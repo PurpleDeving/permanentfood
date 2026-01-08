@@ -1,26 +1,33 @@
 package net.purple.permfood.mixin;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.purple.permfood.Config;
-import net.purple.permfood.PlayerValues;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.asm.mixin.Unique;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.UUID;
 
-import static net.purple.permfood.PlayerValueHandler.PLAYER_VALUES;
-import static net.purple.permfood.ConfigCache.*;
+import java.util.Collection;
+
+import static net.purple.permfood.config.ConfigCache.*;
+import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
 
 @Mixin(Player.class)
-public class PlayerMixin {
+public abstract class PlayerMixin {
+
+    @Shadow
+    public abstract float getDigSpeed(BlockState p_36282_, @Nullable BlockPos pos);
+
+    @Shadow
+    @Final
+    private Collection<MutableComponent> prefixes;
 
     /******************************************
      PEACEFUL HUNGER
@@ -56,9 +63,8 @@ public class PlayerMixin {
                     ordinal = 0) // @after the peaceful check from above
     )
     private float FixNaturalRegionWithCorrectMax(float original) {
-        // Return your new maximum saturation value
 
-        return PLAYER_VALUES.get(((Player) (Object) this).getUUID()).getMax_saturation(); //TODO Add Buff Impplementation
+        return ((Player) (Object) this).getData(PLAYER_VALUES).getMax_saturation();
     }
 
     //TODO Add Buff Implementation on Player.eat()

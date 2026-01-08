@@ -1,11 +1,9 @@
-package net.purple.permfood;
+package net.purple.permfood.config;
 
 import net.minecraft.world.Difficulty;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
-import net.purple.permfood.mixin.FoodDataMixin;
-import net.purple.permfood.mixin.PlayerMixin;
 
 import static net.purple.permfood.PermanentFood.MODID;
 

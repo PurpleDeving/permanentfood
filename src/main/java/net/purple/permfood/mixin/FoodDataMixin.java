@@ -1,39 +1,22 @@
 package net.purple.permfood.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import net.purple.permfood.Config;
-import net.purple.permfood.ConfigCache;
-import net.purple.permfood.Constants;
-import net.purple.permfood.PermanentFood;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 
-import java.util.UUID;
 
-import org.jline.utils.Log;
-
-
-import static net.purple.permfood.ConfigCache.*;
-import static net.purple.permfood.PermanentFood.MODID;
-import static net.purple.permfood.PlayerValueHandler.PLAYER_VALUES;
-
-import net.neoforged.api.distmarker.Dist.*;
+import static net.purple.permfood.config.ConfigCache.*;
+import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
 
 @Mixin(FoodData.class)
 public class FoodDataMixin {
@@ -42,39 +25,9 @@ public class FoodDataMixin {
      Caching
      ******************************************/
 
-    @Unique
-    private UUID permanentfood_1_21_1$playerUUID;
-
 
     @Unique
-    private UUID permanentfood_1_21_1$findUUID() {
-
-
-        if (!(ServerLifecycleHooks.getCurrentServer() == null)) {
-            for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
-                if (player.getFoodData() == (FoodData) (Object) this) {
-                    return player.getUUID();
-                }
-            }
-        }
-
-        // For the client return the UUID of the ServerPlayer of that LocalPlayer. Needed because it runs on the RenderThread as well
-
-        if (RenderSystem.isOnRenderThread()) {
-            Log.warn("Is on Render Thread");
-        }
-
-        if (EffectiveSide.get().isClient()) {
-            Log.warn("Is on client Side");
-        }
-
-        if (Minecraft.getInstance().player == null) {
-            Log.warn("No Player was found. This should never happen. Report to " + Constants.MOD_AUTHOR_LONG);
-            return null;
-        }
-
-        return Minecraft.getInstance().player.getUUID();
-    }
+    private Player permanentfood_1_21_1$player;
 
 
     /******************************************
@@ -83,23 +36,44 @@ public class FoodDataMixin {
 
     // Should also fix saturation because its limit is the current foodLevel
     @ModifyConstant(
-            method = "add", // Note: The method descriptor is (IF)V in bytecode
+            method = "add",
             constant = @Constant(intValue = 20,
                     ordinal = 0) // The one in the first Mth.clamp
     )
-    private int fixAddWithHungerMax(int original) {
+    private int fixAddWithMaxHunger(int original) {
 
-        if (permanentfood_1_21_1$playerUUID == null) {
-            permanentfood_1_21_1$playerUUID = permanentfood_1_21_1$findUUID();
+        if (EffectiveSide.get().isServer()) {
+            permanentfood_1_21_1$updateServerPlayer();
         }
 
-        // TODO remove if working
-        // LocalPlayer detection. If this is needed than findUUID failed
-        /*        if (playerUUID == null) {
-            return original;
-        }*/
+        if (EffectiveSide.get().isClient()) {
+            permanentfood_1_21_1$updateClientPlayer();
+        }
 
-        return PLAYER_VALUES.get(this.permanentfood_1_21_1$playerUUID).getMax_hunger();
+        return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
+    }
+
+    @Unique
+    @OnlyIn(Dist.CLIENT)
+    private void permanentfood_1_21_1$updateClientPlayer() {
+        if (this.permanentfood_1_21_1$player == null) {
+            this.permanentfood_1_21_1$player = Minecraft.getInstance().player;
+        }
+    }
+
+
+    //Limited to Server Side
+    @Unique
+    private void permanentfood_1_21_1$updateServerPlayer() {
+
+        if (this.permanentfood_1_21_1$player == null) {
+            for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+                if (player.getFoodData() == (FoodData) (Object) this) {
+                    this.permanentfood_1_21_1$player = player;
+                    return;
+                }
+            }
+        }
     }
 
 
@@ -109,8 +83,8 @@ public class FoodDataMixin {
                     ordinal = 0) // @Only Value in the Method
     )
     private int needsFoodMaxHungerCheck(int original) {
-        // Return your new maximum saturation value
-        return PLAYER_VALUES.get(this.permanentfood_1_21_1$playerUUID).getMax_hunger();
+
+        return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
     }
 
     /******************************************
@@ -126,7 +100,10 @@ public class FoodDataMixin {
             )
     )
     private float redirectSaturationClamp(float saturationToClamp, float min, float original) {
-        float myCustomMax = PLAYER_VALUES.get(permanentfood_1_21_1$playerUUID).getMax_saturation();
+
+        //UpdateServerPlayer runs through the first mixin first.
+
+        float myCustomMax = this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_saturation();
         return Mth.clamp(saturationToClamp, min, myCustomMax);
     }
 
@@ -137,7 +114,7 @@ public class FoodDataMixin {
     /// What difficulty should be used when you has HUNGER_ON_PEACEFUL on ?
     @ModifyVariable(method = "tick",
             at = @At("STORE"),
-            ordinal = 0)
+            name = "difficulty")
     private Difficulty peaceful_hunger$tick$getDifficulty(Difficulty originalHungerDifficulty) {
         if (HUNGER_ON_PEACEFUL_CACHED && originalHungerDifficulty == Difficulty.PEACEFUL) {
             return PEACEFUL_HUNGER_DIFFICULTY_CACHED;
@@ -155,8 +132,8 @@ public class FoodDataMixin {
             constant = @Constant(intValue = 20,
                     ordinal = 0) // The one in the Natural_Regen Block
     )
-    private int setThresholdForNaturalRegeneration(int original, Player player) {
-        return PLAYER_VALUES.get(player.getUUID()).getNatural_regen_threshold_with_saturation();
+    private int setThresholdForNaturalRegenerationWithSaturation(int original, Player player) {
+        return player.getData(PLAYER_VALUES).getNatural_regen_threshold_with_saturation();
     }
 
     // Hunger Threshold for Natural_Regeneration without Saturation
@@ -165,8 +142,8 @@ public class FoodDataMixin {
             constant = @Constant(intValue = 18,
                     ordinal = 0) // The under the Natural_Regen Block
     )
-    private int setThresholdForNoNNaturalRegeneration(int original, Player player) {
-        return PLAYER_VALUES.get(player.getUUID()).getNatural_regen_threshold_no_saturation();
+    private int setThresholdForNaturalRegenerationNoSaturation(int original, Player player) {
+        return player.getData(PLAYER_VALUES).getNatural_regen_threshold_no_saturation();
     }
 
     /******************************************
@@ -179,7 +156,7 @@ public class FoodDataMixin {
             constant = @Constant(floatValue = 4.0F)
     )
     private float useMaxExhaustion(float original, Player player) {
-        return PLAYER_VALUES.get(player.getUUID()).getMax_exhaustion();
+        return player.getData(PLAYER_VALUES).getMax_exhaustion();
     }
 
     // Exhaustion per Heal
