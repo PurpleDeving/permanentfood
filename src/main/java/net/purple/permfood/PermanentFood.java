@@ -3,6 +3,7 @@ package net.purple.permfood;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.registries.*;
 import net.purple.permfood.config.Config;
+import net.purple.permfood.config.ConfigAttributes;
 import net.purple.permfood.moddata.ModData;
 import org.slf4j.Logger;
 
@@ -39,28 +40,22 @@ public class PermanentFood {
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public PermanentFood(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
 
-        //TODO Does this work or need Kaupens Way with the method in ModData?
+
+        //This way is needed, so that the statics are loaded
         ModData.register(modEventBus);
 
         // Commands
         NeoForge.EVENT_BUS.addListener(ModCommands::onCommandRegister);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC, MODID + ".toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC, MODID + ".toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, ConfigAttributes.SPEC, MODID + "_attributes.toml");
 
 
     }
 
-
-    private void commonSetup(FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOG.info("HELLO FROM COMMON SETUP");
-
-    }
-
+    // TODO solcarrot book integration
 
     //TODO Add real dependency > Dont run without
 

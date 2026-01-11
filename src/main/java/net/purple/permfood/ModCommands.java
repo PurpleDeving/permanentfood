@@ -8,9 +8,12 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.purple.permfood.moddata.PlayerValues;
 
+import static net.purple.permfood.Constants.resourceLocationFoodArmorBuff;
+import static net.purple.permfood.Constants.resourceLocationFoodArmorToughnessBuff;
 import static net.purple.permfood.PermanentFood.MODID;
 import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
 
@@ -53,7 +56,9 @@ public class ModCommands {
                 .append("§7Unique Foods Eaten: §f" + values.getFoodCount() + "\n")
                 .append("§7Max Hunger: §f" + values.getMax_hunger() + "\n")
                 .append("§7Max Saturation: §f" + values.getMax_saturation() + "\n")
-                .append("§7Max Exhaustion: §f" + values.getMax_exhaustion() + "\n");
+                .append("§7Max Exhaustion: §f" + values.getMax_exhaustion() + "\n")
+                .append("§7Armor Food Bonus: §f" + player.getAttributes().getInstance(Attributes.ARMOR).getModifier(resourceLocationFoodArmorBuff).amount() + "\n")
+                .append("§7Armor Toughness Food Bonus: §f" + player.getAttributes().getInstance(Attributes.ARMOR).getModifier(resourceLocationFoodArmorToughnessBuff).amount() + "\n");
 
         source.sendSuccess(() -> output, true);
         return 1;

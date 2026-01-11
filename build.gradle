@@ -138,12 +138,17 @@ dependencies {
     // at runtime, use the full JEI jar for NeoForge
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
+    // Runtimes are for testing only
 
     //Spice-of-life
     compileOnly("curse.maven:spice-of-life-carrot-edition-277616:7374098-sources")
-    // Runtime for testing only
     runtimeOnly("curse.maven:spice-of-life-carrot-edition-277616:7374098")
 
+    //Attribute Fix
+    compileOnly("curse.maven:attributefix-280510:7115922-sources")
+    runtimeOnly("curse.maven:attributefix-280510:7115922")
+    runtimeOnly "curse.maven:bookshelf-228525:7335846"
+    runtimeOnly "curse.maven:prickle-1023259:6961457"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

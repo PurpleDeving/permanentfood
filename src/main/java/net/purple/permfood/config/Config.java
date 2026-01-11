@@ -127,52 +127,15 @@ public class Config {
             .comment("Vanilla default: 6.0")
             .defineInRange("new_base_max_saturation", 6.0, 0.1, 1000.0);
 
-    /****************************************************************
-     ARMOR BLOCK
-     *****************************************************************/
-
-
-    public static final ModConfigSpec.DoubleValue UNIQUE_FOOD_SCALING_ARMOR = BUILDER
-            .comment("")
-            .comment("Define how much additional armour a player should get for each unique food the player ate.")
-            .comment("0.0 does disable the scaling.")
-            .defineInRange("scaling_armour", 0.0, 0.0, 100.0);
-
-
-    // TODO > What other Buffs ? Max live? Max Hunger/Satuation? Ask GPT
-    // TODO > Fix satuation writing everywhere
 
     // TODO > Add config screen ingame stuff
 
 
-    //TODO - Add more Configs + Use Them
-
-
-    //TODO > Add command to view all stats ingame + add them here.
-
-
-    // I think this is obsolet???
-    public static final ModConfigSpec.BooleanValue NATURAL_REGEN_ON_PEACEFUL = BUILDER
-            .comment("")
-            .comment("Should the vanilla Interaction with the natural_health_regeneration on peaceful be enabled? Highly recommended to keep this disabled.")
-            .define("natural_regen_on_peaceful", false);
-
-
-    public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-            .comment("")
-            .comment("What you want the introduction message to be for the magic number")
-            .define("magicNumberIntroduction", "The magic number is... ");
-
-    // a list of strings that are treated as resource locations for items
-/*    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-            .comment("A list of items to log on common setup.")
-            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);*/
+    // TODO check both configs for the path names
+    // TODO Default Values
 
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
 
-/*    private static boolean validateItemName(final Object obj) {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));
-    }*/
 }
