@@ -1,7 +1,6 @@
 package net.purple.permfood.config;
 
 import com.google.common.collect.Lists;
-import net.minecraft.world.Difficulty;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
@@ -21,35 +20,32 @@ public class ConfigAttributes {
      *****************************************************************/
 
     public static final ModConfigSpec.BooleanValue ENABLE_ARMOR_CHANGES = BUILDER
-            .comment("To make some values (like Armor) work above certain threshold you will need a Mod like 'AttributeFix' to bypass Minecraft's attribute caps. \n ")
-            .comment("See here for one mod option: https://www.curseforge.com/minecraft/mc-mods/attribute-fix")
-            .comment("See here for more info: https://minecraft.fandom.com/wiki/Attribute")
+            .comment("Some attribute caps in Minecraft may prevent values above a threshold; use an attribute-cap fix mod if needed.")
+            .comment("See: https://minecraft.fandom.com/wiki/Attribute for info and https://www.curseforge.com/minecraft/mc-mods/attribute-fix for one mod  option.")
             .comment("")
-            .comment("")
-            .comment("")
-            .comment("Should the player get Armor from this mod?")
+            .comment("When true, this mod will grant armor attribute increases to the player based on milestones.")
             .define("enable_armor_changes", true);
 
     public static final ModConfigSpec.DoubleValue ARMOR_PER_MILESTONE = BUILDER
             .comment("")
-            .comment("The amount the player's armor is increased by per Milestone reached.")
+            .comment("Amount of armor value added to the player for each milestone reached.")
             .defineInRange("armor_per_milestone", 2.0, 0.0, 1000.0);
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_ARMOR = BUILDER
             .comment("")
-            .comment("A list of numbers of unique foods you need to eat to unlock each milestone, in ascending order. Naturally, adding more milestones lets you earn more armor.")
-            .defineList("milestones_armor", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
+            .comment("Ascending list of numbers of unique foods required to reach each armor milestone.")
+            .defineList("milestones_for_armor", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
 
     public static final ModConfigSpec.DoubleValue ARMOR_TOUGHNESS_PER_MILESTONE = BUILDER
             .comment("")
-            .comment("The amount the player's armor toughness is increased by per Milestone reached.")
-            .comment("If you are not sure what this is, look here: https://minecraft.fandom.com/wiki/Armor#Armor_toughness")
+            .comment("Amount of armor toughness added to the player for each milestone reached.")
+            .comment("If unfamiliar, see: https://minecraft.fandom.com/wiki/Armor#Armor_toughness")
             .defineInRange("armor_toughness_per_milestone", 0.1, 0.0, 1000.0);
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_ARMOR_TOUGHNESS = BUILDER
             .comment("")
-            .comment("A list of numbers of unique foods you need to eat to unlock each milestone, in ascending order. Naturally, adding more milestones lets you earn more armor toughness.")
-            .defineList("milestones_armor_toughness", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
+            .comment("Ascending list of numbers of unique foods required to reach each armor-toughness milestone.")
+            .defineList("milestones_for_armor_toughness", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
 
     /****************************************************************
      ATTACK DAMAGE BLOCK
@@ -57,19 +53,18 @@ public class ConfigAttributes {
 
     public static final ModConfigSpec.BooleanValue ENABLE_ATTACK_DAMAGE_CHANGES = BUILDER
             .comment("")
-            .comment("Should the player get Attack Damage from this mod?")
-            .define("enable_damage_changes", true);
+            .comment("When true, this mod will grant attack damage increases to the player based on milestones.")
+            .define("enable_attack_damage_changes", true);
 
     public static final ModConfigSpec.DoubleValue ATTACK_DAMAGE_PER_MILESTONE = BUILDER
             .comment("")
-            .comment("The amount of additional damage the player deals by Milestone reached.")
-            .comment("1.0 = Half a Heart")
-            .defineInRange("damage_per_milestone", 1.0, 0.0, 1000.0);
+            .comment("Amount of attack damage added to the player for each milestone reached. 1.0 equals half a heart.")
+            .defineInRange("attack_damage_per_milestone", 1.0, 0.0, 1000.0);
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_ATTACK_DAMAGE = BUILDER
             .comment("")
-            .comment("A list of numbers of unique foods you need to eat to unlock each milestone, in ascending order. Naturally, adding more milestones lets you earn more armor.")
-            .defineList("milestones_damage", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
+            .comment("Ascending list of numbers of unique foods required to reach each attack-damage milestone.")
+            .defineList("milestones_for_attack_damage", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
 
     /****************************************************************
      LUCK BLOCK
@@ -77,19 +72,37 @@ public class ConfigAttributes {
 
     public static final ModConfigSpec.BooleanValue ENABLE_LUCK_CHANGES = BUILDER
             .comment("")
-            .comment("Should the player get Luck from this mod?")
+            .comment("When true, this mod will grant Luck increases to the player based on milestones.")
             .define("enable_luck_changes", true);
 
     public static final ModConfigSpec.DoubleValue LUCK_PER_MILESTONE = BUILDER
             .comment("")
-            .comment("The amount of Luck the player gets for each Milestone reached.")
-            .comment("1.0 = Half a Heart")
-            .defineInRange("damage_per_milestone", 1.0, -100, 1000.0);
+            .comment("Amount of Luck added to the player for each milestone reached. Positive values increase luck, negative decrease it.")
+            .defineInRange("luck_per_milestone", 1.0, -100.0, 1000.0);
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_LUCK = BUILDER
             .comment("")
-            .comment("A list of numbers of unique foods you need to eat to unlock each milestone, in ascending order. Naturally, adding more milestones lets you earn more luck.")
-            .defineList("milestones_luck", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
+            .comment("Ascending list of numbers of unique foods required to reach each luck milestone.")
+            .defineList("milestones_for_luck", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
+
+    /****************************************************************
+     KNOCKBACK RESISTANCE BLOCK
+     *****************************************************************/
+
+    public static final ModConfigSpec.BooleanValue ENABLE_KNOCKBACK_RESISTANCE_CHANGES = BUILDER
+            .comment("")
+            .comment("When true, this mod will grant knockback resistance increases to the player based on milestones.")
+            .define("enable_knockback_resistance_changes", true);
+
+    public static final ModConfigSpec.DoubleValue KNOCKBACK_RESISTANCE_PER_MILESTONE = BUILDER
+            .comment("")
+            .comment("Amount of generic_knockback_resistance added to the player for each milestone reached. Values should be in the range [0.0, 1.0] for percent-like resistance.")
+            .defineInRange("knockback_resistance_per_milestone", 0.02, 0.0, 1.0);
+
+    public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_KNOCKBACK_RESISTANCE = BUILDER
+            .comment("")
+            .comment("Ascending list of numbers of unique foods required to reach each knockback-resistance milestone.")
+            .defineList("milestones_for_knockback_resistance", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
 
     // TODO > What other Buffs ? Max live? Max Hunger/Satuation? Ask GPT
     // TODO > Fix satuation writing everywhere

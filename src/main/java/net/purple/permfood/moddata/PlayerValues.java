@@ -92,7 +92,7 @@ public class PlayerValues {
         return defaultValue + (valuePerMilestone * reachedMilestones);
     }
 
-    public static double getValueDouble(double defaultValue, double valuePerMilestone, List<? extends Integer> milestones, int foodCount) {
+    public static double getAttributeValue(double valuePerMilestone, List<? extends Integer> milestones, int foodCount) {
         int reachedMilestones = 0;
 
         for (int milestone : milestones) {
@@ -103,7 +103,7 @@ public class PlayerValues {
             }
         }
 
-        return defaultValue + (valuePerMilestone * reachedMilestones);
+        return (valuePerMilestone * reachedMilestones);
     }
 
     public static int getFoodCosunt() {

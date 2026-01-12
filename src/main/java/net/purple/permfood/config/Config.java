@@ -20,27 +20,26 @@ public class Config {
      *****************************************************************/
 
     public static final ModConfigSpec.BooleanValue HUNGER_ON_PEACEFUL = BUILDER
-            .comment("Should you get hungry on peaceful? Highly recommended with this mods setup.")
-            .define("bool_hunger_on_peaceful", true);
+            .comment("")
+            .comment("When true, players will still get hungry on Peaceful difficulty. Set to false to disable hunger on Peaceful.")
+            .define("hunger_on_peaceful", true);
 
     public static final ModConfigSpec.ConfigValue<Difficulty> PEACEFUL_HUNGER_DIFFICULTY = BUILDER
             .comment("")
-            .comment("Gets ignored when HUNGER_ON_PEACEFUL is false. Sets the desired difficulty for the hunger mechanic when on Peaceful difficulty.")
-            .defineEnum("peaceful_hunger_difficulty", Difficulty.EASY, new Difficulty[]{Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD});
+            .comment("When hunger on Peaceful is enabled, this sets which difficulty's hunger rules to apply (EASY, NORMAL, or HARD).")
+            .defineEnum("peaceful_hunger_difficulty", Difficulty.EASY, Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD);
 
     public static final ModConfigSpec.IntValue NATURAL_REGEN_THRESHOLD_WITH_SATURATION = BUILDER
             .comment("")
-            .comment("How much food is needed for strong Natural Regeneration. Vanilla is 100%")
-            .comment("Works only with the game rule: RULE_NATURAL_REGENERATION. Works only when you have saturation [Unchanged].")
-            .comment("Resulting values are rounded down.")
-            .defineInRange("natural_regen_threshold", 100, 0, 100);
+            .comment("Percentage of the hunger bar required for strong natural regeneration when the player has saturation (vanilla: 100).")
+            .comment("Requires the game rule 'naturalRegeneration' to be enabled. Values are rounded down.")
+            .defineInRange("natural_regen_threshold_with_saturation", 100, 0, 100);
 
     public static final ModConfigSpec.IntValue NATURAL_REGEN_THRESHOLD_NO_SATURATION = BUILDER
             .comment("")
-            .comment("How much food is needed for weak Natural Regeneration. Vanilla is 90%")
-            .comment("Works only with the game rule: RULE_NATURAL_REGENERATION. Works with 0 saturation [Unchanged].")
-            .comment("Resulting values are rounded down.")
-            .defineInRange("non_natural_regen_threshold", 90, 0, 100);
+            .comment("Percentage of the hunger bar required for weak natural regeneration when the player has no saturation (vanilla: 90).")
+            .comment("Requires the game rule 'naturalRegeneration' to be enabled. Values are rounded down.")
+            .defineInRange("natural_regen_threshold_no_saturation", 90, 0, 100);
 
     /****************************************************************
      HUNGER SCALING BLOCK
@@ -48,24 +47,23 @@ public class Config {
 
     public static final ModConfigSpec.BooleanValue ENABLE_MAX_HUNGER_CHANGES = BUILDER
             .comment("")
-            .comment("Should the maximum hunger amount be changed by this mod?")
-            .define("enable_max_hunger", true);
+            .comment("When true, this mod will modify the player's maximum hunger value.")
+            .define("enable_max_hunger_changes", true);
 
     public static final ModConfigSpec.IntValue NEW_BASE_MAX_HUNGER = BUILDER
             .comment("")
-            .comment("The new maximum base amount of hunger food can fill.")
-            .comment("Vanilla default: 20")
+            .comment("Base maximum hunger value that food can fill. Vanilla default is 20.")
             .defineInRange("new_base_max_hunger", 20, 1, Integer.MAX_VALUE);
 
     public static final ModConfigSpec.IntValue MAX_HUNGER_PER_MILESTONE = BUILDER
             .comment("")
-            .comment("The amount the maximum hunger is increased by per Milestone reached.")
+            .comment("Amount added to the player's maximum hunger for each milestone reached.")
             .defineInRange("max_hunger_per_milestone", 2, 0, 1000);
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_MAX_HUNGER = BUILDER
             .comment("")
-            .comment("A list of numbers of unique foods you need to eat to unlock each milestone, in ascending order. Naturally, adding more milestones lets you earn more max hunger.")
-            .defineList("milestones_hunger", Lists.newArrayList(5, 10, 15, 20, 25), o -> o instanceof Integer);
+            .comment("Ascending list of numbers of unique foods required to reach each maximum-hunger milestone.")
+            .defineList("milestones_for_max_hunger", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
 
 
     /****************************************************************
@@ -74,24 +72,23 @@ public class Config {
 
     public static final ModConfigSpec.BooleanValue ENABLE_MAX_SATURATION_CHANGES = BUILDER
             .comment("")
-            .comment("Should the maximum saturation amount be changed by this mod?")
-            .define("enable_max_saturation", true);
+            .comment("When true, this mod will modify the player's maximum saturation value.")
+            .define("enable_max_saturation_changes", true);
 
     public static final ModConfigSpec.DoubleValue NEW_BASE_MAX_SATURATION = BUILDER
             .comment("")
-            .comment("The new maximum base amount of saturation food can fill.")
-            .comment("Vanilla default: 20.0")
+            .comment("Base maximum saturation value that food can fill. Vanilla default is 20.0.")
             .defineInRange("new_base_max_saturation", 20.0, 0.1, Float.MAX_VALUE);
 
     public static final ModConfigSpec.DoubleValue MAX_SATURATION_PER_MILESTONE = BUILDER
             .comment("")
-            .comment("The amount the maximum saturation is increased by per Milestone reached.")
+            .comment("Amount added to the player's maximum saturation for each milestone reached.")
             .defineInRange("max_saturation_per_milestone", 2.0, 0.0, 1000.0);
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_MAX_SATURATION = BUILDER
             .comment("")
-            .comment("A list of numbers of unique foods you need to eat to unlock each milestone, in ascending order. Naturally, adding more milestones lets you earn more max saturation.")
-            .defineList("milestones_saturation", Lists.newArrayList(5, 10, 15, 20, 25), o -> o instanceof Integer);
+            .comment("Ascending list of numbers of unique foods required to reach each maximum-saturation milestone.")
+            .defineList("milestones_for_max_saturation", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
 
 
     /****************************************************************
@@ -100,32 +97,28 @@ public class Config {
 
     public static final ModConfigSpec.BooleanValue ENABLE_EXHAUSTION_CHANGES = BUILDER
             .comment("")
-            .comment("Should the exhaustion get changed by this mod?")
-            .define("enable_exhaustion", true);
+            .comment("When true, this mod will modify how exhaustion behaves for the player.")
+            .define("enable_exhaustion_changes", true);
 
     public static final ModConfigSpec.DoubleValue NEW_BASE_MAX_EXHAUSTION = BUILDER
             .comment("")
-            .comment("The new maximum base amount of exhaustion the player can have before food is consumed.")
-            .comment("A higher number will result in less food loss.")
-            .comment("Vanilla default: 4.0")
+            .comment("Base exhaustion threshold before food is consumed. Higher values reduce food loss. Vanilla default is 4.0.")
             .defineInRange("new_base_max_exhaustion", 4.0, 0.1, Float.MAX_VALUE);
 
     public static final ModConfigSpec.DoubleValue MAX_EXHAUSTION_PER_MILESTONE = BUILDER
             .comment("")
-            .comment("The amount the maximum exhaustion is increased by per Milestone reached.")
-            .comment("A higher number will result in less food loss.")
+            .comment("Amount added to the exhaustion threshold for each milestone reached. Higher values reduce food loss.")
             .defineInRange("max_exhaustion_per_milestone", 0.1, 0.0, 1000.0);
 
     public static final ModConfigSpec.ConfigValue<List<? extends Integer>> MILESTONES_FOR_MAX_EXHAUSTION = BUILDER
             .comment("")
-            .comment("A list of numbers of unique foods you need to eat to unlock each milestone, in ascending order. Naturally, adding more milestones lets you earn more max exhaustion.")
-            .defineList("milestones_exhaustion", Lists.newArrayList(5, 10, 15, 20, 25), o -> o instanceof Integer);
+            .comment("Ascending list of numbers of unique foods required to reach each exhaustion milestone.")
+            .defineList("milestones_for_max_exhaustion", Lists.newArrayList(5, 10, 15, 20, 25), () -> 10, o -> o instanceof Integer);
 
     public static final ModConfigSpec.DoubleValue EXHAUSTION_PER_HEAL = BUILDER
             .comment("")
-            .comment("The new amount of exhaustion the player gets for healing 1 heart. Higher is worse.")
-            .comment("Vanilla default: 6.0")
-            .defineInRange("new_base_max_saturation", 6.0, 0.1, 1000.0);
+            .comment("Amount of exhaustion applied to the player when they heal one heart. Higher values increase exhaustion cost for healing. Vanilla default is 6.0.")
+            .defineInRange("exhaustion_per_heal", 6.0, 0.1, 1000.0);
 
 
     // TODO > Add config screen ingame stuff
