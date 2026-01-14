@@ -1,8 +1,15 @@
 {
+  "gui.permanentfood.food_book.player_attributes": "Attribute Buffs",
+  "gui.permanentfood.food_book.attributes.food_armor": "Armor Food Buff",
+  "gui.permanentfood.food_book.attributes.tooltip.food_armor": "How much Armor is increased by this mod.",
+  "gui.permanentfood.food_book.attributes.food_luck": "Luck Food Buff",
+  "gui.permanentfood.food_book.attributes.tooltip.food_luck": "How much Luck is increased by this mod.",
+  "gui.permanentfood.food_book.attributes.food_attack_damage": "Damage Food Buff",
+  "gui.permanentfood.food_book.attributes.tooltip.food_attack_damage": "How much Attack Damage is increased by this mod.",
+  "Old Example Mod Tab": "Old Example Mod Tab",
   "itemGroup.permanentfood": "Example Mod Tab",
   "block.permanentfood.example_block": "Example Block",
   "item.permanentfood.example_item": "Example Item",
-
   "permanentfood.configuration.title": "PermanentFood Configs",
   "permanentfood.configuration.section.permanentfood.common.toml": "PermanentFood Configs",
   "permanentfood.configuration.section.permanentfood.common.toml.title": "PermanentFood Configs",

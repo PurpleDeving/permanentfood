@@ -1,4 +1,4 @@
-package net.purple.permfood.ui;
+package net.purple.permfood.client;
 
 import com.cazsius.solcarrot.client.gui.elements.UIElement;
 import com.cazsius.solcarrot.client.gui.elements.UILabel;
