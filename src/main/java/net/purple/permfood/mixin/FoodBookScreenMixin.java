@@ -42,7 +42,7 @@ public abstract class FoodBookScreenMixin {
             } catch (NoSuchFieldException ignored) {
                 // Things are broken. Skip all injection
 
-                LOG.warn("This should not be reached Part 1");
+                LOG.warn("This should not be reached Part.");
                 return;
             }
 

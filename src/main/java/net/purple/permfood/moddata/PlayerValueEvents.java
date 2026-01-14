@@ -6,14 +6,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -21,9 +18,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.purple.permfood.Networking.packet.PlayerValuesData;
 import net.purple.permfood.config.ConfigAttributes;
-import org.jline.utils.Log;
-
-import java.util.ArrayList;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
 import static net.purple.permfood.Constants.*;
@@ -41,6 +35,7 @@ public final class PlayerValueEvents {
             return;
         }
 
+        // I dont need to limit here, but it makes no sense to update if nothing happened on solcarrot side
         if (SOLCarrotConfig.limitProgressionToSurvival() && player.isCreative()) return;
 
         //   ArrayList<String> updateMessages = updatePlayerValues(player);
@@ -61,17 +56,16 @@ public final class PlayerValueEvents {
 
 
         Player player = event.getEntity();
-        updatePlayerValues(player);
+
+        updatePlayerAttributesAndValues(player);
         syncPlayerValues(player);
-
-
     }
 
     private static void syncPlayerValues(Player player) {
         PacketDistributor.sendToPlayer((ServerPlayer) player, new PlayerValuesData(player.getData(PLAYER_VALUES)));
     }
 
-    private static void updatePlayerValues(Player player) {
+    private static void updatePlayerAttributesAndValues(Player player) {
 
         // Client should get values through sync and Attribute-Autosync
         if (EffectiveSide.get().isClient()) {
@@ -79,7 +73,12 @@ public final class PlayerValueEvents {
         }
 
         int foodCount = FoodList.get(player).getEatenFoodCount();
+
+        // PlayerValues
+
         player.getData(PLAYER_VALUES).updateValues(foodCount);
+
+        // Attribute modifiers
 
         if (ConfigAttributes.ENABLE_ARMOR_CHANGES.getAsBoolean()) {
             double amount_armor = PlayerValues.getAttributeValue(ConfigAttributes.ARMOR_PER_MILESTONE.getAsDouble(), ConfigAttributes.MILESTONES_FOR_ARMOR.get(), foodCount);
@@ -118,7 +117,7 @@ public final class PlayerValueEvents {
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         Player player = event.getEntity();
-        updatePlayerValues(player);
+        updatePlayerAttributesAndValues(player);
         syncPlayerValues(player);
     }
 
@@ -126,7 +125,7 @@ public final class PlayerValueEvents {
     @SubscribeEvent
     public static void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getEntity();
-        updatePlayerValues(player);
+        updatePlayerAttributesAndValues(player);
         syncPlayerValues(player);
     }
 
@@ -135,7 +134,7 @@ public final class PlayerValueEvents {
     public static void onConfigReload(ModConfigEvent.Reloading event) {
         if ((event.getConfig().getModId().equals(MODID) || event.getConfig().getModId().equals(SOL_CARROT)) && EffectiveSide.get().isServer()) {
             for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
-                updatePlayerValues(player);
+                updatePlayerAttributesAndValues(player);
                 syncPlayerValues(player);
             }
         }
