@@ -19,7 +19,7 @@ public class Config {
      HUNGER MISC
      *****************************************************************/
 
-    public static final ModConfigSpec.BooleanValue HUNGER_ON_PEACEFUL = BUILDER
+    public static final ModConfigSpec.BooleanValue ENABLE_HUNGER_ON_PEACEFUL = BUILDER
             .comment("")
             .comment("When true, players will still get hungry on Peaceful difficulty. Set to false to disable hunger on Peaceful.")
             .define("hunger_on_peaceful", true);

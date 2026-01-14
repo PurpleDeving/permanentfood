@@ -10,12 +10,13 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.purple.permfood.config.Config;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 
 
-import static net.purple.permfood.config.ConfigCache.*;
+import static net.purple.permfood.config.Config.*;
 import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
 
 @Mixin(FoodData.class)
@@ -116,8 +117,8 @@ public class FoodDataMixin {
             at = @At("STORE"),
             name = "difficulty")
     private Difficulty peaceful_hunger$tick$getDifficulty(Difficulty originalHungerDifficulty) {
-        if (HUNGER_ON_PEACEFUL_CACHED && originalHungerDifficulty == Difficulty.PEACEFUL) {
-            return PEACEFUL_HUNGER_DIFFICULTY_CACHED;
+        if (ENABLE_HUNGER_ON_PEACEFUL.get() && originalHungerDifficulty == Difficulty.PEACEFUL) {
+            return PEACEFUL_HUNGER_DIFFICULTY.get();
         }
         return originalHungerDifficulty;
     }
@@ -166,7 +167,7 @@ public class FoodDataMixin {
             constant = @Constant(floatValue = 6.0F)
     )
     private float useExhaustionForHealing(float original, Player player) {
-        return EXHAUSTION_PER_HEAL;
+        return EXHAUSTION_PER_HEAL.get().floatValue();
     }
 
 

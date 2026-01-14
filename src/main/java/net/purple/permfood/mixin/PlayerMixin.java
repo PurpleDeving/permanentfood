@@ -16,18 +16,18 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Collection;
 
-import static net.purple.permfood.config.ConfigCache.*;
+import static net.purple.permfood.config.Config.*;
 import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin {
 
     @Shadow
-    public abstract float getDigSpeed(BlockState p_36282_, @Nullable BlockPos pos);
-
-    @Shadow
     @Final
     private Collection<MutableComponent> prefixes;
+
+    @Shadow
+    public abstract float getDigSpeed(BlockState p_36282_, @Nullable BlockPos pos);
 
     /******************************************
      PEACEFUL HUNGER
@@ -44,7 +44,7 @@ public abstract class PlayerMixin {
     private Difficulty FixNaturalRegenToConfig(Level level) {
 
 
-        if (HUNGER_ON_PEACEFUL_CACHED) {
+        if (ENABLE_HUNGER_ON_PEACEFUL.get()) {
             // Correct difficulty doesnt matter. If you want Hunger_on_Peaceful, then we can just return anything that is not peaceful
             return Difficulty.EASY;
         }
