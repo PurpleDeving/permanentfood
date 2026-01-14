@@ -1,6 +1,7 @@
 package net.purple.permfood.mixin;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -10,11 +11,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.jline.utils.Log;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 
+
+import java.util.List;
 
 import static net.purple.permfood.config.Config.*;
 import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
@@ -42,7 +44,7 @@ public class FoodDataMixin {
                     ordinal = 0) // The one in the first Mth.clamp
     )
     private int fixAddWithMaxHunger(int original) {
-        validatePlayer();
+        permanentfood_1_21_1$validatePlayer();
         return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
     }
 
@@ -59,7 +61,15 @@ public class FoodDataMixin {
     private void permanentfood_1_21_1$updateServerPlayer() {
 
         if (this.permanentfood_1_21_1$player == null) {
-            for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+
+
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            if (server == null) {
+                return;
+            }
+            List<ServerPlayer> players = server.getPlayerList().getPlayers();
+
+            for (ServerPlayer player : players) {
                 if (player.getFoodData() == (FoodData) (Object) this) {
                     this.permanentfood_1_21_1$player = player;
                     return;
@@ -68,7 +78,8 @@ public class FoodDataMixin {
         }
     }
 
-    private void validatePlayer() {
+    @Unique
+    private void permanentfood_1_21_1$validatePlayer() {
         if (EffectiveSide.get().isServer()) {
             permanentfood_1_21_1$updateServerPlayer();
         }
@@ -87,7 +98,7 @@ public class FoodDataMixin {
     )
     private int needsFoodMaxHungerCheck(int original) {
 
-        validatePlayer();
+        permanentfood_1_21_1$validatePlayer();
 
         return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
     }
@@ -107,7 +118,7 @@ public class FoodDataMixin {
     )
     private float redirectSaturationClamp(float saturationToClamp, float min, float original) {
         //UpdateServerPlayer runs through the first mixin first.
-        validatePlayer();
+        permanentfood_1_21_1$validatePlayer();
         float myCustomMax = this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_saturation();
         return Mth.clamp(saturationToClamp, min, myCustomMax);
     }

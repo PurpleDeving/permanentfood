@@ -22,13 +22,6 @@ import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
 @Mixin(Player.class)
 public abstract class PlayerMixin {
 
-    @Shadow
-    @Final
-    private Collection<MutableComponent> prefixes;
-
-    @Shadow
-    public abstract float getDigSpeed(BlockState p_36282_, @Nullable BlockPos pos);
-
     /******************************************
      PEACEFUL HUNGER
      ******************************************/

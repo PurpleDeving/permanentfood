@@ -1,7 +1,6 @@
 package net.purple.permfood.moddata;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.purple.permfood.Constants;
 import net.purple.permfood.config.Config;
@@ -88,10 +87,6 @@ public class PlayerValues {
         }
 
         return (valuePerMilestone * reachedMilestones);
-    }
-
-    public static int getFoodCosunt() {
-        return 0;
     }
 
     // Read all fields from the ByteBuf and construct a PlayerValues instance with exact values
