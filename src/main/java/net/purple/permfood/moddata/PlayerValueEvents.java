@@ -1,19 +1,29 @@
 package net.purple.permfood.moddata;
 
+import com.cazsius.solcarrot.SOLCarrotConfig;
 import com.cazsius.solcarrot.tracking.FoodList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.purple.permfood.Networking.packet.PlayerValuesData;
 import net.purple.permfood.config.ConfigAttributes;
+import org.jline.utils.Log;
+
+import java.util.ArrayList;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
 import static net.purple.permfood.Constants.*;
@@ -24,9 +34,31 @@ import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
 public final class PlayerValueEvents {
 
 
+    //Booth Sides
+    @SubscribeEvent(priority = EventPriority.LOW) // Guaranteed to trigger after solcarrot
+    public static void onFoodEaten(LivingEntityUseItemEvent.Finish event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        if (SOLCarrotConfig.limitProgressionToSurvival() && player.isCreative()) return;
+
+        //   ArrayList<String> updateMessages = updatePlayerValues(player);
+
+
+        LogicalSide isClientSide = EffectiveSide.get();
+
+
+        var usedStack = event.getItem();
+        if (usedStack.getFoodProperties(player) == null) return;
+
+    }
+
+
     // Is Server side online
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+
 
         Player player = event.getEntity();
         updatePlayerValues(player);

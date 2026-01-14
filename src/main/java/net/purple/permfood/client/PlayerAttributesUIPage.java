@@ -90,7 +90,7 @@ public final class PlayerAttributesUIPage extends PageClone {
          ******************************************/
 
         AttributeModifier modAttackDamage = player.getAttributes().getInstance(Attributes.ATTACK_DAMAGE).getModifier(resourceLocationFoodAttackDamageBuff);
-        double attackDamageAmount = modLuck != null ? modAttackDamage.amount() : 0.0;
+        double attackDamageAmount = modAttackDamage != null ? modAttackDamage.amount() : 0.0;
         String attackDamageAmountStr = String.format("%.2f", attackDamageAmount);
 
         UIElement attackValueStat = statTextWithIcon(

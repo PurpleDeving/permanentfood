@@ -15,6 +15,9 @@ import java.util.List;
 
 import net.minecraft.world.entity.player.Player;
 
+import static net.purple.permfood.PermanentFood.LOG;
+
+
 @Mixin(FoodBookScreen.class)
 public abstract class FoodBookScreenMixin {
 
@@ -38,6 +41,8 @@ public abstract class FoodBookScreenMixin {
                 player = (Player) playerField.get(this);
             } catch (NoSuchFieldException ignored) {
                 // Things are broken. Skip all injection
+
+                LOG.warn("This should not be reached Part 1");
                 return;
             }
 

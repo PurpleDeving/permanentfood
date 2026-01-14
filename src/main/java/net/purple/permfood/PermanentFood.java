@@ -1,9 +1,11 @@
 package net.purple.permfood;
 
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.purple.permfood.communication.ModCommands;
 import net.purple.permfood.config.Config;
 import net.purple.permfood.config.ConfigAttributes;
 import net.purple.permfood.moddata.ModData;
+import org.jline.utils.Log;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -41,6 +43,8 @@ public class PermanentFood {
     }
 
     // TODO solcarrot book integration
+
+    // TODO Add Milestone Reached Message
 
     //TODO Add real dependency > Dont run without
 

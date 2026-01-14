@@ -10,7 +10,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import net.purple.permfood.config.Config;
+import org.jline.utils.Log;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
@@ -42,15 +42,7 @@ public class FoodDataMixin {
                     ordinal = 0) // The one in the first Mth.clamp
     )
     private int fixAddWithMaxHunger(int original) {
-
-        if (EffectiveSide.get().isServer()) {
-            permanentfood_1_21_1$updateServerPlayer();
-        }
-
-        if (EffectiveSide.get().isClient()) {
-            permanentfood_1_21_1$updateClientPlayer();
-        }
-
+        validatePlayer();
         return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
     }
 
@@ -62,8 +54,7 @@ public class FoodDataMixin {
         }
     }
 
-
-    //Limited to Server Side
+    //Limited to Server Side but not with @OnlyIn because local server is also Client side.
     @Unique
     private void permanentfood_1_21_1$updateServerPlayer() {
 
@@ -77,6 +68,17 @@ public class FoodDataMixin {
         }
     }
 
+    private void validatePlayer() {
+        if (EffectiveSide.get().isServer()) {
+            permanentfood_1_21_1$updateServerPlayer();
+        }
+
+
+        if (EffectiveSide.get().isClient()) {
+            permanentfood_1_21_1$updateClientPlayer();
+        }
+    }
+
 
     @ModifyConstant(
             method = "needsFood()Z",
@@ -85,8 +87,11 @@ public class FoodDataMixin {
     )
     private int needsFoodMaxHungerCheck(int original) {
 
+        validatePlayer();
+
         return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
     }
+
 
     /******************************************
      Max Saturation Scaling
@@ -101,9 +106,8 @@ public class FoodDataMixin {
             )
     )
     private float redirectSaturationClamp(float saturationToClamp, float min, float original) {
-
         //UpdateServerPlayer runs through the first mixin first.
-
+        validatePlayer();
         float myCustomMax = this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_saturation();
         return Mth.clamp(saturationToClamp, min, myCustomMax);
     }

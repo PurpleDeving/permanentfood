@@ -79,13 +79,12 @@ config="${mod_id}.mixins.json"
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
     side="BOTH"
 
-# Here's another dependency
+# Spice of Life Carrot Edition
 [[dependencies.${mod_id}]]
-    modId="minecraft"
+    modId="solcarrot"
     type="required"
-    # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="${minecraft_version_range}"
-    ordering="NONE"
+    versionRange="[${sol_version},)"
+    ordering="AFTER"
     side="BOTH"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
