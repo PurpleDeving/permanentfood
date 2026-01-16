@@ -1,20 +1,14 @@
 package net.purple.permfood.mixin;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-
-import java.util.Collection;
 
 import static net.purple.permfood.config.Config.*;
 import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
@@ -34,11 +28,11 @@ public abstract class PlayerMixin {
                     ordinal = 0 // The Peaceful check
             )
     )
-    private Difficulty FixNaturalRegenToConfig(Level level) {
+    private Difficulty changeNaturalRegenAccordingToPeacefulHunger(Level level) {
 
 
         if (ENABLE_HUNGER_ON_PEACEFUL.get()) {
-            // Correct difficulty doesnt matter. If you want Hunger_on_Peaceful, then we can just return anything that is not peaceful
+            // Correct difficulty doesn't matter. If you want Hunger_on_Peaceful, then we can just return anything that is not peaceful
             return Difficulty.EASY;
         }
 

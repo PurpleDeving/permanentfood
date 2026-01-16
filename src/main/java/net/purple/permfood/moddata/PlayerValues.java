@@ -101,7 +101,7 @@ public class PlayerValues {
         return new PlayerValues(foodCount, max_hunger, nat_with, nat_no, max_sat, max_ex);
     }
 
-    public void updateValues(int foodCount) {
+    protected void updateValues(int foodCount) {
         this.foodCount = foodCount;
 
         //Hunger

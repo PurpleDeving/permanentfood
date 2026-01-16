@@ -38,15 +38,14 @@ public final class PlayerValueEvents {
         // I dont need to limit here, but it makes no sense to update if nothing happened on solcarrot side
         if (SOLCarrotConfig.limitProgressionToSurvival() && player.isCreative()) return;
 
-        //   ArrayList<String> updateMessages = updatePlayerValues(player);
-
-
-        LogicalSide isClientSide = EffectiveSide.get();
-
-
+        // If its not food, what the fuck am I doing here?
         var usedStack = event.getItem();
         if (usedStack.getFoodProperties(player) == null) return;
 
+        // TODO - Booth Attributes and updateValues should print out new reached Milestones to the player ingame chat + particles and all tha.
+        //  But should not happen if Milestones are re-calculated on login/dimension change/config reload
+
+        updatePlayerAttributesAndValues(player);
     }
 
 
@@ -65,6 +64,33 @@ public final class PlayerValueEvents {
         PacketDistributor.sendToPlayer((ServerPlayer) player, new PlayerValuesData(player.getData(PLAYER_VALUES)));
     }
 
+    // Is Server side online
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        Player player = event.getEntity();
+        updatePlayerAttributesAndValues(player);
+        syncPlayerValues(player);
+    }
+
+    // Unkown if it fires on client
+    @SubscribeEvent
+    public static void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        Player player = event.getEntity();
+        updatePlayerAttributesAndValues(player);
+        syncPlayerValues(player);
+    }
+
+    // Unkown if it fires on client. Safety check
+    @SubscribeEvent
+    public static void onConfigReload(ModConfigEvent.Reloading event) {
+        if ((event.getConfig().getModId().equals(MODID) || event.getConfig().getModId().equals(SOL_CARROT)) && EffectiveSide.get().isServer()) {
+            for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+                updatePlayerAttributesAndValues(player);
+                syncPlayerValues(player);
+            }
+        }
+    }
+
     private static void updatePlayerAttributesAndValues(Player player) {
 
         // Client should get values through sync and Attribute-Autosync
@@ -73,6 +99,7 @@ public final class PlayerValueEvents {
         }
 
         int foodCount = FoodList.get(player).getEatenFoodCount();
+
 
         // PlayerValues
 
@@ -111,35 +138,5 @@ public final class PlayerValueEvents {
 
 
     }
-
-
-    // Is Server side online
-    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player player = event.getEntity();
-        updatePlayerAttributesAndValues(player);
-        syncPlayerValues(player);
-    }
-
-    // Unkown if it fires on client
-    @SubscribeEvent
-    public static void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
-        Player player = event.getEntity();
-        updatePlayerAttributesAndValues(player);
-        syncPlayerValues(player);
-    }
-
-    // Unkown if it fires on client. Safety check
-    @SubscribeEvent
-    public static void onConfigReload(ModConfigEvent.Reloading event) {
-        if ((event.getConfig().getModId().equals(MODID) || event.getConfig().getModId().equals(SOL_CARROT)) && EffectiveSide.get().isServer()) {
-            for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
-                updatePlayerAttributesAndValues(player);
-                syncPlayerValues(player);
-            }
-        }
-    }
-
-
     // Add all the cases a player fucking changes and change the player in its foodData
 }
