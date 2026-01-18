@@ -13,9 +13,7 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import net.purple.permfood.Networking.packet.PlayerValuesData;
 import net.purple.permfood.config.ConfigAttributes;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
@@ -57,19 +55,16 @@ public final class PlayerValueEvents {
         Player player = event.getEntity();
 
         updatePlayerAttributesAndValues(player);
-        syncPlayerValues(player);
+
     }
 
-    private static void syncPlayerValues(Player player) {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, new PlayerValuesData(player.getData(PLAYER_VALUES)));
-    }
 
     // Is Server side online
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         Player player = event.getEntity();
         updatePlayerAttributesAndValues(player);
-        syncPlayerValues(player);
+
     }
 
     // Unkown if it fires on client
@@ -77,7 +72,7 @@ public final class PlayerValueEvents {
     public static void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getEntity();
         updatePlayerAttributesAndValues(player);
-        syncPlayerValues(player);
+
     }
 
     // Unkown if it fires on client. Safety check
@@ -86,7 +81,7 @@ public final class PlayerValueEvents {
         if ((event.getConfig().getModId().equals(MODID) || event.getConfig().getModId().equals(SOL_CARROT)) && EffectiveSide.get().isServer()) {
             for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
                 updatePlayerAttributesAndValues(player);
-                syncPlayerValues(player);
+
             }
         }
     }
