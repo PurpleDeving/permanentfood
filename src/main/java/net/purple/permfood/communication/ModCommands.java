@@ -8,8 +8,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.purple.permfood.PermanentFood;
 import net.purple.permfood.moddata.PlayerValues;
@@ -38,7 +38,6 @@ public class ModCommands {
 
     private static int showStats(CommandContext<CommandSourceStack> context) {
 
-        System.out.println("Can you sout here?");
         CommandSourceStack source = context.getSource();
 
 

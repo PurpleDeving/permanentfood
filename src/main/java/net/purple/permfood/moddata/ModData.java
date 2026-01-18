@@ -17,7 +17,6 @@ public class ModData {
             () -> AttachmentType.builder(() -> new PlayerValues(0))
                     .build());
 
-
     public static void register(IEventBus eventBus) {
         ATTACHMENT_TYPES.register(eventBus);
     }

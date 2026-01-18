@@ -3,9 +3,10 @@
   "package": "net.purple.permfood.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "FoodBookScreenMixin",
     "FoodDataMixin",
-    "PlayerMixin",
-    "FoodBookScreenMixin"
+    "FoodListCommandMixin",
+    "PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
