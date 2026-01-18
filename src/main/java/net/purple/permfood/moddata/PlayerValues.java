@@ -71,9 +71,9 @@ public class PlayerValues {
         if (Config.ENABLE_EXHAUSTION_CHANGES.getAsBoolean()) {
             int milestonesReached = getMilestonesReached(Config.MILESTONES_FOR_MAX_EXHAUSTION.get(), foodCount);
 
-            this.max_saturation = ((float) Config.NEW_BASE_MAX_EXHAUSTION.getAsDouble() + (float) Config.MAX_EXHAUSTION_PER_MILESTONE.getAsDouble() * milestonesReached);
+            this.max_exhaustion = ((float) Config.NEW_BASE_MAX_EXHAUSTION.getAsDouble() + (float) Config.MAX_EXHAUSTION_PER_MILESTONE.getAsDouble() * milestonesReached);
         } else {
-            this.max_saturation = (Constants.VANILLA_MAX_EXHAUSTION);
+            this.max_exhaustion = (Constants.VANILLA_MAX_EXHAUSTION);
         }
 
         // Natural Regen
@@ -102,6 +102,7 @@ public class PlayerValues {
     }
 
     public float getMax_exhaustion() {
+        Log.warn("Max exhaustion on " + EffectiveSide.get() + " is: " + this.max_exhaustion);
         return this.max_exhaustion;
     }
 
@@ -114,40 +115,17 @@ public class PlayerValues {
      Network and Client shit
      ******************************************/
 
-    // Full constructor used when decoding from the network so client gets exact same values
-    public PlayerValues(int foodCount, int max_hunger, int natural_regen_threshold_with_saturation, int natural_regen_threshold_no_saturation, float max_saturation, float max_exhaustion) {
-        if (EffectiveSide.get().isServer()) {
-            Log.warn("PlayerValues full constructor called on the server side! This should only be used on the client side when reading from the network.");
-        }
-        this.foodCount = foodCount;
-        this.max_hunger = max_hunger;
-        this.natural_regen_threshold_with_saturation = natural_regen_threshold_with_saturation;
-        this.natural_regen_threshold_no_saturation = natural_regen_threshold_no_saturation;
-        this.max_saturation = max_saturation;
-        this.max_exhaustion = max_exhaustion;
-    }
-
 
     // Read all fields from the ByteBuf and construct a PlayerValues instance with exact values
     public static PlayerValues readFromBuf(ByteBuf buf) {
         int foodCount = buf.readInt();
-        int max_hunger = buf.readInt();
-        int nat_with = buf.readInt();
-        int nat_no = buf.readInt();
-        float max_sat = buf.readFloat();
-        float max_ex = buf.readFloat();
 
-        return new PlayerValues(foodCount, max_hunger, nat_with, nat_no, max_sat, max_ex);
+        return new PlayerValues(foodCount);
     }
 
     // Write all fields to the ByteBuf so the client receives exact values from the server
     public void writeToBuf(ByteBuf buf) {
         buf.writeInt(this.foodCount);
-        buf.writeInt(this.max_hunger);
-        buf.writeInt(this.natural_regen_threshold_with_saturation);
-        buf.writeInt(this.natural_regen_threshold_no_saturation);
-        buf.writeFloat(this.max_saturation);
-        buf.writeFloat(this.max_exhaustion);
     }
 
 
