@@ -8,7 +8,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.util.thread.EffectiveSide;
@@ -41,6 +40,7 @@ public final class PlayerValueEvents {
         // If its not food, what the fuck am I doing here?
         var usedStack = event.getItem();
         if (usedStack.getFoodProperties(player) == null) return;
+
 
         // TODO - Booth Attributes and updateValues should print out new reached Milestones to the player ingame chat + particles and all tha.
         //  But should not happen if Milestones are re-calculated on login/dimension change/config reload
