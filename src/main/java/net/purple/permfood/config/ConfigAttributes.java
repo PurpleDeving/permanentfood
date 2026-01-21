@@ -109,10 +109,6 @@ public class ConfigAttributes {
      HUNGER SCALING BLOCK
      *****************************************************************/
 
-    public static final ModConfigSpec.BooleanValue ENABLE_MAX_HUNGER_CHANGES = BUILDER
-            .comment("")
-            .comment("When true, this mod will modify the player's maximum hunger value.")
-            .define("enable_max_hunger_changes", true);
 
     public static final ModConfigSpec.IntValue NEW_BASE_MAX_HUNGER = BUILDER
             .comment("")
@@ -134,10 +130,6 @@ public class ConfigAttributes {
      SATURATION BLOCK
      *****************************************************************/
 
-    public static final ModConfigSpec.BooleanValue ENABLE_MAX_SATURATION_CHANGES = BUILDER
-            .comment("")
-            .comment("When true, this mod will modify the player's maximum saturation value.")
-            .define("enable_max_saturation_changes", true);
 
     public static final ModConfigSpec.DoubleValue NEW_BASE_MAX_SATURATION = BUILDER
             .comment("")
@@ -159,10 +151,6 @@ public class ConfigAttributes {
      Exhaustion BLOCK
      *****************************************************************/
 
-    public static final ModConfigSpec.BooleanValue ENABLE_MAX_EXHAUSTION_CHANGES = BUILDER
-            .comment("")
-            .comment("When true, this mod will modify how exhaustion behaves for the player.")
-            .define("enable_exhaustion_changes", true);
 
     public static final ModConfigSpec.DoubleValue NEW_BASE_MAX_EXHAUSTION = BUILDER
             .comment("")

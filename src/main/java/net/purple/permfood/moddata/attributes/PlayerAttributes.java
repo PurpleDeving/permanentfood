@@ -4,6 +4,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.purple.permfood.config.ConfigAttributes;
+import net.purple.permfood.config.ConfigStartup;
 import net.purple.permfood.moddata.baseClases.PlayerFoodInstance;
 import org.jline.utils.Log;
 
@@ -75,14 +76,14 @@ public class PlayerAttributes extends PlayerFoodInstance {
 
         AttributeMap attributeMap = super.getPlayer().getAttributes();
 
-        if (ConfigAttributes.ENABLE_MAX_HUNGER_CHANGES.getAsBoolean()) {
+        if (ConfigStartup.ENABLE_MAX_HUNGER_CHANGES.getAsBoolean()) {
             AttributeModifier modifier = new AttributeModifier(rLMaxHungerBuff, this.max_hunger.getAddedValue(), ADD_VALUE);
             attributeMap.getInstance(ModAttributes.MAX_HUNGER).addOrReplacePermanentModifier(modifier);
         } else {
             attributeMap.getInstance(ModAttributes.MAX_HUNGER).removeModifier(rLMaxHungerBuff);
         }
 
-        if (ConfigAttributes.ENABLE_MAX_SATURATION_CHANGES.getAsBoolean()) {
+        if (ConfigStartup.ENABLE_MAX_SATURATION_CHANGES.getAsBoolean()) {
             AttributeModifier modifier = new AttributeModifier(rLMaxSaturationBuff, this.max_saturation.getAddedValue(), ADD_VALUE);
             super.getPlayer().getAttributes().getInstance(ModAttributes.MAX_SATURATION).addOrReplacePermanentModifier(modifier);
         } else {
@@ -90,7 +91,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
         }
 
 
-        if (ConfigAttributes.ENABLE_MAX_EXHAUSTION_CHANGES.getAsBoolean()) {
+        if (ConfigStartup.ENABLE_MAX_EXHAUSTION_CHANGES.getAsBoolean()) {
             AttributeModifier modifier = new AttributeModifier(rLMaxExhaustionBuff, this.max_exhaustion.getAddedValue(), ADD_VALUE);
             super.getPlayer().getAttributes().getInstance(ModAttributes.MAX_EXHAUSTION).addOrReplacePermanentModifier(modifier);
         } else {
