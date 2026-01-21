@@ -1,18 +1,17 @@
 package net.purple.permfood;
 
+import com.mojang.logging.LogUtils;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.NeoForge;
 import net.purple.permfood.communication.ModCommands;
 import net.purple.permfood.config.Config;
 import net.purple.permfood.config.ConfigAttributes;
 import net.purple.permfood.moddata.ModData;
+import net.purple.permfood.moddata.attributes.ModAttributes;
 import org.slf4j.Logger;
-
-import com.mojang.logging.LogUtils;
-
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.neoforge.common.NeoForge;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(PermanentFood.MODID)
@@ -29,6 +28,9 @@ public class PermanentFood {
 
         //This way is needed, so that the statics are loaded
         ModData.register(modEventBus);
+
+        ModAttributes.register(modEventBus);
+
 
         // Commands
         NeoForge.EVENT_BUS.addListener(ModCommands::onCommandRegister);

@@ -3,15 +3,14 @@ package net.purple.permfood.mixin;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-
-import static net.purple.permfood.config.Config.*;
-import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
+import static net.purple.permfood.config.Config.ENABLE_HUNGER_ON_PEACEFUL;
+import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_SATURATION;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin {
@@ -51,7 +50,7 @@ public abstract class PlayerMixin {
     )
     private float FixNaturalRegionWithCorrectMax(float original) {
 
-        return ((Player) (Object) this).getData(PLAYER_VALUES).getMax_saturation();
+        return (float) ((Player) (Object) this).getAttribute(MAX_SATURATION).getValue();
     }
 
     //TODO Add Buff Implementation on Player.eat()

@@ -3,9 +3,9 @@ package net.purple.permfood.moddata;
 import com.cazsius.solcarrot.SOLCarrotConfig;
 import com.cazsius.solcarrot.tracking.FoodList;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -17,13 +17,10 @@ import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import net.purple.permfood.config.ConfigAttributes;
-import org.jline.utils.Log;
 
-import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
-import static net.purple.permfood.Constants.*;
+import static net.purple.permfood.Constants.SOL_CARROT;
 import static net.purple.permfood.PermanentFood.MODID;
-import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
+import static net.purple.permfood.moddata.ModData.PLAYER_ATTRIBUTES;
 
 @EventBusSubscriber(modid = MODID)
 public final class PlayerValueEvents {
@@ -34,7 +31,7 @@ public final class PlayerValueEvents {
     public static void updateClientBefore(LivingEntityUseItemEvent.Finish event) {
         if (EffectiveSide.get().isClient()) {
             updatePlayerOnClient();
-            Log.warn("On Client the value is: " + event.getEntity().getData(PLAYER_VALUES).getFoodCount());
+            //Log.warn("On Client the value is: " + event.getEntity().getData(PLAYER_VALUES).getFoodCount());
         }
     }
 
@@ -54,12 +51,15 @@ public final class PlayerValueEvents {
         if (usedStack.getFoodProperties(player) == null) return;
 
         if (EffectiveSide.get().isClient()) {
-            updatePlayerOnClient();
-            Log.warn("On Client the value is: " + player.getData(PLAYER_VALUES).getFoodCount());
+
+            milestoneMessage();
+
+        } else {
+            updatePlayerAttributesAndValues(player);
         }
 
 
-        updatePlayerAttributesAndValues(player);
+
 
 
 
@@ -75,6 +75,64 @@ public final class PlayerValueEvents {
         // TODO - Booth Attributes and updateValues should print out new reached Milestones to the player ingame chat + particles and all tha.
         //  But should not happen if Milestones are re-calculated on login/dimension change/config reload, therefore do here
 
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void milestoneMessage() {
+
+        Player localPlayer = Minecraft.getInstance().player;
+        /*
+
+        PlayerValues prevPlayerValues = new PlayerValues(localPlayer.getData(PLAYER_VALUES).getFoodCount());
+        List<PlayerValue> prevPlayerValuesList = prevPlayerValues.getMilestoneBasedList();
+        updatePlayerOnClient();
+        List<PlayerValue> currentPlayerValues = localPlayer.getData(PLAYER_VALUES).getMilestoneBasedList();
+
+
+        for (int i = 0; i < currentPlayerValues.size(); i++) {
+
+            int prevMilestonesReached = prevPlayerValuesList.get(i).getMilestonesReached();
+            int currentMilestonesReached = currentPlayerValues.get(i).getMilestonesReached();
+
+
+            //Log.warn("For Milestone: " + prevPlayerValues.get(i).getName() + " the old number is: " + prevMilestonesReached);
+            //Log.warn("For Milestone: " + currentPlayerValues.get(i).getName() + " the new number is: " + currentMilestonesReached);
+
+            if (currentMilestonesReached > prevMilestonesReached) {
+
+                if (SOLCarrotConfig.shouldPlayMilestoneSounds()) {
+                    localPlayer.level().playSound(
+                            localPlayer,
+                            localPlayer.blockPosition(),
+                            SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS,
+                            1.0F, 1.0F);
+                }
+
+                if (SOLCarrotConfig.shouldSpawnMilestoneParticles()) {
+                    spawnParticles(localPlayer, ParticleTypes.HEART, 12);
+
+                    if (currentPlayerValues.get(i).maxMilestonesReached()) {
+                        spawnParticles(localPlayer, ParticleTypes.HAPPY_VILLAGER, 16);
+                    }
+                }
+
+
+            }
+        }*/
+
+
+    }
+
+    private static void spawnParticles(Player player, ParticleOptions type, int count) {
+        // hacky way to reuse the existing logic for randomizing particle spawn positions
+        var connection = Minecraft.getInstance().getConnection();
+        assert connection != null;
+        connection.handleParticleEvent(new ClientboundLevelParticlesPacket(
+                type, false,
+                player.getX(), player.getY() + player.getEyeHeight(), player.getZ(),
+                0.5F, 0.5F, 0.5F,
+                0.0F, count
+        ));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -123,6 +181,8 @@ public final class PlayerValueEvents {
     @SubscribeEvent
     public static void onConfigReload(ModConfigEvent.Reloading event) {
 
+        // RangedAttribute attribute = (RangedAttribute) MAX_HUNGER.value();
+
         if ((event.getConfig().getModId().equals(MODID) || event.getConfig().getModId().equals(SOL_CARROT)) && EffectiveSide.get().isServer()) {
 
             for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
@@ -134,7 +194,7 @@ public final class PlayerValueEvents {
         }
 
         if (EffectiveSide.get().isClient()) {
-            updatePlayerOnClient();
+            updatePlayerOnClient(); //TODO if the Attributes are synced this isnt needed ?
         }
 
     }
@@ -146,40 +206,9 @@ public final class PlayerValueEvents {
         int foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
 
 
-        // PlayerValues
-
-        player.getData(PLAYER_VALUES).updateValues(foodCount);
-
         // Attribute modifiers
 
-        if (ConfigAttributes.ENABLE_ARMOR_CHANGES.getAsBoolean()) {
-            double amount_armor = PlayerValues.getAttributeValue(ConfigAttributes.ARMOR_PER_MILESTONE.getAsDouble(), ConfigAttributes.MILESTONES_FOR_ARMOR.get(), foodCount);
-            AttributeModifier modifier_armor = new AttributeModifier(resourceLocationFoodArmorBuff, amount_armor, ADD_VALUE);
-            player.getAttributes().getInstance(Attributes.ARMOR).addOrReplacePermanentModifier(modifier_armor);
-
-            double amount_armor_toughness = PlayerValues.getAttributeValue(ConfigAttributes.ARMOR_TOUGHNESS_PER_MILESTONE.getAsDouble(), ConfigAttributes.MILESTONES_FOR_ARMOR_TOUGHNESS.get(), foodCount);
-            AttributeModifier modifier_toughness = new AttributeModifier(resourceLocationFoodArmorToughnessBuff, amount_armor_toughness, ADD_VALUE);
-            player.getAttributes().getInstance(Attributes.ARMOR_TOUGHNESS).addOrReplacePermanentModifier(modifier_toughness);
-        }
-
-        if (ConfigAttributes.ENABLE_ATTACK_DAMAGE_CHANGES.getAsBoolean()) {
-            double amount_attack_damage = PlayerValues.getAttributeValue(ConfigAttributes.ATTACK_DAMAGE_PER_MILESTONE.getAsDouble(), ConfigAttributes.MILESTONES_FOR_ATTACK_DAMAGE.get(), foodCount);
-            AttributeModifier modifier_attack_damage = new AttributeModifier(resourceLocationFoodAttackDamageBuff, amount_attack_damage, ADD_VALUE);
-            player.getAttributes().getInstance(Attributes.ATTACK_DAMAGE).addOrReplacePermanentModifier(modifier_attack_damage);
-        }
-
-        if (ConfigAttributes.ENABLE_LUCK_CHANGES.getAsBoolean()) {
-            double amount_luck = PlayerValues.getAttributeValue(ConfigAttributes.LUCK_PER_MILESTONE.getAsDouble(), ConfigAttributes.MILESTONES_FOR_LUCK.get(), foodCount);
-            AttributeModifier modifier_luck = new AttributeModifier(resourceLocationFoodLuckBuff, amount_luck, ADD_VALUE);
-            player.getAttributes().getInstance(Attributes.LUCK).addOrReplacePermanentModifier(modifier_luck);
-        }
-
-        if (ConfigAttributes.ENABLE_KNOCKBACK_RESISTANCE_CHANGES.getAsBoolean()) {
-            double amount_kb = PlayerValues.getAttributeValue(ConfigAttributes.KNOCKBACK_RESISTANCE_PER_MILESTONE.getAsDouble(), ConfigAttributes.MILESTONES_FOR_KNOCKBACK_RESISTANCE.get(), foodCount);
-            AttributeModifier modifier_kb = new AttributeModifier(resourceLocationFoodKnockbackResistanceBuff, amount_kb, ADD_VALUE);
-            // Use KNOCKBACK_RESISTANCE attribute (constant name depends on mappings)
-            player.getAttributes().getInstance(Attributes.KNOCKBACK_RESISTANCE).addOrReplacePermanentModifier(modifier_kb);
-        }
+        player.getData(PLAYER_ATTRIBUTES).updateBuffs(foodCount);
 
 
     }

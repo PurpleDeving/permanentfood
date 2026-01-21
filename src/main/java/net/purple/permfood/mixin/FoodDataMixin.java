@@ -11,15 +11,18 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.purple.permfood.moddata.attributes.ModAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 
-
 import java.util.List;
 
-import static net.purple.permfood.config.Config.*;
-import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
+import static net.purple.permfood.config.Config.ENABLE_HUNGER_ON_PEACEFUL;
+import static net.purple.permfood.config.Config.PEACEFUL_HUNGER_DIFFICULTY;
+import static net.purple.permfood.config.ConfigAttributes.EXHAUSTION_PER_HEAL;
+import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_EXHAUSTION;
+import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_SATURATION;
 
 @Mixin(FoodData.class)
 public class FoodDataMixin {
@@ -45,7 +48,7 @@ public class FoodDataMixin {
     )
     private int fixAddWithMaxHunger(int original) {
         permanentfood_1_21_1$validatePlayer();
-        return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
+        return (int) this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue(); //TODO Rounding ?
     }
 
     @Unique
@@ -100,7 +103,7 @@ public class FoodDataMixin {
 
         permanentfood_1_21_1$validatePlayer();
 
-        return this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_hunger();
+        return (int) this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue(); //TODO Rounding ?
     }
 
 
@@ -119,7 +122,7 @@ public class FoodDataMixin {
     private float redirectSaturationClamp(float saturationToClamp, float min, float original) {
         //UpdateServerPlayer runs through the first mixin first.
         permanentfood_1_21_1$validatePlayer();
-        float myCustomMax = this.permanentfood_1_21_1$player.getData(PLAYER_VALUES).getMax_saturation();
+        float myCustomMax = (float) this.permanentfood_1_21_1$player.getAttribute(MAX_SATURATION).getValue();
         return Mth.clamp(saturationToClamp, min, myCustomMax);
     }
 
@@ -149,7 +152,8 @@ public class FoodDataMixin {
                     ordinal = 0) // The one in the Natural_Regen Block
     )
     private int setThresholdForNaturalRegenerationWithSaturation(int original, Player player) {
-        return player.getData(PLAYER_VALUES).getNatural_regen_threshold_with_saturation();
+        //TODO return player.getData(PLAYER_VALUES).getNatural_regen_threshold_with_saturation();
+        return original;
     }
 
     // Hunger Threshold for Natural_Regeneration without Saturation
@@ -159,7 +163,8 @@ public class FoodDataMixin {
                     ordinal = 0) // The under the Natural_Regen Block
     )
     private int setThresholdForNaturalRegenerationNoSaturation(int original, Player player) {
-        return player.getData(PLAYER_VALUES).getNatural_regen_threshold_no_saturation();
+        // Todo      return player.getData(PLAYER_VALUES).getNatural_regen_threshold_no_saturation();
+        return original;
     }
 
     /******************************************
@@ -172,7 +177,7 @@ public class FoodDataMixin {
             constant = @Constant(floatValue = 4.0F)
     )
     private float useMaxExhaustion(float original, Player player) {
-        return player.getData(PLAYER_VALUES).getMax_exhaustion();
+        return (float) player.getAttribute(MAX_EXHAUSTION).getValue();
     }
 
     // Exhaustion per Heal

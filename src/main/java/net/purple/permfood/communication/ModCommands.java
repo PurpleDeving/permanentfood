@@ -8,15 +8,17 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.purple.permfood.PermanentFood;
-import net.purple.permfood.moddata.PlayerValues;
+import net.purple.permfood.moddata.attributes.ModAttributes;
 
 import static net.purple.permfood.Constants.*;
 import static net.purple.permfood.PermanentFood.MODID;
-import static net.purple.permfood.moddata.ModData.PLAYER_VALUES;
+import static net.purple.permfood.moddata.ModData.PLAYER_ATTRIBUTES;
 
 public class ModCommands {
 
@@ -49,14 +51,28 @@ public class ModCommands {
         }
 
         ServerPlayer player = source.getPlayer();
-        assert player != null;
-        PlayerValues values = player.getData(PLAYER_VALUES);
+        AttributeMap attributeMap = player.getAttributes();
 
-        AttributeModifier modArmor = player.getAttributes().getInstance(Attributes.ARMOR).getModifier(resourceLocationFoodArmorBuff);
-        AttributeModifier modArmorTough = player.getAttributes().getInstance(Attributes.ARMOR_TOUGHNESS).getModifier(resourceLocationFoodArmorToughnessBuff);
-        AttributeModifier modAttack = player.getAttributes().getInstance(Attributes.ATTACK_DAMAGE).getModifier(resourceLocationFoodAttackDamageBuff);
-        AttributeModifier modLuck = player.getAttributes().getInstance(Attributes.LUCK).getModifier(resourceLocationFoodLuckBuff);
-        AttributeModifier modKB = player.getAttributes().getInstance(Attributes.KNOCKBACK_RESISTANCE).getModifier(resourceLocationFoodKnockbackResistanceBuff);
+        assert player != null;
+
+
+        AttributeInstance maxHunger = attributeMap.getInstance(ModAttributes.MAX_HUNGER);
+        AttributeInstance maxSaturation = attributeMap.getInstance(ModAttributes.MAX_SATURATION);
+        AttributeInstance maxExhaustion = attributeMap.getInstance(ModAttributes.MAX_EXHAUSTION);
+        AttributeModifier modHunger = maxHunger.getModifier(rLMaxHungerBuff);
+        AttributeModifier modSaturation = maxSaturation.getModifier(rLMaxSaturationBuff);
+        AttributeModifier modExhaustion = maxExhaustion.getModifier(rLMaxExhaustionBuff);
+        // TODO Rounding needed ?
+        int maxHungerAmount = (int) maxHunger.getValue();
+        double maxSaturationAmount = maxSaturation.getValue();
+        double maxExhaustionAmount = maxExhaustion.getValue();
+
+
+        AttributeModifier modArmor = attributeMap.getInstance(Attributes.ARMOR).getModifier(rLArmorBuff);
+        AttributeModifier modArmorTough = attributeMap.getInstance(Attributes.ARMOR_TOUGHNESS).getModifier(rLToughnessBuff);
+        AttributeModifier modAttack = attributeMap.getInstance(Attributes.ATTACK_DAMAGE).getModifier(rLAttackDamageBuff);
+        AttributeModifier modLuck = attributeMap.getInstance(Attributes.LUCK).getModifier(rLLuckBuff);
+        AttributeModifier modKB = attributeMap.getInstance(Attributes.KNOCKBACK_RESISTANCE).getModifier(rLKnockbackResistanceBuff);
 
         double armorAmount = modArmor != null ? modArmor.amount() : 0.0;
         double armorToughAmount = modArmorTough != null ? modArmorTough.amount() : 0.0;
@@ -65,10 +81,10 @@ public class ModCommands {
         double kbAmount = modKB != null ? modKB.amount() : 0.0;
 
         MutableComponent output = Component.literal("§6=== Stats for " + player.getName().getString() + " ===\n")
-                .append("§7Unique Foods Eaten: §f" + values.getFoodCount() + "\n")
-                .append("§7Max Hunger: §f" + values.getMax_hunger() + "\n")
-                .append("§7Max Saturation: §f" + values.getMax_saturation() + "\n")
-                .append("§7Max Exhaustion: §f" + values.getMax_exhaustion() + "\n")
+                .append("§7Unique Foods Eaten: §f" + player.getData(PLAYER_ATTRIBUTES).getFoodCount() + "\n")
+                .append("§7Max Hunger: §f" + maxHungerAmount + " including a Food Buff of: " + modHunger.amount() + "\n")
+                .append("§7Max Saturation: §f" + maxSaturationAmount + " including a Food Buff of: " + modSaturation.amount() + "\n")
+                .append("§7Max Exhaustion: §f" + maxExhaustionAmount + " including a Food Buff of: " + modExhaustion.amount() + "\n")
                 .append("§7Armor Food Bonus: §f" + armorAmount + "\n")
                 .append("§7Armor Toughness Food Bonus: §f" + armorToughAmount + "\n")
                 .append("§7Attack Damage Food Bonus: §f" + attackAmount + "\n")

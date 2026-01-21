@@ -15,10 +15,13 @@ public class Constants {
     public static final float VANILLA_MAX_EXHAUSTION = 4.0F;
     public static final String MOD_AUTHOR_LONG = "Purple Dev";
 
-    public static ResourceLocation resourceLocationFoodArmorBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_armor_buff");
-    public static ResourceLocation resourceLocationFoodArmorToughnessBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_armor_toughness_buff");
-    public static ResourceLocation resourceLocationFoodAttackDamageBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_attack_damage_buff");
-    public static ResourceLocation resourceLocationFoodLuckBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_luck_buff");
-    public static ResourceLocation resourceLocationFoodKnockbackResistanceBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_knockback_resistance_buff");
+    public static ResourceLocation rLMaxHungerBuff = ResourceLocation.fromNamespaceAndPath(MODID, "max_hunger_buff");
+    public static ResourceLocation rLMaxSaturationBuff = ResourceLocation.fromNamespaceAndPath(MODID, "max_saturation_buff");
+    public static ResourceLocation rLMaxExhaustionBuff = ResourceLocation.fromNamespaceAndPath(MODID, "max_exhaustion_buff");
+    public static ResourceLocation rLArmorBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_armor_buff");
+    public static ResourceLocation rLToughnessBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_armor_toughness_buff");
+    public static ResourceLocation rLAttackDamageBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_attack_damage_buff");
+    public static ResourceLocation rLLuckBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_luck_buff");
+    public static ResourceLocation rLKnockbackResistanceBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_knockback_resistance_buff");
 
 }
