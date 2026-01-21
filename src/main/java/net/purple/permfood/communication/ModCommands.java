@@ -15,10 +15,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.purple.permfood.PermanentFood;
 import net.purple.permfood.moddata.attributes.ModAttributes;
+import net.purple.permfood.moddata.attributes.PlayerAttributes;
 
 import static net.purple.permfood.Constants.*;
 import static net.purple.permfood.PermanentFood.MODID;
-import static net.purple.permfood.moddata.ModData.PLAYER_ATTRIBUTES;
 
 public class ModCommands {
 
@@ -81,7 +81,7 @@ public class ModCommands {
         double kbAmount = modKB != null ? modKB.amount() : 0.0;
 
         MutableComponent output = Component.literal("§6=== Stats for " + player.getName().getString() + " ===\n")
-                .append("§7Unique Foods Eaten: §f" + player.getData(PLAYER_ATTRIBUTES).getFoodCount() + "\n")
+                .append("§7Unique Foods Eaten: §f" + PlayerAttributes.getPlayerAttributes(player).getFoodCount() + "\n")
                 .append("§7Max Hunger: §f" + maxHungerAmount + " including a Food Buff of: " + modHunger.amount() + "\n")
                 .append("§7Max Saturation: §f" + maxSaturationAmount + " including a Food Buff of: " + modSaturation.amount() + "\n")
                 .append("§7Max Exhaustion: §f" + maxExhaustionAmount + " including a Food Buff of: " + modExhaustion.amount() + "\n")

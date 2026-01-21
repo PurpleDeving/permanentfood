@@ -7,13 +7,21 @@ import net.purple.permfood.config.ConfigAttributes;
 import net.purple.permfood.moddata.baseClases.PlayerFoodInstance;
 import org.jline.utils.Log;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
 import static net.purple.permfood.Constants.*;
 
 public class PlayerAttributes extends PlayerFoodInstance {
 
+
+    public static final HashMap<UUID, PlayerAttributes> PLAYER_ATTRIBUTES = new HashMap<>();
+
+    public static PlayerFoodInstance getPlayerAttributes(Player player) {
+        return PLAYER_ATTRIBUTES.get(player.getUUID());
+    }
 
     // Player Attributes
     private final PlayerAttribute max_hunger;
@@ -38,6 +46,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
         updatePerMilestone();
         updateBuffs(foodCount);
     }
+
 
     // Not in MilestoneBased in Case there are MilestoneBased with other logic
     private void updatePerMilestone() {

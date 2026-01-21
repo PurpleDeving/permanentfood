@@ -48,7 +48,7 @@ public abstract class PlayerFoodInstance {
         updateBuffs(this.getFoodCount());
     }
 
-    protected abstract void updateBuffs(int foodCount);
+    public abstract void updateBuffs(int foodCount);
 
 
     /******************************************

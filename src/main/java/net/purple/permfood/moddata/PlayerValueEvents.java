@@ -17,10 +17,11 @@ import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.purple.permfood.moddata.attributes.PlayerAttributes;
 
 import static net.purple.permfood.Constants.SOL_CARROT;
 import static net.purple.permfood.PermanentFood.MODID;
-import static net.purple.permfood.moddata.ModData.PLAYER_ATTRIBUTES;
+import static net.purple.permfood.moddata.attributes.PlayerAttributes.PLAYER_ATTRIBUTES;
 
 @EventBusSubscriber(modid = MODID)
 public final class PlayerValueEvents {
@@ -202,13 +203,15 @@ public final class PlayerValueEvents {
 
     private static void updatePlayerAttributesAndValues(Player player) {
 
-
         int foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
+
+        if (!PLAYER_ATTRIBUTES.containsKey(player.getUUID())) {
+            PLAYER_ATTRIBUTES.put(player.getUUID(), new PlayerAttributes(player, foodCount));
+        }
 
 
         // Attribute modifiers
-
-        player.getData(PLAYER_ATTRIBUTES).updateBuffs(foodCount);
+        PlayerAttributes.getPlayerAttributes(player).updateBuffs(foodCount);
 
 
     }

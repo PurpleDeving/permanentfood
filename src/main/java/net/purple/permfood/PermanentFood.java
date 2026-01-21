@@ -9,7 +9,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.purple.permfood.communication.ModCommands;
 import net.purple.permfood.config.Config;
 import net.purple.permfood.config.ConfigAttributes;
-import net.purple.permfood.moddata.ModData;
 import net.purple.permfood.moddata.attributes.ModAttributes;
 import org.slf4j.Logger;
 
@@ -25,9 +24,6 @@ public class PermanentFood {
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public PermanentFood(IEventBus modEventBus, ModContainer modContainer) {
 
-
-        //This way is needed, so that the statics are loaded
-        ModData.register(modEventBus);
 
         ModAttributes.register(modEventBus);
 
