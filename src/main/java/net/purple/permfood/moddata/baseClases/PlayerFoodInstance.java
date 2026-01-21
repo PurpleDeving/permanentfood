@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class PlayerFoodInstance {
 
     private int foodCount = 0;
-    private Player player;
+    private final Player player;
 
     private final List<MilestoneBased> MilestoneBasedList = new ArrayList<>();
 
