@@ -10,6 +10,7 @@ import net.purple.permfood.communication.ModCommands;
 import net.purple.permfood.config.Config;
 import net.purple.permfood.config.ConfigAttributes;
 import net.purple.permfood.config.ConfigStartup;
+import net.purple.permfood.config.Configs;
 import net.purple.permfood.moddata.attributes.ModAttributes;
 import org.slf4j.Logger;
 
@@ -24,6 +25,8 @@ public class PermanentFood {
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public PermanentFood(IEventBus modEventBus, ModContainer modContainer) {
+
+        Configs.init();
 
 
         ModAttributes.register(modEventBus);

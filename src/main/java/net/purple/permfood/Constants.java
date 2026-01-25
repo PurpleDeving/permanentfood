@@ -24,4 +24,6 @@ public class Constants {
     public static ResourceLocation rLLuckBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_luck_buff");
     public static ResourceLocation rLKnockbackResistanceBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_knockback_resistance_buff");
 
+    public static ResourceLocation rLHungerConfig = ResourceLocation.fromNamespaceAndPath(MODID, "hunger_config");
+
 }

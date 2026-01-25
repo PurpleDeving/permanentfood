@@ -32,6 +32,13 @@ repositories {
 
     // For CurseForge files
     maven { url = "https://cursemaven.com" }
+
+    //FuzzyConfig / KotlinForge
+    maven {url = "https://thedarkcolour.github.io/KotlinForForge/" }
+    maven {
+        name = "FzzyMaven"
+        url = uri("https://maven.fzzyhmstrs.me/")
+    }
 }
 
 base {
@@ -144,6 +151,9 @@ dependencies {
     compileOnly("curse.maven:spice-of-life-carrot-edition-277616:7374098-sources")
     runtimeOnly("curse.maven:spice-of-life-carrot-edition-277616:7374098")
 
+    // FuzzyConfig
+    implementation "me.fzzyhmstrs:fzzy_config:${fzzy_version}"
+
     //Attribute Fix
     compileOnly("curse.maven:attributefix-280510:7115922-sources")
     runtimeOnly("curse.maven:attributefix-280510:7115922")
@@ -168,7 +178,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_name               : mod_name,
             mod_license            : mod_license,
             mod_version            : mod_version,
-            sol_version            : sol_version
+            sol_version            : sol_version,
+            fzzy_version           : fzzy_version
 
     ]
     inputs.properties replaceProperties
