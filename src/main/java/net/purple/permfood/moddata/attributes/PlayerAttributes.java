@@ -75,7 +75,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
     public void updateBuffs(int foodCount) {
 
         AttributeMap attributeMap = super.getPlayer().getAttributes();
-
+/* TODO - Enable with new Config
         if (ConfigStartup.ENABLE_MAX_HUNGER_CHANGES.getAsBoolean()) {
             AttributeModifier modifier = new AttributeModifier(rLMaxHungerBuff, this.max_hunger.getAddedValue(), ADD_VALUE);
             attributeMap.getInstance(ModAttributes.MAX_HUNGER).addOrReplacePermanentModifier(modifier);
@@ -96,7 +96,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
             super.getPlayer().getAttributes().getInstance(ModAttributes.MAX_EXHAUSTION).addOrReplacePermanentModifier(modifier);
         } else {
             attributeMap.getInstance(ModAttributes.MAX_EXHAUSTION).removeModifier(rLMaxExhaustionBuff);
-        }
+        }*/
 
 
 

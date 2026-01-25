@@ -130,7 +130,7 @@ public class FoodDataMixin {
      PEACEFUL HUNGER
      ******************************************/
 
-    /// What difficulty should be used when you has HUNGER_ON_PEACEFUL on ?
+/*    /// What difficulty should be used when you has HUNGER_ON_PEACEFUL on ?
     @ModifyVariable(method = "tick",
             at = @At("STORE"),
             name = "difficulty")
@@ -138,12 +138,12 @@ public class FoodDataMixin {
         if (ENABLE_HUNGER_ON_PEACEFUL.get() && originalHungerDifficulty == Difficulty.PEACEFUL) {
             return PEACEFUL_HUNGER_DIFFICULTY.get();
         }
-        return originalHungerDifficulty;
-    }
-
-    /******************************************
+        return originalHungerDifficulty; TODO Add with new config
+    }*/
+/*
+    *//******************************************
      Natural Regeneration + NON_Natural Regeneration
-     ******************************************/
+     ******************************************//*
 
     // Hunger Threshold for Natural_Regeneration with Saturation
     @ModifyConstant(
@@ -167,9 +167,9 @@ public class FoodDataMixin {
         return original;
     }
 
-    /******************************************
+    *//******************************************
      ExhaustionLevel injecting
-     ******************************************/
+     ******************************************//*
 
     // MAX Exhaustion
     @ModifyConstant(
@@ -188,7 +188,7 @@ public class FoodDataMixin {
     )
     private float useExhaustionForHealing(float original, Player player) {
         return EXHAUSTION_PER_HEAL.get().floatValue();
-    }
+    }*/
 
 
 }
