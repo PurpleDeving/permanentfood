@@ -4,6 +4,7 @@ import com.cazsius.solcarrot.SOLCarrotConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -13,12 +14,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.purple.permfood.moddata.attributes.PlayerAttribute;
 import net.purple.permfood.moddata.attributes.PlayerAttributes;
-import net.purple.permfood.moddata.baseClases.MilestoneDiff;
-import net.purple.permfood.moddata.baseClases.PlayerFoodInstance;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static net.purple.permfood.PermanentFood.MODID;
 import static net.purple.permfood.moddata.PlayerAttributeEvents.updatePlayerAttributes;
@@ -50,48 +50,83 @@ public final class FoodSystemEvents {
     private static void handleFoodEatenServer(Player player) {
         PlayerAttributes attrs = getOrCreatePlayerAttributes(player);
 
-        Map<String, Integer> before = attrs.snapshotMilestonesReached();
-
+        // apply config + update milestone counters + apply modifiers
         updatePlayerAttributes(player);
 
-        Map<String, Integer> after = attrs.snapshotMilestonesReached();
-        List<MilestoneDiff> diffs = PlayerFoodInstance.diffMilestones(before, after);
 
-        if (!diffs.isEmpty()) {
-            celebrateMilestones(player, diffs);
-        }
+        celebrateMilestones(player, attrs);
+
     }
 
-    private static void celebrateMilestones(Player player, List<MilestoneDiff> diffs) {
-        // particles once
-        if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.serverLevel().sendParticles(
-                    ParticleTypes.HEART,
-                    serverPlayer.getX(), serverPlayer.getY() + serverPlayer.getEyeHeight(), serverPlayer.getZ(),
-                    12,
-                    0.5D, 0.5D, 0.5D,
-                    0.0D
-            );
+
+    private static void celebrateMilestones(Player player, PlayerAttributes attrs) {
+        List<PlayerAttribute> reachedMilestonesAttributes = new ArrayList<>();
+        boolean anyReachedMaximum = false;
+        for (PlayerAttribute attribute : attrs.getMilestoneBasedList()) {
+            // TODO - Resseting the previous milestone is missing. Currently triggers on all food once a milestone is reached after a restart.
+            if (attribute.advancedMilestone()) {
+                reachedMilestonesAttributes.add(attribute);
+            }
+        }
+        ServerPlayer celebratingPlayer = (ServerPlayer) player;
+
+        for (PlayerAttribute attribute : reachedMilestonesAttributes) {
+            Boolean isMaximum = false;
+            if (attribute.maxMilestonesReached()) {
+                anyReachedMaximum = true;
+                isMaximum = true;
+            }
+
+            celebrateMessage(celebratingPlayer, attribute, isMaximum);
         }
 
-        // sound once
-        player.level().playSound(null,
-                player.blockPosition(),
+        celebrateSound(celebratingPlayer);
+        celebrateParticles(anyReachedMaximum, celebratingPlayer);
+    }
+
+
+    private static void celebrateMessage(ServerPlayer celebratingPlayer, PlayerAttribute attribute, Boolean isMaximum) {
+        String bonus = String.format(java.util.Locale.ROOT, "%.2f", attribute.getAddedValue());
+
+        //TODO - Need a better way to do localization here + Naming for the attributes is messed up.
+        MutableComponent msg;
+        if (isMaximum) {
+            msg = Component.literal("Maximum milestone reached for ").append(Component.literal(attribute.getName()).withStyle(ChatFormatting.AQUA) + ".\n")
+                    .append(Component.literal("The maximum bonus is: ").withStyle(ChatFormatting.GOLD)).append(Component.literal(bonus + "."));
+        } else {
+            msg = Component.literal("Milestone reached for ").append(Component.literal(attribute.getName()).withStyle(ChatFormatting.AQUA) + ".\n")
+                    .append(Component.literal("Current bonus: ").withStyle(ChatFormatting.GREEN)).append(Component.literal(bonus + "."));
+        }
+        celebratingPlayer.sendSystemMessage(msg);
+    }
+
+    private static void celebrateSound(ServerPlayer serverPlayer) {
+        serverPlayer.level().playSound(null,
+                serverPlayer.blockPosition(),
                 SoundEvents.PLAYER_LEVELUP,
                 SoundSource.PLAYERS,
                 1.0F,
                 1.0F);
-
-        // messages: per stat per milestone crossed
-        for (MilestoneDiff diff : diffs) {
-            int delta = diff.delta();
-            for (int i = 0; i < delta; i++) {
-                player.sendSystemMessage(Component.literal("Milestone reached: ")
-                        .append(Component.literal(diff.name()).withStyle(ChatFormatting.AQUA))
-                        .append(Component.literal(" (" + (diff.oldReached() + i + 1) + ")")));
-            }
-        }
     }
 
+    private static void celebrateParticles(Boolean reachedMaximum, ServerPlayer serverPlayer) {
+        serverPlayer.serverLevel().sendParticles(
+                ParticleTypes.HEART,
+                serverPlayer.getX(), serverPlayer.getY() + serverPlayer.getEyeHeight(), serverPlayer.getZ(),
+                12,
+                0.5D, 0.5D, 0.5D,
+                0.0D
+        );
+
+        if (reachedMaximum) {
+            serverPlayer.serverLevel().sendParticles(
+                    ParticleTypes.HAPPY_VILLAGER,
+                    serverPlayer.getX(), serverPlayer.getY() + serverPlayer.getEyeHeight(), serverPlayer.getZ(),
+                    16,
+                    0.5D, 0.5D, 0.5D,
+                    0.0D
+            );
+        }
+    }
 
 }

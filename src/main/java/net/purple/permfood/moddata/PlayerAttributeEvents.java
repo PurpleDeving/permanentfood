@@ -83,7 +83,7 @@ public class PlayerAttributeEvents {
     }
 
 
-    protected static void updatePlayerAttributes(Player player) {
+    protected static void updatePlayerAttributes(Player player) { //TODO - Isnt this double with the other one? with this getOrCreatePlayerAttributes
 
         int foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
 

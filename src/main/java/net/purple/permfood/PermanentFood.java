@@ -38,6 +38,4 @@ public class PermanentFood {
 
     // TODO Add Milestone Reached Message
 
-    //TODO Add real dependency > Dont run without
-
 }
