@@ -18,5 +18,7 @@
   "permanentfood.configuration.items": "Item List",
   "permanentfood.configuration.logDirtBlock": "Log Dirt Block",
   "permanentfood.configuration.magicNumberIntroduction": "Magic Number Text",
-  "permanentfood.configuration.magicNumber": "Magic Number"
+  "permanentfood.configuration.magicNumber": "Magic Number",
+  "foodsystem.prefix": "Ernährungssystem Einstellungen",
+  "foodsystem.prefix.hunger": "Hunger Settings"
 }

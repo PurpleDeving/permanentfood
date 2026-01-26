@@ -10,14 +10,18 @@ import static net.purple.permfood.PermanentFood.MODID;
 
 public class ConfigLanguageProvider extends LanguageProvider {
 
-    public ConfigLanguageProvider(PackOutput output) {
-        super(output, MODID, "en_us");
+    private final String locale;
+
+    public ConfigLanguageProvider(PackOutput output, String locale) {
+        super(output, MODID, locale);
+        this.locale = locale;
     }
 
     @Override
     protected void addTranslations() {
 
-        ConfigApiJava.buildTranslations(FoodSystemConfig.class, Constants.rLHungerConfig, "en_us", true, super::add);
+        ConfigApiJava.buildTranslations(FoodSystemConfig.class, Constants.rLFoodSystemConfig, this.locale, true, super::add);
+
     }
 
 }

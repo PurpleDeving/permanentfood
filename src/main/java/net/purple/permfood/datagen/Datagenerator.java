@@ -1,11 +1,8 @@
 package net.purple.permfood.datagen;
 
-import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.purple.permfood.Constants;
-import net.purple.permfood.config.FoodSystemConfig;
 
 import static net.purple.permfood.PermanentFood.MODID;
 
@@ -17,7 +14,9 @@ public class Datagenerator {
     public static void onGatherData(GatherDataEvent event) {
         // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
 
-        event.createProvider(ConfigLanguageProvider::new);
+        event.createProvider(context -> new ConfigLanguageProvider(context, "de_de"));
+        event.createProvider(context -> new ConfigLanguageProvider(context, "en_us"));
+
     }
 
 }

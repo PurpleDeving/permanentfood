@@ -3,13 +3,13 @@ package net.purple.permfood.mixin;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.purple.permfood.config.Configs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import static net.purple.permfood.config.Config.ENABLE_HUNGER_ON_PEACEFUL;
 import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_SATURATION;
 
 @Mixin(Player.class)
@@ -30,7 +30,7 @@ public abstract class PlayerMixin {
     private Difficulty changeNaturalRegenAccordingToPeacefulHunger(Level level) {
 
 
-        if (ENABLE_HUNGER_ON_PEACEFUL.get()) {
+        if (Configs.fooodSystemConfig.peacefulHungerSection.ENABLE_HUNGER_ON_PEACEFUL) {
             // Correct difficulty doesn't matter. If you want Hunger_on_Peaceful, then we can just return anything that is not peaceful
             return Difficulty.EASY;
         }

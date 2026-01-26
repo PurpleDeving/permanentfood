@@ -18,7 +18,7 @@ public class PlayerAttributeEvents {
         FoodSystemConfig.HungerSection hungerSection = new FoodSystemConfig.HungerSection();
 
         if (hungerSection.ENABLE_HUNGER_CHANGES) {
-            event.add(EntityType.PLAYER, MAX_HUNGER, hungerSection.baseHunger);
+            event.add(EntityType.PLAYER, MAX_HUNGER, hungerSection.baseHunger.get());
         }
 /*
         if (ConfigStartup.ENABLE_MAX_SATURATION_CHANGES.get()) {

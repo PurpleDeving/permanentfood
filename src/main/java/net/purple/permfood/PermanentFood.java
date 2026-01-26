@@ -35,11 +35,11 @@ public class PermanentFood {
         // Commands
         NeoForge.EVENT_BUS.addListener(ModCommands::onCommandRegister);
 
+
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC, MODID + ".toml");
         modContainer.registerConfig(ModConfig.Type.STARTUP, ConfigStartup.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, ConfigAttributes.SPEC, MODID + "_attributes.toml");
-
 
     }
 
