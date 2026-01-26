@@ -5,7 +5,8 @@ import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 
 public class Configs {
 
-    public static FoodSystemConfig fooodSystemConfig = ConfigApiJava.registerAndLoadConfig(FoodSystemConfig::new, RegisterType.BOTH);
+    public static FoodSystemConfig foodSystemConfig = ConfigApiJava.registerAndLoadConfig(FoodSystemConfig::new, RegisterType.BOTH);
+    public static AttributesConfig attributesConfig = ConfigApiJava.registerAndLoadConfig(AttributesConfig::new, RegisterType.BOTH);
 
     public static void init() {}
 

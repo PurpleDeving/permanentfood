@@ -11,6 +11,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.purple.permfood.config.Configs;
 import net.purple.permfood.moddata.attributes.ModAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,8 +19,6 @@ import org.spongepowered.asm.mixin.injection.*;
 
 import java.util.List;
 
-import static net.purple.permfood.config.Config.ENABLE_HUNGER_ON_PEACEFUL;
-import static net.purple.permfood.config.Config.PEACEFUL_HUNGER_DIFFICULTY;
 import static net.purple.permfood.config.ConfigAttributes.EXHAUSTION_PER_HEAL;
 import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_EXHAUSTION;
 import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_SATURATION;
@@ -48,7 +47,7 @@ public class FoodDataMixin {
     )
     private int fixAddWithMaxHunger(int original) {
         permanentfood_1_21_1$validatePlayer();
-        return (int) this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue(); //TODO Rounding ?
+        return (int) Math.round(this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue());
     }
 
     @Unique
@@ -103,7 +102,7 @@ public class FoodDataMixin {
 
         permanentfood_1_21_1$validatePlayer();
 
-        return (int) this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue(); //TODO Rounding ?
+        return (int) Math.round(this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue());
     }
 
 
@@ -130,20 +129,20 @@ public class FoodDataMixin {
      PEACEFUL HUNGER
      ******************************************/
 
-/*    /// What difficulty should be used when you has HUNGER_ON_PEACEFUL on ?
+    /// What difficulty should be used when you has HUNGER_ON_PEACEFUL on ?
     @ModifyVariable(method = "tick",
             at = @At("STORE"),
             name = "difficulty")
     private Difficulty peaceful_hunger$tick$getDifficulty(Difficulty originalHungerDifficulty) {
-        if (ENABLE_HUNGER_ON_PEACEFUL.get() && originalHungerDifficulty == Difficulty.PEACEFUL) {
-            return PEACEFUL_HUNGER_DIFFICULTY.get();
+        if (Configs.foodSystemConfig.peacefulHungerSection.ENABLE_HUNGER_ON_PEACEFUL && originalHungerDifficulty == Difficulty.PEACEFUL) {
+            return Configs.foodSystemConfig.peacefulHungerSection.PEACEFUL_HUNGER_DIFFICULTY.get();
         }
-        return originalHungerDifficulty; TODO Add with new config
-    }*/
-/*
-    *//******************************************
+        return originalHungerDifficulty;
+    }
+
+    /******************************************
      Natural Regeneration + NON_Natural Regeneration
-     ******************************************//*
+     ******************************************/
 
     // Hunger Threshold for Natural_Regeneration with Saturation
     @ModifyConstant(
@@ -167,9 +166,9 @@ public class FoodDataMixin {
         return original;
     }
 
-    *//******************************************
+    /******************************************
      ExhaustionLevel injecting
-     ******************************************//*
+     ******************************************/
 
     // MAX Exhaustion
     @ModifyConstant(
@@ -188,7 +187,7 @@ public class FoodDataMixin {
     )
     private float useExhaustionForHealing(float original, Player player) {
         return EXHAUSTION_PER_HEAL.get().floatValue();
-    }*/
+    }
 
 
 }

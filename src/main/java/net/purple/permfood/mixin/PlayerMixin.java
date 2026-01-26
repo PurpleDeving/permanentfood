@@ -30,7 +30,7 @@ public abstract class PlayerMixin {
     private Difficulty changeNaturalRegenAccordingToPeacefulHunger(Level level) {
 
 
-        if (Configs.fooodSystemConfig.peacefulHungerSection.ENABLE_HUNGER_ON_PEACEFUL) {
+        if (Configs.foodSystemConfig.peacefulHungerSection.ENABLE_HUNGER_ON_PEACEFUL) {
             // Correct difficulty doesn't matter. If you want Hunger_on_Peaceful, then we can just return anything that is not peaceful
             return Difficulty.EASY;
         }

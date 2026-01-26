@@ -7,9 +7,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.purple.permfood.communication.ModCommands;
-import net.purple.permfood.config.Config;
 import net.purple.permfood.config.ConfigAttributes;
-import net.purple.permfood.config.ConfigStartup;
 import net.purple.permfood.config.Configs;
 import net.purple.permfood.moddata.attributes.ModAttributes;
 import org.slf4j.Logger;
@@ -37,8 +35,6 @@ public class PermanentFood {
 
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC, MODID + ".toml");
-        modContainer.registerConfig(ModConfig.Type.STARTUP, ConfigStartup.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, ConfigAttributes.SPEC, MODID + "_attributes.toml");
 
     }

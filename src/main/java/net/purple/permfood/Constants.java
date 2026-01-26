@@ -25,5 +25,6 @@ public class Constants {
     public static ResourceLocation rLKnockbackResistanceBuff = ResourceLocation.fromNamespaceAndPath(MODID, "food_knockback_resistance_buff");
 
     public static ResourceLocation rLFoodSystemConfig = ResourceLocation.fromNamespaceAndPath(MODID, "food_system_config");
+    public static ResourceLocation rLAttributeConfig = ResourceLocation.fromNamespaceAndPath(MODID, "attribute_config");
 
 }
