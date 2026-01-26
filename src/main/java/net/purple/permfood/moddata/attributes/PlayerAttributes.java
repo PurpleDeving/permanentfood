@@ -3,8 +3,9 @@ package net.purple.permfood.moddata.attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.purple.permfood.config.ConfigAttributes;
-import net.purple.permfood.config.ConfigStartup;
+import net.purple.permfood.config.AttributeConfig;
+import net.purple.permfood.config.Configs;
+import net.purple.permfood.config.FoodSystemConfig;
 import net.purple.permfood.moddata.baseClases.PlayerFoodInstance;
 import org.jline.utils.Log;
 
@@ -51,17 +52,19 @@ public class PlayerAttributes extends PlayerFoodInstance {
 
     // Not in MilestoneBased in Case there are MilestoneBased with other logic
     private void updatePerMilestone() {
-        this.max_hunger.setValuePerMilestone(ConfigAttributes.MAX_HUNGER_PER_MILESTONE.getAsInt());
-        this.max_saturation.setValuePerMilestone(ConfigAttributes.MAX_SATURATION_PER_MILESTONE.getAsDouble());
-        this.max_exhaustion.setValuePerMilestone(ConfigAttributes.MAX_EXHAUSTION_PER_MILESTONE.getAsDouble());
+        FoodSystemConfig config = Configs.foodSystemConfig;
+        this.max_hunger.setValuePerMilestone(config.sectionHunger.perMilestoneHunger.get());
+        this.max_saturation.setValuePerMilestone(config.sectionSaturation.perMilestoneSaturation.get());
+        this.max_exhaustion.setValuePerMilestone(config.sectionExhaustion.perMilestoneExhaustion.get());
     }
 
 
     @Override
     protected void updateMilestones() {
-        this.max_hunger.updateMilestones(ConfigAttributes.MILESTONES_FOR_MAX_HUNGER.get());
-        this.max_saturation.updateMilestones(ConfigAttributes.MILESTONES_FOR_MAX_SATURATION.get());
-        this.max_exhaustion.updateMilestones(ConfigAttributes.MILESTONES_FOR_MAX_EXHAUSTION.get());
+        FoodSystemConfig config = Configs.foodSystemConfig;
+        this.max_hunger.updateMilestones(config.sectionHunger.milestonesHunger.get());
+        this.max_saturation.updateMilestones(config.sectionSaturation.milestonesSaturation.get());
+        this.max_exhaustion.updateMilestones(config.sectionExhaustion.milestonesExhaustion.get());
     }
 
 
@@ -75,15 +78,18 @@ public class PlayerAttributes extends PlayerFoodInstance {
     public void updateBuffs(int foodCount) {
 
         AttributeMap attributeMap = super.getPlayer().getAttributes();
-/* TODO - Enable with new Config
-        if (ConfigStartup.ENABLE_MAX_HUNGER_CHANGES.getAsBoolean()) {
+        AttributeConfig attributeConfig = Configs.attributesConfig;
+        FoodSystemConfig foodConfig = Configs.foodSystemConfig;
+
+        if (foodConfig.sectionHunger.ENABLE_HUNGER_CHANGES) {
             AttributeModifier modifier = new AttributeModifier(rLMaxHungerBuff, this.max_hunger.getAddedValue(), ADD_VALUE);
             attributeMap.getInstance(ModAttributes.MAX_HUNGER).addOrReplacePermanentModifier(modifier);
         } else {
             attributeMap.getInstance(ModAttributes.MAX_HUNGER).removeModifier(rLMaxHungerBuff);
         }
 
-        if (ConfigStartup.ENABLE_MAX_SATURATION_CHANGES.getAsBoolean()) {
+
+        if (foodConfig.sectionSaturation.ENABLE_SATURATION_CHANGES) {
             AttributeModifier modifier = new AttributeModifier(rLMaxSaturationBuff, this.max_saturation.getAddedValue(), ADD_VALUE);
             super.getPlayer().getAttributes().getInstance(ModAttributes.MAX_SATURATION).addOrReplacePermanentModifier(modifier);
         } else {
@@ -91,16 +97,16 @@ public class PlayerAttributes extends PlayerFoodInstance {
         }
 
 
-        if (ConfigStartup.ENABLE_MAX_EXHAUSTION_CHANGES.getAsBoolean()) {
+        if (foodConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES) {
             AttributeModifier modifier = new AttributeModifier(rLMaxExhaustionBuff, this.max_exhaustion.getAddedValue(), ADD_VALUE);
             super.getPlayer().getAttributes().getInstance(ModAttributes.MAX_EXHAUSTION).addOrReplacePermanentModifier(modifier);
         } else {
             attributeMap.getInstance(ModAttributes.MAX_EXHAUSTION).removeModifier(rLMaxExhaustionBuff);
-        }*/
+        }
 
+        /* TODO Fix Attribute part.
 
-
-/*        if (ConfigAttributes.ENABLE_ARMOR_CHANGES.getAsBoolean()) {
+        if (ConfigAttributes.ENABLE_ARMOR_CHANGES.getAsBoolean()) {
 
             double amount_armor = PlayerValue.getAttributeValue(ConfigAttributes.ARMOR_PER_MILESTONE.getAsDouble(), ConfigAttributes.MILESTONES_FOR_ARMOR.get(), foodCount);
             AttributeModifier modifier_armor = new AttributeModifier(resourceLocationFoodArmorBuff, amount_armor, ADD_VALUE);
@@ -128,7 +134,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
             AttributeModifier modifier_kb = new AttributeModifier(resourceLocationFoodKnockbackResistanceBuff, amount_kb, ADD_VALUE);
             // Use KNOCKBACK_RESISTANCE attribute (constant name depends on mappings)
             player.getAttributes().getInstance(Attributes.KNOCKBACK_RESISTANCE).addOrReplacePermanentModifier(modifier_kb);
-        }*/
+        } */
 
     }
 

@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.*;
 
 import java.util.List;
 
-import static net.purple.permfood.config.ConfigAttributes.EXHAUSTION_PER_HEAL;
 import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_EXHAUSTION;
 import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_SATURATION;
 
@@ -186,7 +185,7 @@ public class FoodDataMixin {
             constant = @Constant(floatValue = 6.0F)
     )
     private float useExhaustionForHealing(float original, Player player) {
-        return EXHAUSTION_PER_HEAL.get().floatValue();
+        return Configs.foodSystemConfig.sectionExhaustion.exhaustion_per_Heal.get();
     }
 
 

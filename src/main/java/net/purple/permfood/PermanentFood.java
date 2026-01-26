@@ -4,10 +4,8 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.purple.permfood.communication.ModCommands;
-import net.purple.permfood.config.ConfigAttributes;
 import net.purple.permfood.config.Configs;
 import net.purple.permfood.moddata.attributes.ModAttributes;
 import org.slf4j.Logger;
@@ -33,9 +31,6 @@ public class PermanentFood {
         // Commands
         NeoForge.EVENT_BUS.addListener(ModCommands::onCommandRegister);
 
-
-        // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        modContainer.registerConfig(ModConfig.Type.SERVER, ConfigAttributes.SPEC, MODID + "_attributes.toml");
 
     }
 

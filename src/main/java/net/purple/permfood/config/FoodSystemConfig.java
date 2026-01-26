@@ -128,12 +128,16 @@ public class FoodSystemConfig extends me.fzzyhmstrs.fzzy_config.config.Config {
 
         @Desc("The Amount of max Exhaustion gained per Milestone reached. \n" +
                 "Higher values will make each Milestone more impactful.")
-        public ValidatedFloat perMilestoneSaturation = new ValidatedFloat(2.0F, 100, 0, ValidatedNumber.WidgetType.TEXTBOX);
+        public ValidatedFloat perMilestoneExhaustion = new ValidatedFloat(2.0F, 100, 0, ValidatedNumber.WidgetType.TEXTBOX);
 
         @Desc("The Amount of unique Foods eaten needed to reach the different Milestones. \n" +
                 "More Milestones will let you earn more max Exhaustion.\n" +
                 "Must be in order from smallest to largest.")
-        public ValidatedList<Integer> milestonesSaturation = ValidatedList.ofInt(5, 10, 15, 20);
+        public ValidatedList<Integer> milestonesExhaustion = ValidatedList.ofInt(5, 10, 15, 20);
+
+
+        @Desc("Amount of exhaustion applied to the player when they heal one heart. Higher values increase exhaustion cost for healing. Vanilla default is 6.0.")
+        public ValidatedFloat exhaustion_per_Heal = new ValidatedFloat(6.0F, 1000.0F, 0.1F, ValidatedNumber.WidgetType.TEXTBOX);
     }
 
 

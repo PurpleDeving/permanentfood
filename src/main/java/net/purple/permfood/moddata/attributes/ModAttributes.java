@@ -75,6 +75,7 @@ public class ModAttributes {
 
     });
 
+
     public static void register(IEventBus modEventBus) {
         ATTRIBUTES.register(modEventBus);
     }
