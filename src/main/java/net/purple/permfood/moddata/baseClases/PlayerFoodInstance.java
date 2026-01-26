@@ -1,11 +1,11 @@
 package net.purple.permfood.moddata.baseClases;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.world.entity.player.Player;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class PlayerFoodInstance {
 
@@ -31,6 +31,33 @@ public abstract class PlayerFoodInstance {
         return MilestoneBasedList;
     }
 
+    /**
+     * Takes an in-memory snapshot of the current state of milestones.
+     * Keyed by {@link MilestoneBased#getName()}.
+     */
+    public Map<String, Integer> snapshotMilestonesReached() {
+        Map<String, Integer> snapshot = new HashMap<>();
+        for (MilestoneBased milestoneBased : getMilestoneBasedList()) {
+            snapshot.put(milestoneBased.getName(), milestoneBased.getMilestonesReached());
+        }
+        return snapshot;
+    }
+
+    /**
+     * Compares two milestone snapshots and returns the stats that advanced.
+     */
+    public static List<MilestoneDiff> diffMilestones(Map<String, Integer> before, Map<String, Integer> after) {
+        List<MilestoneDiff> diffs = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : after.entrySet()) {
+            String name = entry.getKey();
+            int afterValue = entry.getValue() == null ? 0 : entry.getValue();
+            int beforeValue = before.getOrDefault(name, 0);
+            if (afterValue > beforeValue) {
+                diffs.add(new MilestoneDiff(name, beforeValue, afterValue));
+            }
+        }
+        return diffs;
+    }
 
     /******************************************
      Enforce Behaivor
@@ -50,29 +77,6 @@ public abstract class PlayerFoodInstance {
 
     public abstract void updateBuffs(int foodCount);
 
-
-    /******************************************
-     Networking
-     ******************************************/
-
-    // Write all fields to the ByteBuf so the client receives exact values from the server
-    public void writeToBuf(ByteBuf buf) {
-        buf.writeInt(this.foodCount);
-    }
-
-    public static PlayerFoodInstance readFromBuf(ByteBuf buf, Class<? extends PlayerFoodInstance> clazz, Player player) {
-
-        int foodCount = buf.readInt();
-
-        try {
-            Constructor<? extends PlayerFoodInstance> constructor = clazz.getConstructor(Integer.class);
-            return constructor.newInstance(player, foodCount);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create instance of " + clazz.getSimpleName(), e);
-        }
-
-
-    }
 
     public Player getPlayer() {
         return this.player;

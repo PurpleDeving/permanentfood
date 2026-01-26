@@ -1,13 +1,13 @@
 package net.purple.permfood.moddata.attributes;
 
+import com.cazsius.solcarrot.tracking.FoodList;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.purple.permfood.config.AttributeConfig;
+import net.purple.permfood.PermanentFood;
 import net.purple.permfood.config.Configs;
 import net.purple.permfood.config.FoodSystemConfig;
 import net.purple.permfood.moddata.baseClases.PlayerFoodInstance;
-import org.jline.utils.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
 
     public static final HashMap<UUID, PlayerAttributes> PLAYER_ATTRIBUTES = new HashMap<>();
 
-    public static PlayerFoodInstance getPlayerAttributes(Player player) {
+    public static PlayerAttributes getPlayerAttributes(Player player) {
         return PLAYER_ATTRIBUTES.get(player.getUUID());
     }
 
@@ -34,30 +34,22 @@ public class PlayerAttributes extends PlayerFoodInstance {
         super(player);
 
         if (player == null) {
-            Log.warn("Niklas Idiot > PLAYER_ATTRIBUTES IS BROKEN");
+            PermanentFood.LOG.warn("Something went wrong while creating PlayerAttributes: Player is null");
         }
 
         this.max_hunger = new PlayerAttribute(ModAttributes.MAX_HUNGER);
         this.addMilestoneBased(max_hunger);
-        this.max_saturation = new PlayerAttribute(ModAttributes.MAX_HUNGER);
-        this.addMilestoneBased(max_hunger);
-        this.max_exhaustion = new PlayerAttribute(ModAttributes.MAX_HUNGER);
-        this.addMilestoneBased(max_hunger);
+
+        this.max_saturation = new PlayerAttribute(ModAttributes.MAX_SATURATION);
+        this.addMilestoneBased(max_saturation);
+
+        this.max_exhaustion = new PlayerAttribute(ModAttributes.MAX_EXHAUSTION);
+        this.addMilestoneBased(max_exhaustion);
 
         updateMilestones();
         updatePerMilestone();
         updateBuffs(foodCount);
     }
-
-
-    // Not in MilestoneBased in Case there are MilestoneBased with other logic
-    private void updatePerMilestone() {
-        FoodSystemConfig config = Configs.foodSystemConfig;
-        this.max_hunger.setValuePerMilestone(config.sectionHunger.perMilestoneHunger.get());
-        this.max_saturation.setValuePerMilestone(config.sectionSaturation.perMilestoneSaturation.get());
-        this.max_exhaustion.setValuePerMilestone(config.sectionExhaustion.perMilestoneExhaustion.get());
-    }
-
 
     @Override
     protected void updateMilestones() {
@@ -65,6 +57,15 @@ public class PlayerAttributes extends PlayerFoodInstance {
         this.max_hunger.updateMilestones(config.sectionHunger.milestonesHunger.get());
         this.max_saturation.updateMilestones(config.sectionSaturation.milestonesSaturation.get());
         this.max_exhaustion.updateMilestones(config.sectionExhaustion.milestonesExhaustion.get());
+    }
+
+    // Not in MilestoneBased in Case there are MilestoneBased with other logic
+    private void updatePerMilestone() {
+        FoodSystemConfig config = Configs.foodSystemConfig;
+        this.max_hunger.setValuePerMilestone(config.sectionHunger.perMilestoneHunger.get());
+        this.max_saturation.setValuePerMilestone(config.sectionSaturation.perMilestoneSaturation.get());
+        this.max_exhaustion.setValuePerMilestone(config.sectionExhaustion.perMilestoneExhaustion.get());
+        // TODO > Add existing attributes here
     }
 
 
@@ -77,8 +78,12 @@ public class PlayerAttributes extends PlayerFoodInstance {
     @Override
     public void updateBuffs(int foodCount) {
 
+        // ensure milestone counts are always up-to-date before computing added values
+        for (PlayerAttribute attribute : getMilestoneBasedList()) {
+            attribute.updateMilestonesReached(foodCount);
+        }
+
         AttributeMap attributeMap = super.getPlayer().getAttributes();
-        AttributeConfig attributeConfig = Configs.attributesConfig;
         FoodSystemConfig foodConfig = Configs.foodSystemConfig;
 
         if (foodConfig.sectionHunger.ENABLE_HUNGER_CHANGES) {
@@ -88,14 +93,12 @@ public class PlayerAttributes extends PlayerFoodInstance {
             attributeMap.getInstance(ModAttributes.MAX_HUNGER).removeModifier(rLMaxHungerBuff);
         }
 
-
         if (foodConfig.sectionSaturation.ENABLE_SATURATION_CHANGES) {
             AttributeModifier modifier = new AttributeModifier(rLMaxSaturationBuff, this.max_saturation.getAddedValue(), ADD_VALUE);
             super.getPlayer().getAttributes().getInstance(ModAttributes.MAX_SATURATION).addOrReplacePermanentModifier(modifier);
         } else {
             attributeMap.getInstance(ModAttributes.MAX_SATURATION).removeModifier(rLMaxSaturationBuff);
         }
-
 
         if (foodConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES) {
             AttributeModifier modifier = new AttributeModifier(rLMaxExhaustionBuff, this.max_exhaustion.getAddedValue(), ADD_VALUE);
@@ -136,6 +139,14 @@ public class PlayerAttributes extends PlayerFoodInstance {
             player.getAttributes().getInstance(Attributes.KNOCKBACK_RESISTANCE).addOrReplacePermanentModifier(modifier_kb);
         } */
 
+    }
+
+    public static PlayerAttributes getOrCreatePlayerAttributes(Player player) {
+        if (!PLAYER_ATTRIBUTES.containsKey(player.getUUID())) {
+            int foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
+            PLAYER_ATTRIBUTES.put(player.getUUID(), new PlayerAttributes(player, foodCount));
+        }
+        return (PlayerAttributes) PlayerAttributes.getPlayerAttributes(player);
     }
 
 
