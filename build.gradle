@@ -34,7 +34,7 @@ repositories {
     maven { url = "https://cursemaven.com" }
 
     //FuzzyConfig / KotlinForge
-    maven {url = "https://thedarkcolour.github.io/KotlinForForge/" }
+    maven { url = "https://thedarkcolour.github.io/KotlinForForge/" }
     maven {
         name = "FzzyMaven"
         url = uri("https://maven.fzzyhmstrs.me/")
@@ -117,6 +117,11 @@ neoForge {
         "${mod_id}" {
             sourceSet(sourceSets.main)
         }
+
+        // Second mod entry living in the same jar/source set
+        "${solextended_mod_id}" {
+            sourceSet(sourceSets.main)
+        }
     }
 }
 
@@ -147,10 +152,6 @@ dependencies {
 
     // Runtimes are for testing only
 
-    //Spice-of-life solcarrot
-    compileOnly("curse.maven:spice-of-life-carrot-edition-277616:7374098-sources")
-    runtimeOnly("curse.maven:spice-of-life-carrot-edition-277616:7374098")
-
     // FuzzyConfig
     implementation "me.fzzyhmstrs:fzzy_config:${fzzy_version}"
 
@@ -178,8 +179,13 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_name               : mod_name,
             mod_license            : mod_license,
             mod_version            : mod_version,
-            sol_version            : sol_version,
-            fzzy_version           : fzzy_version
+            fzzy_version           : fzzy_version,
+            fzzy_mod_id            : fzzy_mod_id,
+
+            // SolExtended (embedded companion mod)
+            solextended_mod_id     : solextended_mod_id,
+            solextended_name       : solextended_name,
+            solextended_version    : solextended_version
 
     ]
     inputs.properties replaceProperties

@@ -4,9 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "FoodBookScreenMixin",
-    "FoodDataMixin",
     "FoodListCommandMixin",
-    "PlayerMixin"
+    "backup.mixin.FoodDataMixin",
+    "backup.mixin.PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
