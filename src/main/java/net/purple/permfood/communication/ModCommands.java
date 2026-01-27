@@ -45,7 +45,7 @@ public class ModCommands {
 
         // Check if source is a player
         if (!source.isPlayer()) {
-            PermanentFood.LOG.warn("§cThis command can only be executed by a player! 543");
+            PermanentFood.LOG.warn("§cThis command can only be executed by a player!");
             source.sendFailure(Component.literal("§cThis command can only be executed by a player!"));
             return 0;
         }

@@ -14,8 +14,9 @@ public abstract class PlayerFoodInstance {
 
     private final List<MilestoneBased> MilestoneBasedList = new ArrayList<>();
 
-    public PlayerFoodInstance(Player player) {
+    public PlayerFoodInstance(Player player, int foodCount) {
         this.player = player;
+        this.foodCount = foodCount;
     }
 
     public int getFoodCount() {

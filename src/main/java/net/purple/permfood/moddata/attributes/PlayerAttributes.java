@@ -28,7 +28,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
 
 
     public PlayerAttributes(Player player, int foodCount) {
-        super(player);
+        super(player, foodCount);
 
         if (player == null) {
             PermanentFood.LOG.warn("Something went wrong while creating PlayerAttributes: Player is null");
@@ -65,7 +65,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
         this.max_exhaustion.setValuePerMilestone(config.sectionExhaustion.perMilestoneExhaustion.get());
         // TODO > Add existing attributes here
     }
-    
+
 
     public static PlayerAttributes getOrCreatePlayerAttributes(Player player) {
         if (!PLAYER_ATTRIBUTES.containsKey(player.getUUID())) {
