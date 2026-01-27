@@ -19,7 +19,6 @@ import net.purple.permfood.moddata.attributes.PlayerAttributes;
 import static net.purple.permfood.Constants.SOL_CARROT;
 import static net.purple.permfood.PermanentFood.MODID;
 import static net.purple.permfood.moddata.attributes.ModAttributes.MAX_HUNGER;
-import static net.purple.permfood.moddata.attributes.PlayerAttributes.PLAYER_ATTRIBUTES;
 
 @EventBusSubscriber(modid = MODID)
 public class PlayerAttributeEvents {
@@ -83,15 +82,13 @@ public class PlayerAttributeEvents {
     }
 
 
-    protected static void updatePlayerAttributes(Player player) { //TODO - Isnt this double with the other one? with this getOrCreatePlayerAttributes
-
+    /**
+     * Ensures the player's {@link PlayerAttributes} exist and then updates its buffs based on current food count.
+     */
+    protected static void updatePlayerAttributes(Player player) {
         int foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
-
-        if (!PLAYER_ATTRIBUTES.containsKey(player.getUUID())) {
-            PLAYER_ATTRIBUTES.put(player.getUUID(), new PlayerAttributes(player, foodCount));
-        }
-
-        PlayerAttributes.getPlayerAttributes(player).updateBuffs(foodCount);
+        PlayerAttributes attributes = PlayerAttributes.getOrCreatePlayerAttributes(player);
+        attributes.updateBuffs(foodCount);
     }
 
 }

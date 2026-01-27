@@ -81,7 +81,7 @@ public class ModCommands {
         double kbAmount = modKB != null ? modKB.amount() : 0.0;
 
         MutableComponent output = Component.literal("§6=== Stats for " + player.getName().getString() + " ===\n")
-                .append("§7Unique Foods Eaten: §f" + PlayerAttributes.getPlayerAttributes(player).getFoodCount() + "\n")
+                .append("§7Unique Foods Eaten: §f" + PlayerAttributes.getOrCreatePlayerAttributes(player).getFoodCount() + "\n")
                 .append("§7Max Hunger: §f" + maxHungerAmount + " including a Food Buff of: " + modHunger.amount() + "\n")
                 .append("§7Max Saturation: §f" + maxSaturationAmount + " including a Food Buff of: " + modSaturation.amount() + "\n")
                 .append("§7Max Exhaustion: §f" + maxExhaustionAmount + " including a Food Buff of: " + modExhaustion.amount() + "\n")

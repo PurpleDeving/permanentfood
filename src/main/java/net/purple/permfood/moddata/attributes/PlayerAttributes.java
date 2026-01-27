@@ -19,16 +19,13 @@ import static net.purple.permfood.Constants.*;
 public class PlayerAttributes extends PlayerFoodInstance {
 
 
-    public static final HashMap<UUID, PlayerAttributes> PLAYER_ATTRIBUTES = new HashMap<>();
-
-    public static PlayerAttributes getPlayerAttributes(Player player) {
-        return PLAYER_ATTRIBUTES.get(player.getUUID());
-    }
+    private static final HashMap<UUID, PlayerAttributes> PLAYER_ATTRIBUTES = new HashMap<>();
 
     // Player Attributes
     private final PlayerAttribute max_hunger;
     private final PlayerAttribute max_saturation;
     private final PlayerAttribute max_exhaustion;
+
 
     public PlayerAttributes(Player player, int foodCount) {
         super(player);
@@ -51,6 +48,7 @@ public class PlayerAttributes extends PlayerFoodInstance {
         updateBuffs(foodCount);
     }
 
+
     @Override
     protected void updateMilestones() {
         FoodSystemConfig config = Configs.foodSystemConfig;
@@ -67,7 +65,15 @@ public class PlayerAttributes extends PlayerFoodInstance {
         this.max_exhaustion.setValuePerMilestone(config.sectionExhaustion.perMilestoneExhaustion.get());
         // TODO > Add existing attributes here
     }
+    
 
+    public static PlayerAttributes getOrCreatePlayerAttributes(Player player) {
+        if (!PLAYER_ATTRIBUTES.containsKey(player.getUUID())) {
+            int foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
+            PLAYER_ATTRIBUTES.put(player.getUUID(), new PlayerAttributes(player, foodCount));
+        }
+        return (PlayerAttributes) PLAYER_ATTRIBUTES.get(player.getUUID());
+    }
 
     @Override
     @SuppressWarnings("unchecked cast")
@@ -139,14 +145,6 @@ public class PlayerAttributes extends PlayerFoodInstance {
             player.getAttributes().getInstance(Attributes.KNOCKBACK_RESISTANCE).addOrReplacePermanentModifier(modifier_kb);
         } */
 
-    }
-
-    public static PlayerAttributes getOrCreatePlayerAttributes(Player player) {
-        if (!PLAYER_ATTRIBUTES.containsKey(player.getUUID())) {
-            int foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
-            PLAYER_ATTRIBUTES.put(player.getUUID(), new PlayerAttributes(player, foodCount));
-        }
-        return (PlayerAttributes) PlayerAttributes.getPlayerAttributes(player);
     }
 
 

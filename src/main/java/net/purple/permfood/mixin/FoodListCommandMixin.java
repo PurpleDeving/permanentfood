@@ -16,6 +16,6 @@ public class FoodListCommandMixin {
 
     @Inject(method = "clearFoodList", at = @At("TAIL"))
     private static void clearFoodList(CommandContext<CommandSourceStack> context, Player target, CallbackInfoReturnable<Integer> cir) {
-        PlayerAttributes.getPlayerAttributes(target).setFoodCount(0);
+        PlayerAttributes.getOrCreatePlayerAttributes(target).setFoodCount(0);
     }
 }
