@@ -1,5 +1,6 @@
 package net.purple.permfood.moddata.baseClases;
 
+import com.cazsius.solcarrot.tracking.FoodList;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -23,9 +24,8 @@ public abstract class PlayerFoodInstance {
         return foodCount;
     }
 
-    public void setFoodCount(int foodCount) {
-        this.foodCount = foodCount;
-        updateBuffs(foodCount);
+    public void updateFoodCount() {
+        this.foodCount = FoodList.get(player).getProgressInfo().foodsEaten;
     }
 
     protected List<? extends MilestoneBased> getRawMilestoneBasedList() {
@@ -44,21 +44,6 @@ public abstract class PlayerFoodInstance {
         return snapshot;
     }
 
-    /**
-     * Compares two milestone snapshots and returns the stats that advanced.
-     */
-    public static List<MilestoneDiff> diffMilestones(Map<String, Integer> before, Map<String, Integer> after) {
-        List<MilestoneDiff> diffs = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : after.entrySet()) {
-            String name = entry.getKey();
-            int afterValue = entry.getValue() == null ? 0 : entry.getValue();
-            int beforeValue = before.getOrDefault(name, 0);
-            if (afterValue > beforeValue) {
-                diffs.add(new MilestoneDiff(name, beforeValue, afterValue));
-            }
-        }
-        return diffs;
-    }
 
     /******************************************
      Enforce Behaivor
@@ -72,7 +57,7 @@ public abstract class PlayerFoodInstance {
 
     public abstract List<? extends MilestoneBased> getMilestoneBasedList();
 
-    protected void updateBuffs() {
+    public void updateBuffs() {
         updateBuffs(this.getFoodCount());
     }
 
