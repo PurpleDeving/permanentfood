@@ -1,13 +1,16 @@
 package net.purple.solextended.config;
 
+import me.fzzyhmstrs.fzzy_config.annotations.Action;
+import me.fzzyhmstrs.fzzy_config.annotations.RequiresAction;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedSet;
 import me.fzzyhmstrs.fzzy_config.validation.minecraft.ValidatedIdentifier;
+import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.purple.solextended.Constants;
 
-//IMPL Names, Prefix, Description etc
+//IMPL Names, Prefix, Description etc for everything here
 public class SolExtendedConfig extends Config {
 
 
@@ -15,6 +18,7 @@ public class SolExtendedConfig extends Config {
         super(Constants.rLSolExtendedConfig);
     }
 
+    @RequiresAction(action = Action.RESTART)
     public ValidatedSet<ResourceLocation> whiteList = new ValidatedSet<>(
             java.util.Set.of(),
             ValidatedIdentifier.ofDynamicKey(
@@ -25,6 +29,7 @@ public class SolExtendedConfig extends Config {
             )
     );
 
+    @RequiresAction(action = Action.RESTART)
     public ValidatedSet<ResourceLocation> blackList = new ValidatedSet<>(
             java.util.Set.of(),
             ValidatedIdentifier.ofDynamicKey(
@@ -34,6 +39,9 @@ public class SolExtendedConfig extends Config {
                     (id, entry) -> entry.value().getFoodProperties(entry.value().getDefaultInstance(), null) != null
             )
     );
+
+    @Desc("The minimum hunger value foods need to provide in order to count for milestones, in half drumsticks.")
+    public ValidatedInt minimumFoodValue = new ValidatedInt(1, 0, 1000);
 
 
 }
