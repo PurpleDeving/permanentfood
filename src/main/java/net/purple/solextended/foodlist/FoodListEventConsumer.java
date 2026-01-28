@@ -9,7 +9,7 @@ import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 
 @EventBusSubscriber
-public class FoodListEvents {
+public class FoodListEventConsumer {
 
     /******************************************
      Sync PlayerFoodList to client. FoodList can be created on client because Configs are synced.
@@ -28,6 +28,7 @@ public class FoodListEvents {
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
 
+        player.getData(FOOD_LIST_ATTACHMENT)
         //IMPL Update PlayerFoodList for that Player
         //IMPL Sync PlayerFoodList to Client
         //IMPL Update all Dependent Systems
