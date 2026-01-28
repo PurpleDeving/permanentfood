@@ -1,3 +1,4 @@
+/*
 package backup.moddata.baseClases;
 
 import net.minecraft.world.entity.player.Player;
@@ -32,10 +33,12 @@ public abstract class PlayerFoodInstance {
         return MilestoneBasedList;
     }
 
-    /**
-     * Takes an in-memory snapshot of the current state of milestones.
-     * Keyed by {@link MilestoneBased#getName()}.
-     */
+    */
+/**
+ * Takes an in-memory snapshot of the current state of milestones.
+ * Keyed by {@link MilestoneBased#getName()}.
+ *//*
+
     public Map<String, Integer> snapshotMilestonesReached() {
         Map<String, Integer> snapshot = new HashMap<>();
         for (MilestoneBased milestoneBased : getMilestoneBasedList()) {
@@ -45,9 +48,11 @@ public abstract class PlayerFoodInstance {
     }
 
 
-    /******************************************
-     Enforce Behaivor
-     ******************************************/
+    */
+/******************************************
+ Enforce Behaivor
+ ******************************************//*
+
 
     protected void addMilestoneBased(MilestoneBased milestoneBased) {
         this.MilestoneBasedList.add(milestoneBased);
@@ -68,3 +73,4 @@ public abstract class PlayerFoodInstance {
         return this.player;
     }
 }
+*/

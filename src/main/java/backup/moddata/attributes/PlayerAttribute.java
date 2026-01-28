@@ -1,7 +1,6 @@
 package backup.moddata.attributes;
 
-import net.minecraft.core.Holder;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+/*
 import net.purple.solextended.api.milestonebased.MilestoneBased;
 
 public class PlayerAttribute extends MilestoneBased {
@@ -26,3 +25,4 @@ public class PlayerAttribute extends MilestoneBased {
 
 
 }
+*/
