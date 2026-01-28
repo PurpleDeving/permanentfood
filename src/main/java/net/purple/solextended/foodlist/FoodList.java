@@ -11,7 +11,6 @@ import net.purple.solextended.config.SolExtendedConfig;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class FoodList {
@@ -78,9 +77,7 @@ public class FoodList {
                 }
             });
 
-
-
-        // Atomic-ish swap: replace reference with an unmodifiable set to avoid accidental mutation.
+        }
         ALLOWED_FOODS = Collections.unmodifiableSet(newSet);
     }
 
