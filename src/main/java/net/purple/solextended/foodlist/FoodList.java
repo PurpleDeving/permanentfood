@@ -48,7 +48,6 @@ public class FoodList {
                 }
             }
         } else {
-            // IPML fill Blacklist
 
             Set<Item> blacklistedItems = new HashSet<>();
             if (config.listMode.get() == SolExtendedConfig.ListMode.BLACKLIST && !config.blackList.isEmpty()) {
