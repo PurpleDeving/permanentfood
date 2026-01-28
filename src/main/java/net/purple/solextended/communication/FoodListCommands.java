@@ -37,7 +37,7 @@ public class FoodListCommands {
 
 
     /******************************************
-     Sync PlayerFoodList to client. FoodList can be created on client because Configs are synced.
+     Dev Commands for testing and debugging
      ******************************************/
 
     public static void registerDevCommands(CommandDispatcher<CommandSourceStack> dispatcher) {

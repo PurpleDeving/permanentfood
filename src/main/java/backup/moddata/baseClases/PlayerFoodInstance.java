@@ -1,6 +1,7 @@
 package backup.moddata.baseClases;
 
 import net.minecraft.world.entity.player.Player;
+import net.purple.solextended.api.milestonebased.MilestoneBased;
 
 import java.util.ArrayList;
 import java.util.HashMap;
