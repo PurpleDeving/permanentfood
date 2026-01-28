@@ -38,7 +38,8 @@ public class FoodList {
             for (ResourceLocation rl : config.whiteList) {
                 try {
                     Item item = BuiltInRegistries.ITEM.get(rl);
-                    if (item == null || item == Items.AIR) continue;
+                    // Registry lookups never return null; unknown ids resolve to the default (AIR).
+                    if (item == Items.AIR) continue;
                     FoodProperties fp = item.getFoodProperties(item.getDefaultInstance(), null);
                     if (fp != null && fp.nutrition() >= minimumFood) {
                         newSet.add(item);
@@ -54,7 +55,8 @@ public class FoodList {
                 for (ResourceLocation rl : config.blackList) {
                     try {
                         Item item = BuiltInRegistries.ITEM.get(rl);
-                        if (item != null && item != Items.AIR) {
+                        // Registry lookups never return null; unknown ids resolve to the default (AIR).
+                        if (item != Items.AIR) {
                             blacklistedItems.add(item);
                         }
                     } catch (Throwable ignored) {
@@ -65,7 +67,7 @@ public class FoodList {
 
             BuiltInRegistries.ITEM.stream().forEach(item -> {
                 try {
-                    if (item == null || item == Items.AIR) return;
+                    if (item == Items.AIR) return;
                     if (blacklistedItems.contains(item)) return;
                     FoodProperties fp = item.getFoodProperties(item.getDefaultInstance(), null);
                     if (fp != null && fp.nutrition() >= minimumFood) {
