@@ -17,7 +17,7 @@ public class FoodList {
 
     private static Set<Item> ALLOWED_FOODS;
 
-    public Set<Item> lazzyGetAllowedFoods() {
+    public static Set<Item> lazzyGetAllowedFoods() {
         if (ALLOWED_FOODS == null) {
             ALLOWED_FOODS = new HashSet<>();
             updateAllowedFoods();
@@ -25,7 +25,7 @@ public class FoodList {
         return ALLOWED_FOODS;
     }
 
-    public void updateAllowedFoods() {
+    public static void updateAllowedFoods() {
         // Build a fresh set locally then swap it in to minimize race windows and work on the server thread.
         Set<Item> newSet = new HashSet<>();
 
@@ -82,8 +82,11 @@ public class FoodList {
         ALLOWED_FOODS = Collections.unmodifiableSet(newSet);
     }
 
+    public static boolean isFoodAllowed(Item item) {
+        return lazzyGetAllowedFoods().contains(item);
+    }
 
-    // IMPL Populate ALLOWED_FOODS from configs
+
     // IMPL Redo on ConfigReload and ServerStart
 
 
