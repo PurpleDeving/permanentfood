@@ -14,6 +14,7 @@ import net.purple.solextended.Constants;
 //IMPL Names, Prefix, Description etc for everything here
 public class SolExtendedConfig extends Config {
 
+
     public enum ListMode {
         NONE,
         WHITELIST,
@@ -50,7 +51,9 @@ public class SolExtendedConfig extends Config {
     );
 
     @Desc("The minimum hunger value foods need to provide in order to count for milestones, in half drumsticks.")
-    public ValidatedInt minimumFoodValue = new ValidatedInt(1, 0, 1000);
+    public ValidatedInt minimumFoodValue = new ValidatedInt(1, 1000, 0);
 
+
+    public Boolean limitProgressToSurvival = true;
 
 }

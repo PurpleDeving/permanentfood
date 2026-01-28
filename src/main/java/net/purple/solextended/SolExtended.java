@@ -29,6 +29,7 @@ public class SolExtended {
     public SolExtended(IEventBus modEventBus) {
 
         Configs.init();
+        ATTACHMENT_TYPES.register(modEventBus);
     }
 
 
