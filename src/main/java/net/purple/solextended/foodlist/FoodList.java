@@ -1,8 +1,17 @@
 package net.purple.solextended.foodlist;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.purple.solextended.SolExtended;
+import net.purple.solextended.config.Configs;
+import net.purple.solextended.config.SolExtendedConfig;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class FoodList {
@@ -18,7 +27,61 @@ public class FoodList {
     }
 
     public void updateAllowedFoods() {
-        // IMPL Populate ALLOWED_FOODS with foods that are not on the blacklist (or are only on the whitelist, if whitelist has entries). Also check minimum food value.
+        // Build a fresh set locally then swap it in to minimize race windows and work on the server thread.
+        Set<Item> newSet = new HashSet<>();
+
+        var config = Configs.solExtendedConfig;
+        int minimumFood = config.minimumFoodValue.get();
+
+
+        // If whitelist contains entries, prefer iterating only over those (much faster for large registries)
+        if (config.listMode.get() == SolExtendedConfig.ListMode.WHITELIST && !config.whiteList.isEmpty()) {
+            for (ResourceLocation rl : config.whiteList) {
+                try {
+                    Item item = BuiltInRegistries.ITEM.get(rl);
+                    if (item == null || item == Items.AIR) continue;
+                    FoodProperties fp = item.getFoodProperties(item.getDefaultInstance(), null);
+                    if (fp != null && fp.nutrition() >= minimumFood) {
+                        newSet.add(item);
+                    }
+                } catch (Throwable ignored) {
+                    SolExtended.LOGGER.warn("Failed to resolve whitelisted item: {}", rl);
+                }
+            }
+        } else {
+            // IPML fill Blacklist
+
+            Set<Item> blacklistedItems = new HashSet<>();
+            if (config.listMode.get() == SolExtendedConfig.ListMode.BLACKLIST && !config.blackList.isEmpty()) {
+                for (ResourceLocation rl : config.blackList) {
+                    try {
+                        Item item = BuiltInRegistries.ITEM.get(rl);
+                        if (item != null && item != Items.AIR) {
+                            blacklistedItems.add(item);
+                        }
+                    } catch (Throwable ignored) {
+                        SolExtended.LOGGER.warn("Failed to resolve blacklisted item: {}", rl);
+                    }
+                }
+            }
+
+            BuiltInRegistries.ITEM.stream().forEach(item -> {
+                try {
+                    if (item == null || item == Items.AIR) return;
+                    if (blacklistedItems.contains(item)) return;
+                    FoodProperties fp = item.getFoodProperties(item.getDefaultInstance(), null);
+                    if (fp != null && fp.nutrition() >= minimumFood) {
+                        newSet.add(item);
+                    }
+                } catch (Throwable ignoredInner) {
+                    // ignore corrupt entries
+                }
+            });
+
+
+
+        // Atomic-ish swap: replace reference with an unmodifiable set to avoid accidental mutation.
+        ALLOWED_FOODS = Collections.unmodifiableSet(newSet);
     }
 
 

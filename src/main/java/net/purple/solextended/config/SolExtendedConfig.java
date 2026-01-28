@@ -5,6 +5,7 @@ import me.fzzyhmstrs.fzzy_config.annotations.RequiresAction;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedSet;
 import me.fzzyhmstrs.fzzy_config.validation.minecraft.ValidatedIdentifier;
+import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedEnum;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -13,10 +14,18 @@ import net.purple.solextended.Constants;
 //IMPL Names, Prefix, Description etc for everything here
 public class SolExtendedConfig extends Config {
 
+    public enum ListMode {
+        NONE,
+        WHITELIST,
+        BLACKLIST
+    }
 
     public SolExtendedConfig() {
         super(Constants.rLSolExtendedConfig);
     }
+
+    @Desc("How the item lists below are applied. NONE disables list filtering.")
+    public ValidatedEnum<ListMode> listMode = new ValidatedEnum<>(ListMode.NONE, ValidatedEnum.WidgetType.CYCLING);
 
     @RequiresAction(action = Action.RESTART)
     public ValidatedSet<ResourceLocation> whiteList = new ValidatedSet<>(
