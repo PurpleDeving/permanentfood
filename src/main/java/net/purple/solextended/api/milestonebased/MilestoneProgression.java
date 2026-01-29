@@ -37,9 +37,6 @@ public final class MilestoneProgression {
     }
 
     public int getMilestonesReached() {
-        if (currentMilestonesReached == null) {
-            updateMilestonesReached();
-        }
         return currentMilestonesReached;
     }
 
@@ -55,7 +52,7 @@ public final class MilestoneProgression {
     /**
      * @return the number of milestones that are currently reached
      */
-    public int reachedMilestones(int foodCount) {
+    private int reachedMilestones(int foodCount) {
 
         // TODO - Test if .length differs to .count()
         return this.type.getMilestones().stream().mapToInt(Integer::intValue)
@@ -71,7 +68,6 @@ public final class MilestoneProgression {
     }
 
     public void invalidateProgress() {
-        this.currentMilestonesReached = null;
-        this.previousMilestonesReached = null;
+
     }
 }
