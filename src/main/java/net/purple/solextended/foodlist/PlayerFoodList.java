@@ -25,7 +25,7 @@ public class PlayerFoodList implements INBTSerializable<CompoundTag> {
     public PlayerFoodList() {
     }
 
-    public int getFoodEatenCount(String foodId) {
+    public int getFoodEatenCount() {
         return eatenFoods.size();
     }
 

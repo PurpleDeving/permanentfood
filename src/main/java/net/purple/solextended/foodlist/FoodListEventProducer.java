@@ -6,6 +6,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.purple.solextended.config.Configs;
 
@@ -34,9 +35,14 @@ public class FoodListEventProducer {
         var usedStack = event.getItem();
         if (usedStack.getFoodProperties(player) == null) return;
 
+        PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
+        playerFoodList.addFood(usedStack);
 
-        player.getData(FOOD_LIST_ATTACHMENT).addFood(usedStack);
 
+        NeoForge.EVENT_BUS.post(new FoodListEvent.PlayerFoodCountEvent(player, playerFoodList.getFoodEatenCount()));
+
+
+        // POST EVENT HERE
 
         // TODO: retrieve the PlayerFoodList attachment/capability from the player here.
         // TODO: update PlayerFoodList for that player, then sync to client.
