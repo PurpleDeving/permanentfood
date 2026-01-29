@@ -44,6 +44,18 @@ public final class MilestoneProgression {
         return currentMilestonesReached >= type.getNumberOfMilestones();
     }
 
+    /******************************************
+     Calculate and update milestones
+     ******************************************/
+
+    /**
+     * @return true if a new milestone is reached after the update
+     */
+    public boolean checkReachedMilestoneUpdate(int foodCount) {
+        updateMilestonesReached(foodCount);
+        return currentMilestonesReached > previousMilestonesReached;
+    }
+
     private void updateMilestonesReached(int foodCount) {
         previousMilestonesReached = currentMilestonesReached;
         currentMilestonesReached = reachedMilestones(foodCount);
@@ -59,15 +71,4 @@ public final class MilestoneProgression {
                 .filter(milestone -> foodCount >= milestone).toArray().length;
     }
 
-    /**
-     * @return true if a new milestone is reached after the update
-     */
-    public boolean checkForReachedMilestone(int foodCount) {
-        updateMilestonesReached(foodCount);
-        return currentMilestonesReached > previousMilestonesReached;
-    }
-
-    public void invalidateProgress() {
-
-    }
 }
