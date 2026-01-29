@@ -19,5 +19,11 @@ public abstract class FoodListEvent extends Event {
 
     }
 
+
+    // Event to signal that all player food values should be updated
+    public static class UpdateAllPlayerValues extends FoodListEvent {
+    }
+
+
 }
 // TODO make the stupid events here

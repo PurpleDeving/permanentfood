@@ -37,6 +37,7 @@ public class FoodListEventProducer {
 
         player.getData(FOOD_LIST_ATTACHMENT).addFood(usedStack);
 
+
         // TODO: retrieve the PlayerFoodList attachment/capability from the player here.
         // TODO: update PlayerFoodList for that player, then sync to client.
         // (left intentionally unimplemented)

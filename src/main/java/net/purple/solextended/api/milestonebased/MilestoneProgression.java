@@ -29,7 +29,7 @@ public final class MilestoneProgression {
     }
 
     /******************************************
-     Information about the number of milestones
+     Information about the number of milestones reached
      ******************************************/
 
     public List<Integer> getMilestones() {
