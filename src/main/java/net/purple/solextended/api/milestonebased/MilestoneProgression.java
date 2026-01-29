@@ -37,11 +37,10 @@ public final class MilestoneProgression {
     }
 
     public int getMilestonesReached() {
+        if (currentMilestonesReached == null) {
+            updateMilestonesReached();
+        }
         return currentMilestonesReached;
-    }
-
-    public int getPreviousMilestonesReached() {
-        return previousMilestonesReached;
     }
 
     public boolean maxMilestonesReached() {
@@ -53,12 +52,10 @@ public final class MilestoneProgression {
         currentMilestonesReached = reachedMilestones(foodCount);
     }
 
-
     /**
-     * Tier is defined as the number of milestones {@code <= foodCount}.
+     * @return the number of milestones that are currently reached
      */
     public int reachedMilestones(int foodCount) {
-
 
         // TODO - Test if .length differs to .count()
         return this.type.getMilestones().stream().mapToInt(Integer::intValue)
@@ -66,10 +63,15 @@ public final class MilestoneProgression {
     }
 
     /**
-     * @return true if the milestone tier increased with this update
+     * @return true if a new milestone is reached after the update
      */
     public boolean checkForReachedMilestone(int foodCount) {
         updateMilestonesReached(foodCount);
         return currentMilestonesReached > previousMilestonesReached;
+    }
+
+    public void invalidateProgress() {
+        this.currentMilestonesReached = null;
+        this.previousMilestonesReached = null;
     }
 }
