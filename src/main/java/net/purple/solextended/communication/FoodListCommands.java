@@ -14,25 +14,64 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.purple.solextended.SolExtended;
+import net.purple.solextended.foodlist.FoodListEventProducer;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
 import static net.purple.solextended.SolExtended.IS_DEV;
 
 @EventBusSubscriber
 public class FoodListCommands {
 
+    // TODO - Can commands be case sensitive, underscore or space separated?
+
+    // IMPL Translation Keys for List Messages
 
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
+
+        FoodListCommands.registerNormalCommands(event.getDispatcher());
 
         if (IS_DEV) {
             FoodListCommands.registerDevCommands(event.getDispatcher());
         }
 
+    }
+
+    /******************************************
+     Normal Commands for players
+     ******************************************/
+
+
+    public static void registerNormalCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+
+        final LiteralArgumentBuilder<CommandSourceStack> foodlistclearCommand = Commands.literal("foodlist");
+        foodlistclearCommand//.requires((CommandSourceStack sourceStack) -> sourceStack.hasPermission(2))
+                .then(Commands.literal("clearlist").executes(FoodListCommands::clearList));
+        dispatcher.register(foodlistclearCommand);
+
+
+    }
+
+    private static int clearList(CommandContext<CommandSourceStack> context) {
+
+        CommandSourceStack source = context.getSource();
+
+        if (!source.isPlayer()) {
+            source.sendFailure(Component.literal("§cThis command can only be executed by a player!"));
+            return 0;
+        }
+
+        ServerPlayer player = source.getPlayer();
+        player.getData(FOOD_LIST_ATTACHMENT).clearList();
+        FoodListEventProducer.postPlayerFoodCountEvent(player);
+
+
+        source.sendSuccess(() -> Component.nullToEmpty("Your list has been cleared."), true);
+        return 1;
     }
 
 
@@ -85,7 +124,7 @@ public class FoodListCommands {
         ServerPlayer player = source.getPlayer();
 
         assert player != null;
-        var foodList = player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
+        var foodList = player.getData(FOOD_LIST_ATTACHMENT);
         var eatenFoods = foodList.getEatenFoods();
 
         // Deterministic + server-friendly sorting: registry id (minecraft:apple) instead of localized names.

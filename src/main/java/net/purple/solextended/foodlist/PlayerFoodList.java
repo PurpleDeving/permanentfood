@@ -55,6 +55,12 @@ public class PlayerFoodList implements INBTSerializable<CompoundTag> {
         return java.util.Collections.unmodifiableSet(eatenFoods);
     }
 
+
+    public void clearList() {
+        eatenFoods.clear();
+    }
+
+
     /******************************************
      Network / Persistent storage
      ******************************************/
@@ -106,6 +112,7 @@ public class PlayerFoodList implements INBTSerializable<CompoundTag> {
         }
 
     }
+
 
     // IMPLS Boolean if food has been eaten
 

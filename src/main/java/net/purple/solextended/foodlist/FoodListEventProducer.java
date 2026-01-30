@@ -39,19 +39,14 @@ public class FoodListEventProducer {
         playerFoodList.addFood(usedStack);
 
 
+        postPlayerFoodCountEvent(player);
+
+        // TODO: Sync needed here ?
+    }
+
+    public static void postPlayerFoodCountEvent(ServerPlayer player) {
+        PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
         NeoForge.EVENT_BUS.post(new FoodListEvent.PlayerFoodCountEvent(player, playerFoodList.getFoodEatenCount()));
-
-
-        // POST EVENT HERE
-
-        // TODO: retrieve the PlayerFoodList attachment/capability from the player here.
-        // TODO: update PlayerFoodList for that player, then sync to client.
-        // (left intentionally unimplemented)
-
-        //IMPL Update PlayerFoodList to Client
-        //IMPL Update all Dependent Systems
-
-        // TODO Check and Ask why SolCarrot is using the invalidateProgressCache
     }
 
 
