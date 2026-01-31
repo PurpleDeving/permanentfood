@@ -1,7 +1,5 @@
-package backup.mixin;
+package net.purple.permfood.mixin;
 
-import backup.config.Configs;
-import backup.moddata.attributes.ModAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,49 +11,44 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.purple.permfood.attributes.ModAttributes;
+import net.purple.permfood.config.Configs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 
 import java.util.List;
+import java.util.Objects;
 
-import static backup.moddata.attributes.ModAttributes.MAX_EXHAUSTION;
-import static backup.moddata.attributes.ModAttributes.MAX_SATURATION;
+import static net.purple.permfood.attributes.ModAttributes.MAX_EXHAUSTION;
+import static net.purple.permfood.attributes.ModAttributes.MAX_SATURATION;
 
+@SuppressWarnings("DataFlowIssue")
 @Mixin(FoodData.class)
 public class FoodDataMixin {
 
     /******************************************
-     Caching
+     Caching Player
      ******************************************/
 
 
+    // Attached to the Player Instance
     @Unique
     private Player permanentfood_1_21_1$player;
 
 
-    /******************************************
-     Max Hunger Scaling
-     ******************************************/
-
-    // Should also fix saturation because its limit is the current foodLevel
-    @ModifyConstant(
-            method = "add",
-            constant = @Constant(intValue = 20,
-                    ordinal = 0) // The one in the first Mth.clamp
-    )
-    private int fixAddWithMaxHunger(int original) {
-        permanentfood_1_21_1$validatePlayer();
-        return (int) Math.round(this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue());
-    }
-
     @Unique
-    @OnlyIn(Dist.CLIENT)
-    private void permanentfood_1_21_1$updateClientPlayer() {
-        if (this.permanentfood_1_21_1$player == null) {
-            this.permanentfood_1_21_1$player = Minecraft.getInstance().player;
+    private void permanentfood_1_21_1$validatePlayer() {
+        if (EffectiveSide.get().isServer()) {
+            permanentfood_1_21_1$updateServerPlayer();
+        }
+
+
+        if (EffectiveSide.get().isClient()) {
+            permanentfood_1_21_1$updateClientPlayer();
         }
     }
+
 
     //Limited to Server Side but not with @OnlyIn because local server is also Client side.
     @Unique
@@ -80,15 +73,31 @@ public class FoodDataMixin {
     }
 
     @Unique
-    private void permanentfood_1_21_1$validatePlayer() {
-        if (EffectiveSide.get().isServer()) {
-            permanentfood_1_21_1$updateServerPlayer();
+    @OnlyIn(Dist.CLIENT)
+    private void permanentfood_1_21_1$updateClientPlayer() {
+        if (this.permanentfood_1_21_1$player == null) {
+            this.permanentfood_1_21_1$player = Minecraft.getInstance().player;
         }
+    }
 
 
-        if (EffectiveSide.get().isClient()) {
-            permanentfood_1_21_1$updateClientPlayer();
+    /******************************************
+     Max Hunger Scaling
+     ******************************************/
+
+    // Should also fix saturation because its limit is the current foodLevel
+    @ModifyConstant(
+            method = "add",
+            constant = @Constant(intValue = 20,
+                    ordinal = 0) // The one in the first Mth.clamp
+    )
+    private int fixAddWithMaxHunger(int original) {
+        if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) {
+            return original;
         }
+
+        permanentfood_1_21_1$validatePlayer();
+        return (int) Math.round(Objects.requireNonNull(this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER)).getValue());
     }
 
 
@@ -98,10 +107,12 @@ public class FoodDataMixin {
                     ordinal = 0) // @Only Value in the Method
     )
     private int needsFoodMaxHungerCheck(int original) {
+        if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) {
+            return original;
+        }
 
         permanentfood_1_21_1$validatePlayer();
-
-        return (int) Math.round(this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER).getValue());
+        return (int) Math.round(Objects.requireNonNull(this.permanentfood_1_21_1$player.getAttribute(ModAttributes.MAX_HUNGER)).getValue());
     }
 
 
@@ -118,10 +129,14 @@ public class FoodDataMixin {
             )
     )
     private float redirectSaturationClamp(float saturationToClamp, float min, float original) {
-        //UpdateServerPlayer runs through the first mixin first.
-        permanentfood_1_21_1$validatePlayer();
-        float myCustomMax = (float) this.permanentfood_1_21_1$player.getAttribute(MAX_SATURATION).getValue();
-        return Mth.clamp(saturationToClamp, min, myCustomMax);
+        float returnMax = original;
+        if (Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES) {
+            //UpdateServerPlayer runs through the first mixin first.
+            permanentfood_1_21_1$validatePlayer();
+            returnMax = (float) this.permanentfood_1_21_1$player.getAttribute(MAX_SATURATION).getValue();
+        }
+
+        return Mth.clamp(saturationToClamp, min, returnMax);
     }
 
     /******************************************
@@ -150,8 +165,10 @@ public class FoodDataMixin {
                     ordinal = 0) // The one in the Natural_Regen Block
     )
     private int setThresholdForNaturalRegenerationWithSaturation(int original, Player player) {
-        //TODO return player.getData(PLAYER_VALUES).getNatural_regen_threshold_with_saturation();
-        return original;
+        if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) { // Attribute doesn't exist on the player if the flag is false
+            return original;
+        }
+        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.peacefulHungerSection.NATURAL_REGEN_THRESHOLD_WITH_SATURATION.get() / 100;
     }
 
     // Hunger Threshold for Natural_Regeneration without Saturation
@@ -161,8 +178,10 @@ public class FoodDataMixin {
                     ordinal = 0) // The under the Natural_Regen Block
     )
     private int setThresholdForNaturalRegenerationNoSaturation(int original, Player player) {
-        // Todo      return player.getData(PLAYER_VALUES).getNatural_regen_threshold_no_saturation();
-        return original;
+        if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) { // Attribute doesn't exist on the player if the flag is false
+            return original;
+        }
+        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.peacefulHungerSection.NATURAL_REGEN_THRESHOLD_NO_SATURATION.get() / 100;
     }
 
     /******************************************
@@ -175,6 +194,9 @@ public class FoodDataMixin {
             constant = @Constant(floatValue = 4.0F)
     )
     private float useMaxExhaustion(float original, Player player) {
+        if (!Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES) {
+            return original;
+        }
         return (float) player.getAttribute(MAX_EXHAUSTION).getValue();
     }
 
@@ -185,6 +207,9 @@ public class FoodDataMixin {
             constant = @Constant(floatValue = 6.0F)
     )
     private float useExhaustionForHealing(float original, Player player) {
+        if (!Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES) {
+            return original;
+        }
         return Configs.foodSystemConfig.sectionExhaustion.exhaustion_per_Heal.get();
     }
 

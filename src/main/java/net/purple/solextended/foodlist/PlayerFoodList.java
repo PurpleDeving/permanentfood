@@ -114,7 +114,4 @@ public class PlayerFoodList implements INBTSerializable<CompoundTag> {
     }
 
 
-    // IMPLS Boolean if food has been eaten
-
-    // Impl Add food should be boolean and return true if new food
 }

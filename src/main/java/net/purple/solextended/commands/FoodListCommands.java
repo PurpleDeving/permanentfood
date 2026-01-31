@@ -68,6 +68,7 @@ public class FoodListCommands {
 
         ServerPlayer player = source.getPlayer();
         player.getData(FOOD_LIST_ATTACHMENT).clearList();
+
         FoodListSyncEvents.syncFoodList(player);
         FoodListEvents.postPlayerFoodCountEvent(player);
 

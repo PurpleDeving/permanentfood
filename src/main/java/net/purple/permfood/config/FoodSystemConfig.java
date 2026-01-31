@@ -1,9 +1,10 @@
-package backup.config;
+package net.purple.permfood.config;
 
 import me.fzzyhmstrs.fzzy_config.annotations.Action;
 import me.fzzyhmstrs.fzzy_config.annotations.RequiresAction;
 import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.api.SaveType;
+import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
 import me.fzzyhmstrs.fzzy_config.util.Translatable;
 import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedList;
@@ -20,7 +21,7 @@ import static net.purple.permfood.PermanentFood.MODID;
 @Translatable.Name("Food System")
 @Translatable.Name(value = "Ernährungssystem", lang = "de_de")
 @Translation(prefix = MODID + ".foodsystem")
-public class FoodSystemConfig extends me.fzzyhmstrs.fzzy_config.config.Config {
+public class FoodSystemConfig extends Config {
 
 
     public FoodSystemConfig() {

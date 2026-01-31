@@ -1,4 +1,4 @@
-package backup.moddata.attributes;
+package net.purple.permfood.attributes;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;

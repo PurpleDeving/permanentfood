@@ -39,4 +39,5 @@ public class SolExtended {
     // TODO ReWrite FoodBookScreen for a modern screen ???
 
 
+    // TODO Tooltip
 }

@@ -1,12 +1,12 @@
 package net.purple.permfood;
 
 
-import backup.config.Configs;
-import backup.moddata.attributes.ModAttributes;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.purple.permfood.attributes.ModAttributes;
+import net.purple.permfood.config.Configs;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file

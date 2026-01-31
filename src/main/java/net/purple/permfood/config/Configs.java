@@ -1,5 +1,6 @@
-package backup.config;
+package net.purple.permfood.config;
 
+import backup.config.AttributeConfig;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 
