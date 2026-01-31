@@ -23,7 +23,6 @@ public class PermanentFood {
 
         Configs.init();
 
-
         ModAttributes.register(modEventBus);
 
 

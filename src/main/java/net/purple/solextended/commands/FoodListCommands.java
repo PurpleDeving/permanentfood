@@ -14,7 +14,8 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.purple.solextended.foodlist.FoodListEvents;
+import net.purple.solextended.SolExtended;
+import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.foodlist.FoodListSyncEvents;
 
 import java.util.Comparator;
@@ -70,8 +71,10 @@ public class FoodListCommands {
         player.getData(FOOD_LIST_ATTACHMENT).clearList();
 
         FoodListSyncEvents.syncFoodList(player);
-        FoodListEvents.postPlayerFoodCountEvent(player);
 
+        // Direct update for all registered milestone managers
+        var foodList = player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
+        MilestoneManagerRegistry.updateAllManagers(player, foodList.getFoodEatenCount());
 
         source.sendSuccess(() -> Component.nullToEmpty("Your list has been cleared."), true);
         return 1;

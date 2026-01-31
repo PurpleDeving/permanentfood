@@ -6,8 +6,8 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.config.Configs;
 
 import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
@@ -41,15 +41,9 @@ public class FoodListEvents {
 
         if (newFoodEaten) {
             FoodListSyncEvents.syncFoodList(player);
-            postPlayerFoodCountEvent(player);
+
+            // Direct update: no event bus, no intermediate event objects
+            MilestoneManagerRegistry.updateAllManagers(player, playerFoodList.getFoodEatenCount());
         }
     }
-
-
-    public static void postPlayerFoodCountEvent(ServerPlayer player) {
-        PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
-        NeoForge.EVENT_BUS.post(new FoodListEvent.PlayerFoodCountEvent(player, playerFoodList.getFoodEatenCount()));
-    }
-
-
 }

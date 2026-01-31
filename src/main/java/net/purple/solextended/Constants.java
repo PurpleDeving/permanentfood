@@ -20,6 +20,6 @@ public class Constants {
     // DEBUGGING & TESTING
 
     // Enable test items in Food Book GUI
-    public static final boolean FOOD_BOOK_TEST_ITEMS = IS_DEV && true;
+    public static final boolean FOOD_BOOK_TEST_ITEMS = IS_DEV && true; //TODO Need to Test
 
 }

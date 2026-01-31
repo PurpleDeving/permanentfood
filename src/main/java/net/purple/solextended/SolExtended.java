@@ -7,6 +7,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.config.Configs;
 import net.purple.solextended.foodlist.PlayerFoodList;
 import net.purple.solextended.item.SolExtendedItems;
@@ -32,6 +33,9 @@ public class SolExtended {
         Configs.init();
         SolExtendedItems.setUp(modEventBus);
         ATTACHMENT_TYPES.register(modEventBus);
+
+        // Initialize milestone manager registry for all mods
+        MilestoneManagerRegistry.register(modEventBus);
     }
 
     // TODO Cleanup "solcarrot" everywhere
