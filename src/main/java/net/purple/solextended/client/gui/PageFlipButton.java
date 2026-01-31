@@ -70,7 +70,11 @@ final class PageFlipButton extends Button {
         }
     }
 
-    interface Pageable {
+    /**
+     * Interface for screens that support page navigation.
+     * Public API for external mods.
+     */
+    public interface Pageable {
         void switchToPage(int pageNumber);
 
         int getCurrentPageNumber();
