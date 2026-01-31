@@ -9,10 +9,12 @@ import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.purple.solextended.config.Configs;
+import org.jline.utils.Log;
 
 import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
+import static net.purple.solextended.SolExtended.MODID;
 
-@EventBusSubscriber
+@EventBusSubscriber(modid = MODID)
 public class FoodListEvents {
 
     /******************************************
@@ -24,6 +26,8 @@ public class FoodListEvents {
     @SubscribeEvent(priority = EventPriority.HIGH)
     // High should be enough to Trigger before all mopds that use this as dependency.
     public static void onFoodEaten(LivingEntityUseItemEvent.Finish event) {
+
+        Log.warn("Food Eaten Event Triggered");
 
         if (EffectiveSide.get().isClient()) {
             return;

@@ -1,9 +1,14 @@
 package net.purple.solextended.client.gui;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.purple.solextended.foodlist.PlayerFoodList;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static net.purple.solextended.Constants.FOOD_BOOK_TEST_ITEMS;
 
 /**
  * Helper class that encapsulates player food tracking data.
@@ -16,7 +21,21 @@ final class FoodData {
 
     FoodData(PlayerFoodList foodList) {
         this.foodList = foodList;
-        this.eatenFoods = foodList.getEatenFoods();
+
+        // In dev mode, add test items for GUI testing
+        if (FOOD_BOOK_TEST_ITEMS) {
+            Set<Item> testFoods = new HashSet<>(foodList.getEatenFoods());
+
+            // Collect all food items from registry
+            List<Item> allFoodItems = BuiltInRegistries.ITEM.stream()
+                    .filter(item -> item.getFoodProperties(item.getDefaultInstance(), null) != null)
+                    .toList();
+            testFoods.addAll(allFoodItems);
+
+            this.eatenFoods = testFoods;
+        } else {
+            this.eatenFoods = foodList.getEatenFoods();
+        }
     }
 
     /**

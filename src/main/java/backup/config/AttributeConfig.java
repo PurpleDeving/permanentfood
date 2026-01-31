@@ -24,6 +24,8 @@ public class AttributeConfig extends Config {
         super(Constants.rLAttributeConfig);
     }
 
+    //TODO - Add Health Stuff
+
     @Name("Armor Bonus Settings")
     @Name(value = "Rüstungsbonus Einstellungen", lang = "de_de")
     public ArmorSection sectionArmor = new ArmorSection();

@@ -56,4 +56,7 @@ public class SolExtendedConfig extends Config {
 
     public Boolean limitProgressToSurvival = true;
 
+    public Boolean resetFoodListOnDeath = false;
+
+
 }
