@@ -34,5 +34,8 @@ public class SolExtended {
         ATTACHMENT_TYPES.register(modEventBus);
     }
 
+    // TODO Cleanup "solcarrot" everywhere
+    // TODO Write README.md and credit solcarrot
+
 
 }
