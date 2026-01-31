@@ -9,7 +9,7 @@ import java.util.Objects;
  * <p>References a shared {@link MilestoneType} which owns the milestone list.
  * This class only stores current/previous reached tiers.</p>
  */
-public final class MilestoneProgression {
+public abstract class MilestoneProgression {
 
     private final MilestoneType type;
 
@@ -18,6 +18,11 @@ public final class MilestoneProgression {
 
     public MilestoneProgression(MilestoneType type) {
         this.type = Objects.requireNonNull(type, "type");
+    }
+
+    public MilestoneProgression(MilestoneType type, int foodCount) {
+        this(type);
+        this.currentMilestonesReached = reachedMilestones(foodCount);
     }
 
     public MilestoneType getType() {

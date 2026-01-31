@@ -10,7 +10,7 @@ import java.util.Objects;
  * <p>This is intentionally simple: it stores a name and a sorted milestone list.
  * Instances of {@link MilestoneProgression} reference a type and track per-player tier state.</p>
  */
-public final class MilestoneType {
+public class MilestoneType {
 
     private final String name;
     private volatile List<Integer> milestones;

@@ -6,9 +6,13 @@ import net.purple.solextended.foodlist.FoodListEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class MilestoneManager {
+public abstract class MilestoneManager<T extends MilestoneProgression> {
 
-    final Set<MilestoneProgression> milestoneProgressions = new HashSet<>();
+    private final Set<T> milestoneProgressions = new HashSet<>();
+
+    public Set<T> getMilestoneProgressions() {
+        return milestoneProgressions;
+    }
 
     @SubscribeEvent
     public abstract void onFoodCoundUpdate(FoodListEvent.PlayerFoodCountEvent event);
