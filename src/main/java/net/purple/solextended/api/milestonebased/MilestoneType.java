@@ -38,6 +38,7 @@ public class MilestoneType {
 
     private void setMilestones(List<? extends Integer> input) {
         Objects.requireNonNull(input, "milestones");
+
         Collections.sort(input);
         this.milestones = Collections.unmodifiableList(input);
 

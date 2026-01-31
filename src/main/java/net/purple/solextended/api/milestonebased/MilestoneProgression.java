@@ -1,5 +1,8 @@
 package net.purple.solextended.api.milestonebased;
 
+import net.neoforged.fml.util.thread.EffectiveSide;
+import org.jline.utils.Log;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -57,6 +60,9 @@ public abstract class MilestoneProgression {
      * @return true if a new milestone is reached after the update
      */
     public boolean checkReachedMilestoneUpdate(int foodCount) {
+        if (EffectiveSide.get().isClient()) {
+            Log.warn("MilestoneProgression reached on client");
+        }
         updateMilestonesReached(foodCount);
         return currentMilestonesReached > previousMilestonesReached;
     }

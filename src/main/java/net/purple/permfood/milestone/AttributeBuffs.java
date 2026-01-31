@@ -20,9 +20,9 @@ import static net.purple.permfood.PermanentFood.MODID;
 @EventBusSubscriber(modid = MODID)
 public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgression> {
 
-    private static final AttributeMilestoneType MAX_HUNGER_BUFF = new AttributeMilestoneType("max_hunger_buff", Configs.foodSystemConfig.sectionHunger.milestonesHunger, ModAttributes.MAX_HUNGER);
-    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff", Configs.foodSystemConfig.sectionSaturation.milestonesSaturation, ModAttributes.MAX_SATURATION);
-    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff", Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion, ModAttributes.MAX_EXHAUSTION);
+    private static final AttributeMilestoneType MAX_HUNGER_BUFF = new AttributeMilestoneType("max_hunger_buff", Configs.foodSystemConfig.sectionHunger.milestonesHunger.get(), ModAttributes.MAX_HUNGER);
+    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff", Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(), ModAttributes.MAX_SATURATION);
+    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff", Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(), ModAttributes.MAX_EXHAUSTION);
 
     public AttributeBuffs() {
         super();
@@ -35,9 +35,14 @@ public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgressi
 
     }
 
+
+    @SubscribeEvent
+    public static void AtttributeBuffsFoodCountEventUpdate(FoodListEvent.PlayerFoodCountEvent event) {
+        
+    }
+
     @SuppressWarnings("DataFlowIssue")
     @Override
-    @SubscribeEvent
     public void onFoodCoundUpdate(FoodListEvent.PlayerFoodCountEvent event) {
         Player player = event.getPlayer();
         AttributeMap playerAttributes = player.getAttributes();
@@ -49,6 +54,4 @@ public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgressi
             playerAttributes.getInstance(attribute).addOrReplacePermanentModifier(attributeModifier);
         }
     }
-
-
 }

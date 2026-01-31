@@ -1,6 +1,5 @@
 package net.purple.solextended.api.milestonebased;
 
-import net.neoforged.bus.api.SubscribeEvent;
 import net.purple.solextended.foodlist.FoodListEvent;
 
 import java.util.HashSet;
@@ -14,7 +13,7 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
         return milestoneProgressions;
     }
 
-    @SubscribeEvent
+
     public abstract void onFoodCoundUpdate(FoodListEvent.PlayerFoodCountEvent event);
 
 
