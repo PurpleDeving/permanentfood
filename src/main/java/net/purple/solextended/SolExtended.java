@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.purple.solextended.config.Configs;
 import net.purple.solextended.foodlist.PlayerFoodList;
+import net.purple.solextended.item.SolExtendedItems;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -29,6 +30,7 @@ public class SolExtended {
     public SolExtended(IEventBus modEventBus) {
 
         Configs.init();
+        SolExtendedItems.setUp(modEventBus);
         ATTACHMENT_TYPES.register(modEventBus);
     }
 

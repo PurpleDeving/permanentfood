@@ -1,7 +1,6 @@
-
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "solcarrot:item/food_book"
+    "layer0": "solextended:item/food_book"
   }
 }
