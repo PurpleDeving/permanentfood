@@ -12,7 +12,7 @@ import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
 import static net.purple.solextended.SolExtended.MODID;
 
 @EventBusSubscriber(modid = MODID)
-public class FoodListSyncHandler {
+public class FoodListSyncEvents {
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

@@ -38,7 +38,7 @@ public class FoodListEvents {
         PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
         playerFoodList.addFood(usedStack);
 
-        FoodListSyncHandler.syncFoodList(player);
+        FoodListSyncEvents.syncFoodList(player);
         postPlayerFoodCountEvent(player);
     }
 

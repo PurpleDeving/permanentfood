@@ -15,7 +15,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.purple.solextended.foodlist.FoodListEvents;
-import net.purple.solextended.foodlist.FoodListSyncHandler;
+import net.purple.solextended.foodlist.FoodListSyncEvents;
 
 import java.util.Comparator;
 import java.util.List;
@@ -68,7 +68,7 @@ public class FoodListCommands {
 
         ServerPlayer player = source.getPlayer();
         player.getData(FOOD_LIST_ATTACHMENT).clearList();
-        FoodListSyncHandler.syncFoodList(player);
+        FoodListSyncEvents.syncFoodList(player);
         FoodListEvents.postPlayerFoodCountEvent(player);
 
 
