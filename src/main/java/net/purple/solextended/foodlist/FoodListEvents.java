@@ -10,8 +10,8 @@ import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.config.Configs;
 
-import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
-import static net.purple.solextended.SolExtended.MODID;
+import static net.purple.solextended.Constants.ENABLE_EXTENSIVE_LOGGING;
+import static net.purple.solextended.SolExtended.*;
 
 @EventBusSubscriber(modid = MODID)
 public class FoodListEvents {
@@ -25,6 +25,11 @@ public class FoodListEvents {
     @SubscribeEvent(priority = EventPriority.HIGH)
     // High should be enough to Trigger before all mopds that use this as dependency.
     public static void onFoodEaten(LivingEntityUseItemEvent.Finish event) {
+
+        if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
+            LOGGER.info("FoodListEvents.onFoodEaten triggered");
+        }
+
 
         if (EffectiveSide.get().isClient()) {
             return;
@@ -41,6 +46,10 @@ public class FoodListEvents {
 
         if (newFoodEaten) {
             FoodListSyncEvents.syncFoodList(player);
+
+            if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
+                LOGGER.info("FoodListEvents.onFoodEaten: New food eaten registered: " + usedStack.getDisplayName());
+            }
 
             // Direct update: no event bus, no intermediate event objects
             MilestoneManagerRegistry.updateAllManagers(player, playerFoodList.getFoodEatenCount());

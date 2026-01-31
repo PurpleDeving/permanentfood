@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 public class SolExtended {
     public static final String MODID = "solextended";
     // Directly reference a slf4j logger
+
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final boolean IS_DEV = !FMLEnvironment.production;
@@ -42,6 +43,7 @@ public class SolExtended {
     // TODO Write README.md and credit solcarrot
     // TODO ReWrite FoodBookScreen for a modern screen ???
 
+    // TODO Test Peaceful Hunger not working
 
     // TODO Tooltip
 }

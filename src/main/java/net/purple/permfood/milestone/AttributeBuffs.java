@@ -11,6 +11,7 @@ import net.purple.permfood.config.Configs;
 import net.purple.permfood.config.FoodSystemConfig;
 import net.purple.solextended.api.milestonebased.MilestoneManager;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
+import org.jline.utils.Log;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -51,6 +52,7 @@ public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgressi
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void onFoodCountUpdate(Player player, int foodCount) {
+        Log.warn("Updating AttributeBuffs for player: " + player.getName().getString() + " with foodCount: " + foodCount);
         AttributeMap playerAttributes = player.getAttributes();
         Set<AttributeMilestoneProgression> attributeBuffs = this.getMilestoneProgressions();
 

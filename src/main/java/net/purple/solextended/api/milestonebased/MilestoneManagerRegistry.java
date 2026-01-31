@@ -7,10 +7,13 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.purple.solextended.Constants;
 import net.purple.solextended.SolExtended;
 
 import java.util.*;
 import java.util.function.Supplier;
+
+import static net.purple.solextended.SolExtended.IS_DEV;
 
 /**
  * Central registry for all milestone managers across all mods.
@@ -102,6 +105,12 @@ public class MilestoneManagerRegistry {
      * Updates all registered milestone managers for a specific player.
      */
     public static void updateAllManagers(Player player, int foodCount) {
+
+        if (IS_DEV && Constants.ENABLE_EXTENSIVE_LOGGING) {
+            SolExtended.LOGGER.info("MilestoneManagerRegistry.updateAllManagers: Updating all managers for player {} with foodCount {}",
+                    player.getName().getString(), foodCount);
+        }
+
         for (ManagerRegistration<?> registration : REGISTERED_MANAGERS.values()) {
             updateManager(player, foodCount, registration);
         }
