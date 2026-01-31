@@ -71,4 +71,5 @@ public final class MilestoneProgression {
                 .filter(milestone -> foodCount >= milestone).toArray().length;
     }
 
+
 }

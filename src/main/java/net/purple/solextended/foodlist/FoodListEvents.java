@@ -40,10 +40,12 @@ public class FoodListEvents {
         if (usedStack.getFoodProperties(player) == null) return;
 
         PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
-        playerFoodList.addFood(usedStack);
+        boolean newFoodEaten = playerFoodList.addFood(usedStack);
 
-        FoodListSyncEvents.syncFoodList(player);
-        postPlayerFoodCountEvent(player);
+        if (newFoodEaten) {
+            FoodListSyncEvents.syncFoodList(player);
+            postPlayerFoodCountEvent(player);
+        }
     }
 
 

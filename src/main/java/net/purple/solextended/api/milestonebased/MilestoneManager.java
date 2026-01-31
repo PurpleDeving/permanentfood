@@ -12,6 +12,6 @@ public abstract class MilestoneManager {
 
     @SubscribeEvent
     public abstract void onFoodCoundUpdate(FoodListEvent.PlayerFoodCountEvent event);
-    
+
 
 }
