@@ -8,6 +8,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.purple.permfood.Constants;
 import net.purple.permfood.PermanentFood;
+import net.purple.permfood.config.Configs;
 
 public class ModAttributes {
 
@@ -15,12 +16,12 @@ public class ModAttributes {
     /****************************************************************
      MAKE SURE: MAX VALUES HERE ARE LARGER THAN MAX IN CONFIG
      *****************************************************************/
-    // TODO > Can you check that autoamtically ?
+    // TODO > Can you check that automatically ?
 
 
     /****************************************************************
-     Attributes are loaded with Vanilla Defaults and set in EntityAttributeModificationEvent.
-     Background: Server Configs are loaded to late to be used here. And a Startup Config would be seperate and not auto-synced
+     Attributes are conditionally registered based on FoodSystemConfig enable flags.
+     They are loaded with Vanilla Defaults and set in EntityAttributeModificationEvent.
      *****************************************************************/
 
 
@@ -29,7 +30,8 @@ public class ModAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(
             BuiltInRegistries.ATTRIBUTE, PermanentFood.MODID);
 
-    public static final Holder<Attribute> MAX_HUNGER = ATTRIBUTES.register("max_hunger", () -> {
+    public static final Holder<Attribute> MAX_HUNGER = Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES
+            ? ATTRIBUTES.register("max_hunger", () -> {
 
         int defaultvalue = Constants.VANILLA_MAX_HUNGER;
 
@@ -42,9 +44,10 @@ public class ModAttributes {
                 10000
         );
 
-    });
+    }) : null;
 
-    public static final Holder<Attribute> MAX_SATURATION = ATTRIBUTES.register("max_saturation", () -> {
+    public static final Holder<Attribute> MAX_SATURATION = Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES
+            ? ATTRIBUTES.register("max_saturation", () -> {
 
         double defaultvalue = Constants.VANILLA_MAX_SATURATION;
 
@@ -57,10 +60,11 @@ public class ModAttributes {
                 10000
         );
 
-    });
+    }) : null;
 
 
-    public static final Holder<Attribute> MAX_EXHAUSTION = ATTRIBUTES.register("max_exhaustion", () -> {
+    public static final Holder<Attribute> MAX_EXHAUSTION = Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES
+            ? ATTRIBUTES.register("max_exhaustion", () -> {
 
         double defaultvalue = Constants.VANILLA_MAX_EXHAUSTION;
 
@@ -73,7 +77,7 @@ public class ModAttributes {
                 10000
         );
 
-    });
+    }) : null;
 
 
     public static void register(IEventBus modEventBus) {
