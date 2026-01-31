@@ -13,7 +13,7 @@ import net.purple.solextended.config.Configs;
 import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
 
 @EventBusSubscriber
-public class FoodListEventProducer {
+public class FoodListEvents {
 
     /******************************************
      Sync PlayerFoodList to client. FoodList can be created on client because Configs are synced.
@@ -38,11 +38,10 @@ public class FoodListEventProducer {
         PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
         playerFoodList.addFood(usedStack);
 
-
+        FoodListSyncHandler.syncFoodList(player);
         postPlayerFoodCountEvent(player);
-
-        // TODO: Sync needed here ?
     }
+
 
     public static void postPlayerFoodCountEvent(ServerPlayer player) {
         PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);

@@ -14,7 +14,8 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.purple.solextended.foodlist.FoodListEventProducer;
+import net.purple.solextended.foodlist.FoodListEvents;
+import net.purple.solextended.foodlist.FoodListSyncHandler;
 
 import java.util.Comparator;
 import java.util.List;
@@ -67,7 +68,8 @@ public class FoodListCommands {
 
         ServerPlayer player = source.getPlayer();
         player.getData(FOOD_LIST_ATTACHMENT).clearList();
-        FoodListEventProducer.postPlayerFoodCountEvent(player);
+        FoodListSyncHandler.syncFoodList(player);
+        FoodListEvents.postPlayerFoodCountEvent(player);
 
 
         source.sendSuccess(() -> Component.nullToEmpty("Your list has been cleared."), true);
