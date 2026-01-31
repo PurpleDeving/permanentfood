@@ -27,3 +27,6 @@ repo
 .vscode
 /gradle/wrapper/gradle-wrapper.jar
 /gradle/wrapper/gradle-wrapper.properties
+
+# Copilot shutup file
+AgentOutput/*
