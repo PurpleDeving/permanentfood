@@ -225,3 +225,22 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// --- Datagen quality-of-life: clean generated resources before running datagen ---
+// NeoForge datagen can be picky when the output folder already contains files from a previous run.
+// Deleting the output dir makes the run reproducible and avoids "already exists"/stale-file warnings.
+var generatedResourcesDir = file('src/generated/resources')
+
+tasks.register('cleanGeneratedResources', Delete) {
+    group = 'mod development'
+    description = 'Deletes src/generated/resources before running datagen.'
+    delete(generatedResourcesDir)
+}
+
+// Ensure datagen always starts from a clean output directory.
+// (prepareDataRun is what sets up the run; runData actually executes it.)
+['prepareDataRun', 'runData'].each { taskName ->
+    tasks.matching { it.name == taskName }.configureEach {
+        dependsOn(tasks.named('cleanGeneratedResources'))
+    }
+}

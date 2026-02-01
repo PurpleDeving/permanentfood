@@ -15,16 +15,21 @@ public class SolClientConfig extends Config {
 
     // TODO Implementation missng
 
+    @Name("Milestone Sound")
     @Desc("Whether a sounds should play when a milestone is reached.")
     public Boolean shouldPlayMilestoneSound = true;
-    @Desc("Whether particles sounds spawn when a milestone is reached.")
+    @Name("Milestone Particles")
+    @Desc("Whether particles spawn when a milestone is reached.")
     public Boolean shouldSpawnMilestoneParticles = true;
-    @Desc("Whether additional particles sounds spawn when a maximum milestone is reached.")
+    @Name("Max Milestone Particles")
+    @Desc("Whether additional particles spawn when a maximum milestone is reached.")
     public Boolean shouldSpawnMaxMilestoneParticles = true;
 
-    @Desc("Whether a sound should play when new food is eaten for the first time.")
+    @Name("New Food Particles")
+    @Desc("Whether particles should spawn when new food is eaten for the first time.")
     public Boolean shouldPlayParticlesForNewFood = true; //IMPL missing
 
+    @Name("Food Tooltips")
     @Desc("Whether food tooltips for eaten/not eaten foods is shown.")
     public Boolean isFoodTooltipEnabled = true;
 
