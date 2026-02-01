@@ -27,7 +27,7 @@ public class SolExtended {
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
     public static final Supplier<AttachmentType<PlayerFoodList>> FOOD_LIST_ATTACHMENT = ATTACHMENT_TYPES.register("food", () ->
-            AttachmentType.serializable(PlayerFoodList::new).sync(new FoodListSyncHandler()).build());
+            AttachmentType.serializable(PlayerFoodList::new).sync(new FoodListSyncHandler()).copyOnDeath().build());
 
 
     public SolExtended(IEventBus modEventBus) {
@@ -45,6 +45,8 @@ public class SolExtended {
     // TODO ReWrite FoodBookScreen for a modern screen ???
 
     // TODO Test Peaceful Hunger not working
+
+    // Empty Foodlist Page looks bad
 
     // TODO Tooltip
 }

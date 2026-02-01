@@ -67,7 +67,14 @@ public class FoodListCommands {
         }
 
         ServerPlayer player = source.getPlayer();
-        player.getData(FOOD_LIST_ATTACHMENT).clearList();
+        if (player == null) {
+            source.sendFailure(Component.literal("§cPlayer not found!"));
+            return 0;
+        }
+
+        player.getData(SolExtended.FOOD_LIST_ATTACHMENT).clearList();
+        player.syncData(FOOD_LIST_ATTACHMENT);
+
 
         // Direct update for all registered milestone managers
         var foodList = player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
