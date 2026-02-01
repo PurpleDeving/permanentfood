@@ -7,6 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.purple.solextended.SolextendedEvents;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.config.Configs;
 
@@ -14,7 +15,7 @@ import static net.purple.solextended.Constants.ENABLE_EXTENSIVE_LOGGING;
 import static net.purple.solextended.SolExtended.*;
 
 @EventBusSubscriber(modid = MODID)
-public class FoodListEvents {
+public class FoodListEatEvent {
 
     /******************************************
      Sync PlayerFoodList to client. FoodList can be created on client because Configs are synced.
@@ -45,7 +46,7 @@ public class FoodListEvents {
         boolean newFoodEaten = playerFoodList.addFood(usedStack);
 
         if (newFoodEaten) {
-            FoodListSyncEvents.syncFoodList(player);
+            SolextendedEvents.syncFoodListToClient(player);
 
             if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
                 LOGGER.info("FoodListEvents.onFoodEaten: New food eaten registered: " + usedStack.getDisplayName());

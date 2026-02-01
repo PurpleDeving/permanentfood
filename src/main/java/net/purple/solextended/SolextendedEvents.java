@@ -1,19 +1,22 @@
-package net.purple.solextended.api.milestonebased;
+package net.purple.solextended;
+
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.purple.solextended.SolExtended;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
+import net.purple.solextended.foodlist.PlayerFoodList;
+import net.purple.solextended.networking.FoodListData;
 
 import static net.purple.permfood.PermanentFood.MODID;
+import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
 
-/**
- * Handles player lifecycle events for milestone managers.
- * Ensures milestone managers are properly initialized and synced when players join, respawn, etc.
- */
 @EventBusSubscriber(modid = MODID)
-public class PlayerMilestoneEvents {
+public class SolextendedEvents {
+
 
     private static void refreshAllManagers(ServerPlayer player) {
         var foodList = player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
@@ -25,6 +28,10 @@ public class PlayerMilestoneEvents {
      */
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+
+        // Server needs to send any loaded data to the client
+        syncFoodListToClient(event.getEntity());
+
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             refreshAllManagers(serverPlayer);
         }
@@ -34,7 +41,9 @@ public class PlayerMilestoneEvents {
      * When a player changes dimension, ensure all milestone managers are maintained.
      */
     @SubscribeEvent
-    public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+    public static void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+
+        syncFoodListToClient(event.getEntity());
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             refreshAllManagers(serverPlayer);
         }
@@ -46,6 +55,9 @@ public class PlayerMilestoneEvents {
      */
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+
+        syncFoodListToClient(event.getEntity());
+
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             refreshAllManagers(serverPlayer);
         }
@@ -57,8 +69,33 @@ public class PlayerMilestoneEvents {
      */
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
+
+        syncFoodListToClient(event.getEntity());
+
+        // Copy food list data to the new player instance
+        var originalPlayer = event.getOriginal();
+        var original = originalPlayer.getData(FOOD_LIST_ATTACHMENT);
+        event.getEntity().setData(FOOD_LIST_ATTACHMENT, original);
+
         if (event.getEntity() instanceof ServerPlayer serverPlayer && !event.isWasDeath()) {
             refreshAllManagers(serverPlayer);
         }
     }
+
+
+    /**
+     * Syncs the player's food list to their client.
+     */
+    public static void syncFoodListToClient(Player player) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            PlayerFoodList foodList = player.getData(FOOD_LIST_ATTACHMENT);
+            PacketDistributor.sendToPlayer(
+                    serverPlayer,
+                    new FoodListData(foodList.serializeNBT(player.registryAccess()))
+            );
+        }
+    }
+
+
+    //TODO - Check Sync instead of this manual sync
 }

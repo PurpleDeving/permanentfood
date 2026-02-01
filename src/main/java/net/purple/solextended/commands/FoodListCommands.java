@@ -70,7 +70,7 @@ public class FoodListCommands {
         ServerPlayer player = source.getPlayer();
         player.getData(FOOD_LIST_ATTACHMENT).clearList();
 
-        FoodListSyncEvents.syncFoodList(player);
+        FoodListSyncEvents.syncFoodListToClient(player);
 
         // Direct update for all registered milestone managers
         var foodList = player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
