@@ -14,9 +14,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.purple.solextended.Constants;
 
+import static net.purple.solextended.SolExtended.MODID;
+
 //IMPL Names, Prefix, Description etc for everything here
 @Translatable.Name("Sol Extended")
-@Translation(prefix = "solextended")
+@Translation(prefix = MODID + ".solextended_config")
 public class SolExtendedConfig extends Config {
 
 

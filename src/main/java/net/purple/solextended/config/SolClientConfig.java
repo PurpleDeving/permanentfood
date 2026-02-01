@@ -6,7 +6,7 @@ import net.purple.solextended.Constants;
 
 import static net.purple.solextended.SolExtended.MODID;
 
-@Translation(prefix = MODID + "sol_client_config.")
+@Translation(prefix = MODID + ".sol_client_config.")
 public class SolClientConfig extends Config {
 
     public SolClientConfig() {
