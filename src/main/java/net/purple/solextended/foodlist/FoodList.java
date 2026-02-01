@@ -96,7 +96,4 @@ public class FoodList {
     }
 
 
-    // IMPL Redo on ConfigReload and ServerStart
-
-
 }

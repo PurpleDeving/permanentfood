@@ -2,17 +2,20 @@ package net.purple.solextended.api.milestonebased;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.purple.solextended.Constants;
 import net.purple.solextended.SolExtended;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -164,7 +167,14 @@ public class MilestoneManagerRegistry {
      * Updates all milestone managers for all online players.
      * Useful for config reloads or server-wide updates.
      */
-    public static void updateAllPlayersAllManagers(Collection<ServerPlayer> players) {
+    public static void updateAllPlayersAllManagers() {
+
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server == null) {
+            return;
+        }
+        List<ServerPlayer> players = server.getPlayerList().getPlayers();
+
         for (ServerPlayer player : players) {
             net.purple.solextended.foodlist.PlayerFoodList foodList =
                     player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
