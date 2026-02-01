@@ -2,14 +2,10 @@ package net.purple.solextended;
 
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
-import net.purple.solextended.foodlist.PlayerFoodList;
-import net.purple.solextended.networking.FoodListData;
 
 import static net.purple.permfood.PermanentFood.MODID;
 import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
@@ -29,9 +25,6 @@ public class SolextendedEvents {
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 
-        // Server needs to send any loaded data to the client
-        syncFoodListToClient(event.getEntity());
-
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             refreshAllManagers(serverPlayer);
         }
@@ -43,7 +36,6 @@ public class SolextendedEvents {
     @SubscribeEvent
     public static void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
 
-        syncFoodListToClient(event.getEntity());
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             refreshAllManagers(serverPlayer);
         }
@@ -55,8 +47,6 @@ public class SolextendedEvents {
      */
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-
-        syncFoodListToClient(event.getEntity());
 
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             refreshAllManagers(serverPlayer);
@@ -70,8 +60,6 @@ public class SolextendedEvents {
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
 
-        syncFoodListToClient(event.getEntity());
-
         // Copy food list data to the new player instance
         var originalPlayer = event.getOriginal();
         var original = originalPlayer.getData(FOOD_LIST_ATTACHMENT);
@@ -79,20 +67,6 @@ public class SolextendedEvents {
 
         if (event.getEntity() instanceof ServerPlayer serverPlayer && !event.isWasDeath()) {
             refreshAllManagers(serverPlayer);
-        }
-    }
-
-
-    /**
-     * Syncs the player's food list to their client.
-     */
-    public static void syncFoodListToClient(Player player) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            PlayerFoodList foodList = player.getData(FOOD_LIST_ATTACHMENT);
-            PacketDistributor.sendToPlayer(
-                    serverPlayer,
-                    new FoodListData(foodList.serializeNBT(player.registryAccess()))
-            );
         }
     }
 

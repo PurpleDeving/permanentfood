@@ -7,7 +7,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.purple.solextended.SolextendedEvents;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.config.Configs;
 
@@ -46,7 +45,7 @@ public class FoodListEatEvent {
         boolean newFoodEaten = playerFoodList.addFood(usedStack);
 
         if (newFoodEaten) {
-            SolextendedEvents.syncFoodListToClient(player);
+            player.syncData(FOOD_LIST_ATTACHMENT);
 
             if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
                 LOGGER.info("FoodListEvents.onFoodEaten: New food eaten registered: " + usedStack.getDisplayName());

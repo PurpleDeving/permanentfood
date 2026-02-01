@@ -11,6 +11,7 @@ import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.config.Configs;
 import net.purple.solextended.foodlist.PlayerFoodList;
 import net.purple.solextended.item.SolExtendedItems;
+import net.purple.solextended.networking.FoodListSyncHandler;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -26,7 +27,7 @@ public class SolExtended {
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
     public static final Supplier<AttachmentType<PlayerFoodList>> FOOD_LIST_ATTACHMENT = ATTACHMENT_TYPES.register("food", () ->
-            AttachmentType.serializable(PlayerFoodList::new).build());
+            AttachmentType.serializable(PlayerFoodList::new).sync(new FoodListSyncHandler()).build());
 
 
     public SolExtended(IEventBus modEventBus) {

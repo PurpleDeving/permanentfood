@@ -16,7 +16,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.purple.solextended.SolExtended;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
-import net.purple.solextended.foodlist.FoodListSyncEvents;
 
 import java.util.Comparator;
 import java.util.List;
@@ -69,8 +68,6 @@ public class FoodListCommands {
 
         ServerPlayer player = source.getPlayer();
         player.getData(FOOD_LIST_ATTACHMENT).clearList();
-
-        FoodListSyncEvents.syncFoodListToClient(player);
 
         // Direct update for all registered milestone managers
         var foodList = player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
