@@ -1,5 +1,7 @@
 package net.purple.solextended.api.milestonebased;
 
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashSet;
@@ -35,4 +37,13 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
      * </ol>
      */
     public abstract void onFoodCountUpdate(Player player, int foodCount);
+
+    /**
+     * Called by the {@code /foodlist showstats} command.
+     *
+     * <p>Default implementation does nothing. Override to append manager-specific stats to {@code output}.
+     */
+    public void outputStats(ServerPlayer player, int foodCount, MutableComponent output) {
+        // no-op by default
+    }
 }

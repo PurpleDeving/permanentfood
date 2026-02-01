@@ -1,11 +1,14 @@
 package net.purple.permfood.milestone;
 
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.purple.permfood.Constants;
 import net.purple.permfood.attributes.ModAttributes;
 import net.purple.permfood.config.Configs;
 import net.purple.permfood.config.FoodSystemConfig;
@@ -13,6 +16,7 @@ import net.purple.solextended.api.milestonebased.MilestoneManager;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import org.jline.utils.Log;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -75,5 +79,31 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
             );
             playerAttributes.getInstance(attribute).addOrReplacePermanentModifier(attributeModifier);
         }
+    }
+
+    @Override
+    public void outputStats(ServerPlayer player, int foodCount, MutableComponent output) {
+        FoodSystemConfig.HungerSection hunger = Configs.foodSystemConfig.sectionHunger;
+
+        output.append("§e--- Food System: Hunger ---\n");
+        output.append("§7Hunger Changes: §f" + (hunger.ENABLE_HUNGER_CHANGES ? "Enabled" : "Disabled") + "\n");
+
+        if (!hunger.ENABLE_HUNGER_CHANGES) {
+            output.append("§7Max Hunger: §f" + Constants.VANILLA_MAX_HUNGER + "\n");
+            return;
+        }
+
+        // Determine milestones reached for max hunger.
+        Optional<AttributeMilestoneProgression> maxHungerProg = this.getMilestoneProgressions().stream()
+                .filter(p -> p.getType() == MAX_HUNGER_BUFF)
+                .findFirst();
+
+        int reached = maxHungerProg.map(AttributeMilestoneProgression::getMilestonesReached).orElse(0);
+        int bonus = (int) (reached * hunger.perMilestoneHunger.get());
+
+        // Current max hunger value as applied to the player.
+        double current = player.getAttributeValue(ModAttributes.MAX_HUNGER);
+
+        output.append("§7Max Hunger is §f" + (int) current + "§7 with a Milestone Bonus of §f" + bonus + ".\n");
     }
 }

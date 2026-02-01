@@ -98,12 +98,23 @@ public class FoodListCommands {
             return 0;
         }
 
-        MutableComponent output = Component.literal("");
+        ServerPlayer player = source.getPlayer();
+        if (player == null) {
+            source.sendFailure(Component.literal("§cPlayer not found!"));
+            return 0;
+        }
 
-        // IMPL All FoodList base Stats
+        var foodList = player.getData(FOOD_LIST_ATTACHMENT);
+        int foodCount = foodList.getFoodEatenCount();
 
-        source.sendSuccess(() -> output, true);
+        MutableComponent output = Component.literal("")
+                .append("§6=== Food Stats for §f" + player.getName().getString() + " §6===\n")
+                .append("§7Unique Foods Eaten: §f" + foodCount + "\n");
 
+        // Let each milestone manager append its own stats lines.
+        MilestoneManagerRegistry.outputStatsAllManagers(player, foodCount, output);
+
+        source.sendSuccess(() -> output, false);
         return 1;
     }
 

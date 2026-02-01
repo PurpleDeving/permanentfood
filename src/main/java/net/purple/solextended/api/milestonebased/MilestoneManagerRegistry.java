@@ -1,5 +1,6 @@
 package net.purple.solextended.api.milestonebased;
 
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -124,6 +125,34 @@ public class MilestoneManagerRegistry {
         } catch (Exception e) {
             SolExtended.LOGGER.error(
                     "Failed to update milestone manager {} for player {}",
+                    registration.id,
+                    player.getName().getString(),
+                    e
+            );
+        }
+    }
+
+    /**
+     * Lets all registered milestone managers append their stats output into a shared component.
+     */
+    public static void outputStatsAllManagers(ServerPlayer player, int foodCount, MutableComponent output) {
+        for (ManagerRegistration<?> registration : REGISTERED_MANAGERS.values()) {
+            outputStatsManager(player, foodCount, output, registration);
+        }
+    }
+
+    private static <M extends MilestoneManager<?>> void outputStatsManager(
+            ServerPlayer player,
+            int foodCount,
+            MutableComponent output,
+            ManagerRegistration<M> registration
+    ) {
+        try {
+            M manager = player.getData(registration.attachmentType);
+            manager.outputStats(player, foodCount, output);
+        } catch (Exception e) {
+            SolExtended.LOGGER.error(
+                    "Failed to output stats for milestone manager {} for player {}",
                     registration.id,
                     player.getName().getString(),
                     e

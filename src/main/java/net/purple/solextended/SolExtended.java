@@ -46,7 +46,7 @@ public class SolExtended {
 
     // TODO Test Peaceful Hunger not working
 
-    // Empty Foodlist Page looks bad
+    // TODO Empty Foodlist Page looks bad
 
-    // TODO Tooltip
+    // TODO Tooltip inlcuding Book, Commands, showstats output etc.
 }
