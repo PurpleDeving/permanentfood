@@ -22,13 +22,13 @@ import static net.purple.permfood.PermanentFood.MODID;
  * Manages attribute buffs for players based on milestone progression.
  * Each player has their own instance of this class via DataAttachment managed by solextended.
  */
-public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgression> {
+public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgression> {
 
     private static final AttributeMilestoneType MAX_HUNGER_BUFF = new AttributeMilestoneType("max_hunger_buff", Configs.foodSystemConfig.sectionHunger.milestonesHunger.get(), ModAttributes.MAX_HUNGER);
     private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff", Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(), ModAttributes.MAX_SATURATION);
     private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff", Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(), ModAttributes.MAX_EXHAUSTION);
 
-    private static Supplier<AttachmentType<AttributeBuffs>> ATTACHMENT_TYPE;
+    private static Supplier<AttachmentType<FoodSystemBuffs>> ATTACHMENT_TYPE;
 
     /**
      * Registers this manager type with the central registry.
@@ -40,11 +40,11 @@ public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgressi
         if (ATTACHMENT_TYPE != null) {
             return;
         }
-        ATTACHMENT_TYPE = MilestoneManagerRegistry.registerManager(MODID, "attribute_buffs", AttributeBuffs::new);
+        ATTACHMENT_TYPE = MilestoneManagerRegistry.registerManager(MODID, "attribute_buffs", FoodSystemBuffs::new);
         Log.info("Registered AttributeBuffs milestone manager");
     }
 
-    public AttributeBuffs() {
+    public FoodSystemBuffs() {
         super();
 
         FoodSystemConfig foodSystemConfig = Configs.foodSystemConfig;
@@ -54,7 +54,7 @@ public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgressi
         this.getMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_EXHAUSTION_BUFF, foodSystemConfig.sectionExhaustion.perMilestoneExhaustion.get()));
     }
 
-    public static AttributeBuffs getForPlayer(Player player) {
+    public static FoodSystemBuffs getForPlayer(Player player) {
         if (ATTACHMENT_TYPE == null) {
             throw new IllegalStateException("AttributeBuffs.init() was not called early enough");
         }

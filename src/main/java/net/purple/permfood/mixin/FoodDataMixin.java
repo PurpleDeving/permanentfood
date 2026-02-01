@@ -22,6 +22,9 @@ import java.util.Objects;
 
 import static net.purple.permfood.attributes.ModAttributes.MAX_EXHAUSTION;
 import static net.purple.permfood.attributes.ModAttributes.MAX_SATURATION;
+import static net.purple.solextended.Constants.ENABLE_EXTENSIVE_LOGGING;
+import static net.purple.solextended.SolExtended.IS_DEV;
+
 
 @SuppressWarnings("DataFlowIssue")
 @Mixin(FoodData.class)
@@ -148,6 +151,12 @@ public class FoodDataMixin {
             at = @At("STORE"),
             name = "difficulty")
     private Difficulty peaceful_hunger$tick$getDifficulty(Difficulty originalHungerDifficulty) {
+
+        if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
+            System.out.println("FoodDataMixin.peaceful_hunger$tick$getDifficulty: Original Difficulty: " + originalHungerDifficulty);
+        }
+
+
         if (Configs.foodSystemConfig.peacefulHungerSection.ENABLE_HUNGER_ON_PEACEFUL && originalHungerDifficulty == Difficulty.PEACEFUL) {
             return Configs.foodSystemConfig.peacefulHungerSection.PEACEFUL_HUNGER_DIFFICULTY.get();
         }

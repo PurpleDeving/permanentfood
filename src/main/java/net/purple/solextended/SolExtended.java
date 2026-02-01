@@ -45,7 +45,5 @@ public class SolExtended {
 
     // TODO Test Peaceful Hunger not working
 
-    // TODO Move all Events together where usefull.
-
     // TODO Tooltip
 }

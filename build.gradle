@@ -119,7 +119,7 @@ neoForge {
         }
 
         // Second mod entry living in the same jar/source set
-        "${solextended_mod_id}" {
+        "${api_mod_id}" {
             sourceSet(sourceSets.main)
         }
     }
@@ -177,15 +177,15 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
-            mod_license            : mod_license,
             mod_version            : mod_version,
+            mod_license            : mod_license,
             fzzy_version           : fzzy_version,
             fzzy_mod_id            : fzzy_mod_id,
 
-            // SolExtended (embedded companion mod)
-            solextended_mod_id     : solextended_mod_id,
-            solextended_name       : solextended_name,
-            solextended_version    : solextended_version
+            // API / companion mod (embedded)
+            api_mod_id             : api_mod_id,
+            api_name               : api_name,
+            api_version            : api_version
 
     ]
     inputs.properties replaceProperties

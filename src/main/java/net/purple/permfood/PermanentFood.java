@@ -7,6 +7,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.purple.permfood.attributes.ModAttributes;
 import net.purple.permfood.config.Configs;
+import net.purple.permfood.milestone.FoodSystemBuffs;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -24,7 +25,7 @@ public class PermanentFood {
         Configs.init();
 
         // Must happen during construction (before RegisterEvent) so solextended's DeferredRegister can accept entries.
-        net.purple.permfood.milestone.AttributeBuffs.init();
+        FoodSystemBuffs.init();
 
         ModAttributes.register(modEventBus);
 

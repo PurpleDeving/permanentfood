@@ -5,28 +5,30 @@ license="${mod_license}"
 
 # Optional metadata keys (uncomment and fill in if you want them)
 # issueTrackerURL="..."
-# [[mixins]]
-# config="<modid>.mixins.json"
+
+[[mixins]]
+config="${mod_id}.mixins.json"
+
 # [[accessTransformers]]
 # file="META-INF/accesstransformer.cfg"
 
 # --- SolExtended (loads first) -------------------------------------------------
 [[mods]]
-modId="${solextended_mod_id}"
-version="${solextended_version}"
-displayName="${solextended_name}"
+modId="${api_mod_id}"
+version="${api_version}"
+displayName="${api_name}"
 description='''
 Internal companion mod shipped inside the PermanentFood jar.
 '''
 
-[[dependencies.${solextended_mod_id}]]
+[[dependencies.${api_mod_id}]]
 modId="neoforge"
 type="required"
 versionRange="[${neo_version},)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.${solextended_mod_id}]]
+[[dependencies.${api_mod_id}]]
 modId="${fzzy_mod_id}"
 type="required"
 versionRange="[${fzzy_version},)"
@@ -57,8 +59,8 @@ ordering="AFTER"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
-modId="${solextended_mod_id}"
+modId="${api_mod_id}"
 type="required"
-versionRange="[${solextended_version},)"
+versionRange="[${api_version},)"
 ordering="AFTER"
 side="BOTH"
