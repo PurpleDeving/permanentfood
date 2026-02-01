@@ -1,8 +1,6 @@
 package net.purple.solextended.client;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
@@ -45,9 +43,9 @@ public class TooltipHandler {
         boolean isAllowed = FoodList.isFoodAllowed(item);
         if (!isAllowed) { // Item is food but not allowed
             if (!isHealthy(item)) {
-                tooltip.add(localizedTooltip("disabled.cheap_food", ChatFormatting.DARK_GRAY));
+                tooltip.add(LocalizationHelper.localizedTooltip("disabled.cheap_food", ChatFormatting.DARK_GRAY));
             } else { // If food is healthy but not allowed, it must be the whitelist/blacklist
-                tooltip.add(localizedTooltip("disabled.white_black_list", ChatFormatting.GRAY));
+                tooltip.add(LocalizationHelper.localizedTooltip("disabled.white_black_list", ChatFormatting.GRAY));
             }
         }
         PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
@@ -55,22 +53,11 @@ public class TooltipHandler {
 
 
         if (hasBeenEaten) {
-            tooltip.add(localizedTooltip("enabled.eaten", ChatFormatting.GREEN));
+            tooltip.add(LocalizationHelper.localizedTooltip("enabled.eaten", ChatFormatting.GREEN));
         } else {
-            tooltip.add(localizedTooltip("enabled.not_eaten", ChatFormatting.DARK_GRAY));
+            tooltip.add(LocalizationHelper.localizedTooltip("enabled.not_eaten", ChatFormatting.DARK_GRAY));
         }
 
     }
 
-    private static MutableComponent localizedTooltip(String path, ChatFormatting color) {
-        return localizedComponent("tooltip", path).withStyle(color);
-    }
-
-    public static MutableComponent localizedComponent(String domain, String path, Object... args) {
-        return Component.translatable(keyString(domain, path), args);
-    }
-
-    public static String keyString(String domain, String path) {
-        return domain + "." + MODID + "." + path;
-    }
 }
