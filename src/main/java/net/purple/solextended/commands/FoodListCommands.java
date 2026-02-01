@@ -54,6 +54,11 @@ public class FoodListCommands {
         dispatcher.register(foodlistclearCommand);
 
 
+        final LiteralArgumentBuilder<CommandSourceStack> foodStatsCommand = Commands.literal("foodlist");
+        foodStatsCommand//.requires((CommandSourceStack sourceStack) -> sourceStack.hasPermission(2))
+                .then(Commands.literal("showstats").executes(FoodListCommands::showStats));
+        dispatcher.register(foodStatsCommand);
+
     }
 
     private static int clearList(CommandContext<CommandSourceStack> context) {
@@ -81,27 +86,8 @@ public class FoodListCommands {
 
         source.sendSuccess(() -> Component.nullToEmpty("Your list has been cleared."), true);
         return 1;
-    }
-
-
-    /******************************************
-     Dev Commands for testing and debugging
-     ******************************************/
-
-    public static void registerDevCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
-
-        final LiteralArgumentBuilder<CommandSourceStack> foodStatsCommand = Commands.literal("foodlist");
-        foodStatsCommand//.requires((CommandSourceStack sourceStack) -> sourceStack.hasPermission(2))
-                .then(Commands.literal("showstats").executes(FoodListCommands::showStats));
-        dispatcher.register(foodStatsCommand);
-
-        final LiteralArgumentBuilder<CommandSourceStack> foodlistCommand = Commands.literal("foodlist");
-        foodlistCommand//.requires((CommandSourceStack sourceStack) -> sourceStack.hasPermission(2))
-                .then(Commands.literal("showlist").executes(FoodListCommands::showList));
-        dispatcher.register(foodlistCommand);
 
     }
-
 
     private static int showStats(CommandContext<CommandSourceStack> context) {
 
@@ -120,6 +106,22 @@ public class FoodListCommands {
 
         return 1;
     }
+
+
+    /******************************************
+     Dev Commands for testing and debugging
+     ******************************************/
+
+    public static void registerDevCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+
+
+        final LiteralArgumentBuilder<CommandSourceStack> foodlistCommand = Commands.literal("foodlist");
+        foodlistCommand//.requires((CommandSourceStack sourceStack) -> sourceStack.hasPermission(2))
+                .then(Commands.literal("showlist").executes(FoodListCommands::showList));
+        dispatcher.register(foodlistCommand);
+
+    }
+
 
     private static int showList(CommandContext<CommandSourceStack> context) {
 
