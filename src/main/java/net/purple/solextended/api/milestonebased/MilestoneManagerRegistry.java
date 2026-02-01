@@ -13,7 +13,6 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.purple.solextended.Constants;
 import net.purple.solextended.SolExtended;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import static net.purple.solextended.SolExtended.IS_DEV;
  *   <li>Mods register manager types via {@link #registerManager(String, String, Supplier)}.</li>
  *   <li>solextended stores per-player instances using DataAttachments.</li>
  *   <li>Call {@link #updateAllManagers(Player, int)} to refresh all registered managers for one player.</li>
- *   <li>Call {@link #updateAllPlayersAllManagers(Collection)} to refresh all players (e.g. config reload).</li>
  * </ul>
  */
 public class MilestoneManagerRegistry {
