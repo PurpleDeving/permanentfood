@@ -19,7 +19,6 @@ import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
 import static net.purple.solextended.SolExtended.IS_DEV;
@@ -140,7 +139,6 @@ public class FoodListCommands {
         // Deterministic + server-friendly sorting: registry id (minecraft:apple) instead of localized names.
         List<ResourceLocation> sortedIds = eatenFoods.stream()
                 .map(BuiltInRegistries.ITEM::getKey)
-                .filter(Objects::nonNull)
                 .sorted(Comparator.comparing(ResourceLocation::toString, String.CASE_INSENSITIVE_ORDER))
                 .toList();
 

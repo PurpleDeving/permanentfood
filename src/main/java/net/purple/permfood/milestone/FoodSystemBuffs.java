@@ -54,13 +54,6 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
         this.getMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_EXHAUSTION_BUFF, foodSystemConfig.sectionExhaustion.perMilestoneExhaustion.get()));
     }
 
-    public static FoodSystemBuffs getForPlayer(Player player) {
-        if (ATTACHMENT_TYPE == null) {
-            throw new IllegalStateException("AttributeBuffs.init() was not called early enough");
-        }
-        return MilestoneManagerRegistry.getManagerForPlayer(player, ATTACHMENT_TYPE);
-    }
-
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void onFoodCountUpdate(Player player, int foodCount) {

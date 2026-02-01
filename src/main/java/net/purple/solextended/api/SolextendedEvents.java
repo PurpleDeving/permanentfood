@@ -32,45 +32,7 @@ public class SolextendedEvents {
         }
     }
 
-    /*    *//**
-     * When a player changes dimension, ensure all milestone managers are maintained.
-     *//*
-    @SubscribeEvent
-    public static void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
 
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            refreshAllManagers(serverPlayer);
-        }
-    }*/
-
-    /*    *//**
-     * When a player respawns (death or end return), maintain milestone manager data.
-     * The DataAttachment system automatically handles cloning if needed.
-     *//*
-    @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            refreshAllManagers(serverPlayer);
-        }
-    }*/
-
-    /**
-     * Handle player cloning (death, end portal return).
-     * DataAttachment automatically handles this, but we ensure all managers are re-applied.
-     */
-/*    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-
-        // Copy food list data to the new player instance
-        var originalPlayer = event.getOriginal();
-        var original = originalPlayer.getData(FOOD_LIST_ATTACHMENT);
-        event.getEntity().setData(FOOD_LIST_ATTACHMENT, original);
-
-        if (event.getEntity() instanceof ServerPlayer serverPlayer && !event.isWasDeath()) {
-            refreshAllManagers(serverPlayer);
-        }
-    }*/
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer serverPlayer)) {

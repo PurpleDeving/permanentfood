@@ -10,7 +10,9 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.purple.solextended.Constants;
 import net.purple.solextended.SolExtended;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static net.purple.solextended.SolExtended.IS_DEV;
@@ -143,11 +145,4 @@ public class MilestoneManagerRegistry {
         }
     }
 
-    public static Set<ResourceLocation> getRegisteredManagerIds() {
-        return Collections.unmodifiableSet(REGISTERED_MANAGERS.keySet());
-    }
-
-    public static int getRegisteredManagerCount() {
-        return REGISTERED_MANAGERS.size();
-    }
 }
