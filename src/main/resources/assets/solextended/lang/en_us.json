@@ -3,5 +3,9 @@
   "tooltip.solextended.enabled.not_eaten": "Not yet eaten! What does it taste like?",
   "tooltip.solextended.enabled.eaten": "Eaten: Assisted in adding stats",
   "tooltip.solextended.cheap": "This food is not nourishing enough to improve your stats.",
-  "tooltip.solextended.disabled.white_black_list": "This food is on the blacklist or not on the whitelist and thus does not count."
+  "tooltip.solextended.disabled.white_black_list": "This food is on the blacklist or not on the whitelist and thus does not count.",
+  "gui.solextended.food_book.stats.title": "Food Statistics",
+  "gui.solextended.food_book.stats.foods_eaten": "Foods Eaten",
+  "gui.solextended.food_book.eaten_foods": "Eaten Foods (%s)",
+  "gui.solextended.food_book.attribution": "by: %s"
 }

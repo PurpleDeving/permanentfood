@@ -1,5 +1,6 @@
 package net.purple.solextended.client.gui.pages;
 
+import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.purple.solextended.client.gui.elements.*;
@@ -22,6 +23,10 @@ public abstract class Page extends UIElement {
     protected static final Color LEAST_BLACK = new Color(0, 0, 0, 64);
 
     protected Page(Rectangle frame, String header) {
+        this(frame, Component.literal(header));
+    }
+
+    protected Page(Rectangle frame, Component header) {
         super(frame);
 
         mainStack = new UIStack();

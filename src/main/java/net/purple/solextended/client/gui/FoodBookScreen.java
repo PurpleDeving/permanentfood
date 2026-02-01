@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.purple.solextended.SolExtended;
+import net.purple.solextended.client.LocalizationHelper;
 import net.purple.solextended.client.gui.elements.ImageData;
 import net.purple.solextended.client.gui.elements.UIElement;
 import net.purple.solextended.client.gui.elements.UIImage;
@@ -88,8 +89,9 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
                     .collect(Collectors.toList());
 
             // ItemListPage.pages returns multiple pages if needed
+            Component title = LocalizationHelper.localizedComponent("gui", "food_book.eaten_foods", eatenStacks.size());
             List<? extends Page> pages = FoodListPage.pages(frame,
-                    "Eaten Foods (" + eatenStacks.size() + ")", eatenStacks);
+                    title.getString(), eatenStacks);
 
             // Return the first page (we'll handle multiple pages separately)
             return pages.isEmpty() ? new StatsPage(0, frame) : pages.getFirst();
@@ -125,13 +127,13 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
         permanentElements.clear();
 
         // Page number label
-        pageNumberLabel = new UILabel("1");
+        pageNumberLabel = new UILabel(Component.literal("1"));
         pageNumberLabel.setCenterX(background.getCenterX());
         pageNumberLabel.setMinY(background.getMinY() + 156);
         permanentElements.add(pageNumberLabel);
 
         // Mod attribution label (initially hidden)
-        modAttributionLabel = new UILabel("");
+        modAttributionLabel = new UILabel(Component.empty());
         modAttributionLabel.color = new Color(128, 128, 128);
         modAttributionLabel.setMinX(background.getMinX() + 8);
         modAttributionLabel.setMaxY(background.getMaxY() - 8);
@@ -182,8 +184,9 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
                     .collect(Collectors.toList());
 
             if (!eatenStacks.isEmpty()) {
+                Component title = LocalizationHelper.localizedComponent("gui", "food_book.eaten_foods", eatenStacks.size());
                 List<? extends Page> foodPages = FoodListPage.pages(background.frame,
-                        "Eaten Foods (" + eatenStacks.size() + ")", eatenStacks);
+                        title.getString(), eatenStacks);
 
                 for (Page page : foodPages) {
                     pageEntries.add(new PageRegistry.PageEntry(page, null));
@@ -236,7 +239,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
         updateButtonVisibility();
         updateModAttribution();
 
-        pageNumberLabel.text = "" + (currentPageNumber + 1);
+        pageNumberLabel.setComponent(Component.literal("" + (currentPageNumber + 1)));
     }
 
     @Override
@@ -259,11 +262,11 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
 
         PageRegistry.PageEntry currentEntry = pageEntries.get(currentPageNumber);
         if (currentEntry.isExternal()) {
-            modAttributionLabel.text = "by: " + currentEntry.modId;
+            modAttributionLabel.setComponent(LocalizationHelper.localizedComponent("gui", "food_book.attribution", currentEntry.modId));
             // Update label frame to fit new text
-            modAttributionLabel.frame.width = font.width(modAttributionLabel.text) - 1;
+            modAttributionLabel.frame.width = font.width(modAttributionLabel.component) - 1;
         } else {
-            modAttributionLabel.text = "";
+            modAttributionLabel.setComponent(Component.empty());
         }
     }
 }
