@@ -22,7 +22,7 @@ public class Constants {
     // Enable test items in Food Book GUI
     public static final boolean FOOD_BOOK_TEST_ITEMS = IS_DEV && false; //TODO Need to Test
 
-    public static final boolean ENABLE_EXTENSIVE_LOGGING = IS_DEV && true;
+    public static final boolean ENABLE_EXTENSIVE_LOGGING = IS_DEV && false;
 
 
 }

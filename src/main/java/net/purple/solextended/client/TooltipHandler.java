@@ -55,7 +55,7 @@ public class TooltipHandler {
 
 
         if (hasBeenEaten) {
-            tooltip.add(localizedTooltip("disabled.eaten", ChatFormatting.GREEN));
+            tooltip.add(localizedTooltip("enabled.eaten", ChatFormatting.GREEN));
         } else {
             tooltip.add(localizedTooltip("enabled.not_eaten", ChatFormatting.DARK_GRAY));
         }
