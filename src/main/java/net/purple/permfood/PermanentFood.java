@@ -23,6 +23,9 @@ public class PermanentFood {
 
         Configs.init();
 
+        // Must happen during construction (before RegisterEvent) so solextended's DeferredRegister can accept entries.
+        net.purple.permfood.milestone.AttributeBuffs.init();
+
         ModAttributes.register(modEventBus);
 
 

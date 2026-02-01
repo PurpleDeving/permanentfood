@@ -28,12 +28,21 @@ public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgressi
     private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff", Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(), ModAttributes.MAX_SATURATION);
     private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff", Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(), ModAttributes.MAX_EXHAUSTION);
 
+    private static Supplier<AttachmentType<AttributeBuffs>> ATTACHMENT_TYPE;
+
     /**
-     * Attachment type registered with solextended's centralized registry.
-     * This is used to retrieve per-player instances.
+     * Registers this manager type with the central registry.
+     *
+     * <p>This must run before NeoForge's attachment type {@code RegisterEvent} fires.
+     * Do <b>not</b> call this from common setup.</p>
      */
-    public static final Supplier<AttachmentType<AttributeBuffs>> ATTACHMENT_TYPE =
-            MilestoneManagerRegistry.registerManager(MODID, "attribute_buffs", AttributeBuffs::new);
+    public static void init() {
+        if (ATTACHMENT_TYPE != null) {
+            return;
+        }
+        ATTACHMENT_TYPE = MilestoneManagerRegistry.registerManager(MODID, "attribute_buffs", AttributeBuffs::new);
+        Log.info("Registered AttributeBuffs milestone manager");
+    }
 
     public AttributeBuffs() {
         super();
@@ -46,6 +55,9 @@ public class AttributeBuffs extends MilestoneManager<AttributeMilestoneProgressi
     }
 
     public static AttributeBuffs getForPlayer(Player player) {
+        if (ATTACHMENT_TYPE == null) {
+            throw new IllegalStateException("AttributeBuffs.init() was not called early enough");
+        }
         return MilestoneManagerRegistry.getManagerForPlayer(player, ATTACHMENT_TYPE);
     }
 

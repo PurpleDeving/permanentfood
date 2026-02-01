@@ -42,14 +42,9 @@ public class MilestoneManagerRegistry {
      */
     private static boolean registered = false;
 
-    private static class ManagerRegistration<M extends MilestoneManager<?>> {
-        final ResourceLocation id;
-        final Supplier<AttachmentType<M>> attachmentType;
-
-        ManagerRegistration(ResourceLocation id, Supplier<AttachmentType<M>> attachmentType) {
-            this.id = id;
-            this.attachmentType = attachmentType;
-        }
+    private record ManagerRegistration<M extends MilestoneManager<?>>(
+            ResourceLocation id,
+            Supplier<AttachmentType<M>> attachmentType) {
     }
 
     /**
@@ -107,7 +102,7 @@ public class MilestoneManagerRegistry {
     public static void updateAllManagers(Player player, int foodCount) {
 
         if (IS_DEV && Constants.ENABLE_EXTENSIVE_LOGGING) {
-            SolExtended.LOGGER.info("MilestoneManagerRegistry.updateAllManagers: Updating all managers for player {} with foodCount {}",
+            SolExtended.LOGGER.warn("MilestoneManagerRegistry.updateAllManagers: Updating all managers for player {} with foodCount {}",
                     player.getName().getString(), foodCount);
         }
 
