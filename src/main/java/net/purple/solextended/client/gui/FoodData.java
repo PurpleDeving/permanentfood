@@ -2,6 +2,8 @@ package net.purple.solextended.client.gui;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.purple.solextended.foodlist.PlayerFoodList;
 
 import java.util.HashSet;
@@ -15,6 +17,7 @@ import static net.purple.solextended.Constants.FOOD_BOOK_TEST_ITEMS;
  * Separates data logic from UI concerns.
  * Package-private - for internal use by the Food Book screen.
  */
+@OnlyIn(Dist.CLIENT)
 final class FoodData {
     private final PlayerFoodList foodList;
     private final Set<Item> eatenFoods;

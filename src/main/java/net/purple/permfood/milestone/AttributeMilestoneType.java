@@ -12,11 +12,16 @@ import static net.purple.permfood.PermanentFood.MODID;
 public class AttributeMilestoneType extends MilestoneType {
 
     Holder<Attribute> attribute;
+    String declareName;
+    Boolean isEnabled;
 
-    public AttributeMilestoneType(String name, List<? extends Integer> milestones, Holder<Attribute> attribute) {
+    public AttributeMilestoneType(String name, List<? extends Integer> milestones, Holder<Attribute> attribute, String declareName, Boolean isEnabled) {
         super(name, milestones);
         this.attribute = attribute;
+        this.declareName = declareName;
+        this.isEnabled = isEnabled;
     }
+
 
     public Holder<Attribute> getAttribute() {
         return attribute;
@@ -26,4 +31,8 @@ public class AttributeMilestoneType extends MilestoneType {
         return ResourceLocation.fromNamespaceAndPath(MODID, this.getName());
     }
 
+    public String getDeclareName() {
+        return declareName;
+    }
 }
+

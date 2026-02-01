@@ -1,6 +1,8 @@
 package net.purple.solextended.client.gui.pages;
 
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.awt.*;
 
@@ -10,6 +12,7 @@ import java.awt.*;
  *
  * @see net.purple.solextended.client.gui.PageRegistry#registerExternalPage(String, PageProvider)
  */
+@OnlyIn(Dist.CLIENT)
 @FunctionalInterface
 public interface PageProvider {
     /**

@@ -199,8 +199,8 @@ public class FoodDataMixin {
 
     // MAX Exhaustion
     @ModifyConstant(
-            method = "tick", // Note: The method descriptor is (IF)V in bytecode
-            constant = @Constant(floatValue = 4.0F)
+            method = "tick",
+            constant = @Constant(floatValue = 4.0F) // Doubles as the Exhaustion Threshold (when it is reduced for hunger/sauturation) and also the amount it is reduced by.
     )
     private float useMaxExhaustion(float original, Player player) {
         if (!Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES) {

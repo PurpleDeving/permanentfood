@@ -6,7 +6,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.purple.permfood.Constants;
 import net.purple.permfood.PermanentFood;
 import net.purple.permfood.config.Configs;
 
@@ -33,7 +32,7 @@ public class ModAttributes {
     public static final Holder<Attribute> MAX_HUNGER = Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES
             ? ATTRIBUTES.register("max_hunger", () -> {
 
-        int defaultvalue = Constants.VANILLA_MAX_HUNGER;
+        int defaultvalue = Configs.foodSystemConfig.sectionHunger.baseHunger.get();
 
         return new RangedAttribute(
                 // The translation key to use.
@@ -49,7 +48,7 @@ public class ModAttributes {
     public static final Holder<Attribute> MAX_SATURATION = Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES
             ? ATTRIBUTES.register("max_saturation", () -> {
 
-        double defaultvalue = Constants.VANILLA_MAX_SATURATION;
+        double defaultvalue = Configs.foodSystemConfig.sectionSaturation.baseSaturation.get();
 
         return new RangedAttribute(
                 // The translation key to use.
@@ -66,7 +65,7 @@ public class ModAttributes {
     public static final Holder<Attribute> MAX_EXHAUSTION = Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES
             ? ATTRIBUTES.register("max_exhaustion", () -> {
 
-        double defaultvalue = Constants.VANILLA_MAX_EXHAUSTION;
+        double defaultvalue = Configs.foodSystemConfig.sectionExhaustion.baseExhaustion.get();
 
         return new RangedAttribute(
                 // The translation key to use.

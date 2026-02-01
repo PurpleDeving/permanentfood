@@ -30,8 +30,6 @@ public class FoodList {
         Set<Item> newSet = new HashSet<>();
 
         var config = Configs.solExtendedConfig;
-        int minimumFood = config.minimumFoodValue.get();
-
 
         // If whitelist contains entries, prefer iterating only over those (much faster for large registries)
         if (config.listMode.get() == SolExtendedConfig.ListMode.WHITELIST && !config.whiteList.isEmpty()) {
@@ -40,10 +38,11 @@ public class FoodList {
                     Item item = BuiltInRegistries.ITEM.get(rl);
                     // Registry lookups never return null; unknown ids resolve to the default (AIR).
                     if (item == Items.AIR) continue;
-                    FoodProperties fp = item.getFoodProperties(item.getDefaultInstance(), null);
-                    if (fp != null && fp.nutrition() >= minimumFood) {
-                        newSet.add(item);
-                    }
+                    if (!isFood(item)) continue;
+                    if (!isHealthy(item)) continue;
+
+                    newSet.add(item);
+
                 } catch (Throwable ignored) {
                     SolExtended.LOGGER.warn("Failed to resolve whitelisted item: {}", rl);
                 }
@@ -69,10 +68,9 @@ public class FoodList {
                 try {
                     if (item == Items.AIR) return;
                     if (blacklistedItems.contains(item)) return;
-                    FoodProperties fp = item.getFoodProperties(item.getDefaultInstance(), null);
-                    if (fp != null && fp.nutrition() >= minimumFood) {
-                        newSet.add(item);
-                    }
+                    if (!isFood(item)) return;
+                    if (!isHealthy(item)) return;
+                    newSet.add(item);
                 } catch (Throwable ignoredInner) {
                     // ignore corrupt entries
                 }
@@ -82,17 +80,23 @@ public class FoodList {
         ALLOWED_FOODS = Collections.unmodifiableSet(newSet);
     }
 
+    public static boolean isHealthy(Item item) {
+        if (!isFood(item)) return false;
+        //noinspection DataFlowIssue
+        return item.getFoodProperties(item.getDefaultInstance(), null).saturation() >= Configs.solExtendedConfig.minimumFoodValue.get();
+    }
+
     public static boolean isFoodAllowed(Item item) {
         return lazzyGetAllowedFoods().contains(item);
+    }
+
+    public static boolean isFood(Item item) {
+        FoodProperties foodProps = item.getFoodProperties(item.getDefaultInstance(), null);
+        return foodProps != null;
     }
 
 
     // IMPL Redo on ConfigReload and ServerStart
 
-
-    public static boolean isFoodAllowed() {
-        // IMPL Parameter. Check if food is on big list
-        return true;
-    }
 
 }

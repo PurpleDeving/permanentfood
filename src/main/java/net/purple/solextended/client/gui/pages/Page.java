@@ -1,5 +1,7 @@
 package net.purple.solextended.client.gui.pages;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.purple.solextended.client.gui.elements.*;
 
 import java.awt.*;
@@ -9,6 +11,7 @@ import java.awt.*;
  * Provides helper methods for creating common page elements.
  * External mods can extend this to create custom pages.
  */
+@OnlyIn(Dist.CLIENT)
 public abstract class Page extends UIElement {
     protected final UIStack mainStack;
     protected final int spacing = 6;

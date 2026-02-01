@@ -1,6 +1,8 @@
 package net.purple.solextended.client.gui;
 
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.purple.solextended.client.gui.pages.Page;
 import net.purple.solextended.client.gui.pages.PageProvider;
 
@@ -16,6 +18,7 @@ import java.util.Map;
  * External mods can register custom pages that will be displayed between
  * the stats page and the eaten foods list.
  */
+@OnlyIn(Dist.CLIENT)
 public final class PageRegistry {
     private static final List<PageProvider> internalPages = new ArrayList<>();
     private static final Map<String, PageProvider> externalPages = new LinkedHashMap<>();

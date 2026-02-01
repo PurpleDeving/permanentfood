@@ -30,6 +30,8 @@ public class SolextendedEvents {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             refreshAllManagers(serverPlayer);
         }
+
+        
     }
 
 

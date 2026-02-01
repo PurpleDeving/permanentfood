@@ -1,6 +1,8 @@
 package net.purple.solextended.client.gui.examples;
 
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.purple.solextended.client.gui.FoodBookScreen;
 import net.purple.solextended.client.gui.PageRegistry;
 import net.purple.solextended.client.gui.elements.UIElement;
@@ -18,6 +20,7 @@ import java.awt.*;
  * 2. Call registerExamplePage() during your mod initialization
  * 3. The page will appear in the Food Book between stats and eaten foods
  */
+@OnlyIn(Dist.CLIENT)
 public class ExternalPageExample {
 
     /**

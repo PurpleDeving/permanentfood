@@ -55,6 +55,9 @@ public class PlayerFoodList implements INBTSerializable<CompoundTag> {
         return java.util.Collections.unmodifiableSet(eatenFoods);
     }
 
+    public boolean hasEaten(Item food) {
+        return eatenFoods.contains(food);
+    }
 
     public void clearList() {
         eatenFoods.clear();

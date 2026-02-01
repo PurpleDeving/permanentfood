@@ -1,6 +1,8 @@
 package net.purple.solextended.client.gui.pages;
 
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.purple.solextended.client.gui.elements.UIItemStack;
 
 import java.awt.*;
@@ -11,6 +13,7 @@ import java.util.List;
  * Page displaying a grid of item stacks (eaten foods).
  * Package-accessible for use by FoodBookScreen.
  */
+@OnlyIn(Dist.CLIENT)
 public final class FoodListPage extends Page {
     private static final int itemsPerRow = 5;
     private static final int rowsPerPage = 6;

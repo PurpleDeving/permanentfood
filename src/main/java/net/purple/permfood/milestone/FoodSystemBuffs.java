@@ -8,7 +8,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.purple.permfood.Constants;
 import net.purple.permfood.attributes.ModAttributes;
 import net.purple.permfood.config.Configs;
 import net.purple.permfood.config.FoodSystemConfig;
@@ -16,7 +15,6 @@ import net.purple.solextended.api.milestonebased.MilestoneManager;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import org.jline.utils.Log;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -28,9 +26,13 @@ import static net.purple.permfood.PermanentFood.MODID;
  */
 public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgression> {
 
-    private static final AttributeMilestoneType MAX_HUNGER_BUFF = new AttributeMilestoneType("max_hunger_buff", Configs.foodSystemConfig.sectionHunger.milestonesHunger.get(), ModAttributes.MAX_HUNGER);
-    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff", Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(), ModAttributes.MAX_SATURATION);
-    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff", Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(), ModAttributes.MAX_EXHAUSTION);
+    private static final AttributeMilestoneType MAX_HUNGER_BUFF = new AttributeMilestoneType("max_hunger_buff",
+            Configs.foodSystemConfig.sectionHunger.milestonesHunger.get(),
+            ModAttributes.MAX_HUNGER,
+            "Hunger",
+            Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES);
+    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff", Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(), ModAttributes.MAX_SATURATION, "Saturation", Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES);
+    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff", Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(), ModAttributes.MAX_EXHAUSTION, "Exhaustion", Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES);
 
     private static Supplier<AttachmentType<FoodSystemBuffs>> ATTACHMENT_TYPE;
 
@@ -83,27 +85,24 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
 
     @Override
     public void outputStats(ServerPlayer player, int foodCount, MutableComponent output) {
-        FoodSystemConfig.HungerSection hunger = Configs.foodSystemConfig.sectionHunger;
 
-        output.append("§e--- Food System: Hunger ---\n");
-        output.append("§7Hunger Changes: §f" + (hunger.ENABLE_HUNGER_CHANGES ? "Enabled" : "Disabled") + "\n");
+        for (AttributeMilestoneProgression progression : this.getMilestoneProgressions()) {
+            AttributeMilestoneType type = (AttributeMilestoneType) progression.getType();
+            String declareName = type.declareName;
 
-        if (!hunger.ENABLE_HUNGER_CHANGES) {
-            output.append("§7Max Hunger: §f" + Constants.VANILLA_MAX_HUNGER + "\n");
-            return;
+            output.append("§e--- Food System: " + declareName + " ---\n");
+            output.append("§f" + declareName + " Changes: " + (type.isEnabled ? "Enabled" : "Disabled") + "\n");
+
+            if (!type.isEnabled) {
+                continue;
+            }
+
+            double current = AttributeMilestoneProgression.round(player.getAttributeValue(type.getAttribute()), 1);
+            double bonus = AttributeMilestoneProgression.round(progression.getBuffValue(), 1);
+
+            output.append("§fMax " + declareName + " is §f" + current + "§7 with a Milestone Bonus of §f" + bonus + ".\n");
+
+
         }
-
-        // Determine milestones reached for max hunger.
-        Optional<AttributeMilestoneProgression> maxHungerProg = this.getMilestoneProgressions().stream()
-                .filter(p -> p.getType() == MAX_HUNGER_BUFF)
-                .findFirst();
-
-        int reached = maxHungerProg.map(AttributeMilestoneProgression::getMilestonesReached).orElse(0);
-        int bonus = (int) (reached * hunger.perMilestoneHunger.get());
-
-        // Current max hunger value as applied to the player.
-        double current = player.getAttributeValue(ModAttributes.MAX_HUNGER);
-
-        output.append("§7Max Hunger is §f" + (int) current + "§7 with a Milestone Bonus of §f" + bonus + ".\n");
     }
 }

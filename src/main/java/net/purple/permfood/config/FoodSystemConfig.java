@@ -15,6 +15,7 @@ import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedNumber;
 import net.minecraft.world.Difficulty;
 import net.purple.permfood.Constants;
+import org.jetbrains.annotations.NotNull;
 
 import static net.purple.permfood.PermanentFood.MODID;
 
@@ -97,7 +98,7 @@ public class FoodSystemConfig extends Config {
         public boolean ENABLE_SATURATION_CHANGES = true;
 
         @RequiresAction(action = Action.RESTART)
-        public ValidatedFloat baseSaturation = new ValidatedFloat(4.0F, 10000.0F, 0, ValidatedNumber.WidgetType.TEXTBOX);
+        public ValidatedFloat baseSaturation = new ValidatedFloat(20.0F, 10000.0F, 0, ValidatedNumber.WidgetType.TEXTBOX);
 
         @Desc("The Amount of max Saturation gained per Milestone reached. \n" +
                 "Higher values will make each Milestone more impactful.")
@@ -125,7 +126,7 @@ public class FoodSystemConfig extends Config {
         public boolean ENABLE_EXHAUSTION_CHANGES = true;
 
         @RequiresAction(action = Action.RESTART)
-        public ValidatedFloat baseExhaustion = new ValidatedFloat(20.0F, 10000, 0, ValidatedNumber.WidgetType.TEXTBOX);
+        public ValidatedFloat baseExhaustion = new ValidatedFloat(4.0F, 10000, 0, ValidatedNumber.WidgetType.TEXTBOX);
 
         @Desc("The Amount of max Exhaustion gained per Milestone reached. \n" +
                 "Higher values will make each Milestone more impactful.")
@@ -144,7 +145,7 @@ public class FoodSystemConfig extends Config {
 
     // The Server should overwrite the clients config.
     @Override
-    public SaveType saveType() {
+    public @NotNull SaveType saveType() {
         return SaveType.OVERWRITE;
     }
 

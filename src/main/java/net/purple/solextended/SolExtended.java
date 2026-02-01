@@ -49,4 +49,6 @@ public class SolExtended {
     // TODO Empty Foodlist Page looks bad
 
     // TODO Tooltip inlcuding Book, Commands, showstats output etc.
+
+    // TODO Remove more Hunger per Exhaustion option
 }
