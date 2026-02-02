@@ -62,7 +62,5 @@ public class SolextendedEvents {
 
         }
     }
-
-
-    //TODO - Check Sync instead of this manual sync
+ 
 }

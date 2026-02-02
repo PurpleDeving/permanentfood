@@ -4,8 +4,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for all milestone-based progression managers.
@@ -21,9 +21,9 @@ import java.util.Set;
  */
 public abstract class MilestoneManager<T extends MilestoneProgression> {
 
-    private final Set<T> milestoneProgressions = new HashSet<>();
+    private final List<T> milestoneProgressions = new ArrayList<>();
 
-    public Set<T> getMilestoneProgressions() {
+    public List<T> getMilestoneProgressions() {
         return milestoneProgressions;
     }
 

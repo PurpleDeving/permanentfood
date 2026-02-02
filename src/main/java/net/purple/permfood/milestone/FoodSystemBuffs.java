@@ -15,7 +15,7 @@ import net.purple.solextended.api.milestonebased.MilestoneManager;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import org.jline.utils.Log;
 
-import java.util.Set;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static net.purple.permfood.PermanentFood.MODID;
@@ -65,7 +65,7 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
     public void onFoodCountUpdate(Player player, int foodCount) {
         Log.warn("Updating AttributeBuffs for player: " + player.getName().getString() + " with foodCount: " + foodCount);
         AttributeMap playerAttributes = player.getAttributes();
-        Set<AttributeMilestoneProgression> attributeBuffs = this.getMilestoneProgressions();
+        List<AttributeMilestoneProgression> attributeBuffs = this.getMilestoneProgressions();
 
         for (AttributeMilestoneProgression attributeBuff : attributeBuffs) {
             // Update milestone progression
