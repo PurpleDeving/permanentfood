@@ -63,18 +63,27 @@ public class FoodListCommands {
 
     }
 
-    private static int clearList(CommandContext<CommandSourceStack> context) {
-
-        CommandSourceStack source = context.getSource();
-
+    private static ServerPlayer requirePlayer(CommandSourceStack source) {
         if (!source.isPlayer()) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.only_player")));
-            return 0;
+            var msg = Component.translatable(keyString("command", "foodlist.commands.only_player")).withStyle(ChatFormatting.RED);
+            return null;
         }
 
         ServerPlayer player = source.getPlayer();
         if (player == null) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.player_not_found")));
+            var msg = Component.translatable(keyString("command", "foodlist.commands.player_not_found")).withStyle(ChatFormatting.RED);
+            return null;
+        }
+
+        return player;
+    }
+
+    private static int clearList(CommandContext<CommandSourceStack> context) {
+
+        CommandSourceStack source = context.getSource();
+
+        ServerPlayer player = requirePlayer(source);
+        if (player == null) {
             return 0;
         }
 
@@ -95,14 +104,8 @@ public class FoodListCommands {
 
         CommandSourceStack source = context.getSource();
 
-        if (!source.isPlayer()) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.only_player")).withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        ServerPlayer player = source.getPlayer();
+        ServerPlayer player = requirePlayer(source);
         if (player == null) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.player_not_found")).withStyle(ChatFormatting.RED));
             return 0;
         }
 
@@ -144,14 +147,11 @@ public class FoodListCommands {
 
         CommandSourceStack source = context.getSource();
 
-        if (!source.isPlayer()) {
-            source.sendFailure(Component.literal("§cThis command can only be executed by a player!"));
+        ServerPlayer player = requirePlayer(source);
+        if (player == null) {
             return 0;
         }
 
-        ServerPlayer player = source.getPlayer();
-
-        assert player != null;
         var foodList = player.getData(FOOD_LIST_ATTACHMENT);
         var eatenFoods = foodList.getEatenFoods();
 
