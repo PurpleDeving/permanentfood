@@ -1,6 +1,8 @@
 package net.purple.permfood.milestone;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -90,8 +92,22 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
             AttributeMilestoneType type = (AttributeMilestoneType) progression.getType();
             String declareName = type.declareName;
 
-            output.append("§e--- Food System: " + declareName + " ---\n");
-            output.append("§f" + declareName + " Changes: " + (type.isEnabled ? "Enabled" : "Disabled") + "\n");
+            output.append(Component.translatable(
+                            "command." + MODID + ".milestone.attribute_buffs.section_header",
+                            declareName)
+                    .withStyle(ChatFormatting.YELLOW));
+            output.append("\n");
+
+            // Enabled/disabled label is localized separately so languages can vary word order.
+            Component enabledLabel = Component.translatable(
+                    "command." + MODID + ".milestone.attribute_buffs." + (type.isEnabled ? "enabled" : "disabled"));
+
+            output.append(Component.translatable(
+                            "command." + MODID + ".milestone.attribute_buffs.changes",
+                            declareName,
+                            enabledLabel)
+                    .withStyle(ChatFormatting.WHITE));
+            output.append("\n");
 
             if (!type.isEnabled) {
                 continue;
@@ -100,9 +116,13 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
             double current = AttributeMilestoneProgression.round(player.getAttributeValue(type.getAttribute()), 1);
             double bonus = AttributeMilestoneProgression.round(progression.getBuffValue(), 1);
 
-            output.append("§fMax " + declareName + " is §f" + current + "§7 with a Milestone Bonus of §f" + bonus + ".\n");
-
-
+            output.append(Component.translatable(
+                            "command." + MODID + ".milestone.attribute_buffs.current_and_bonus",
+                            declareName,
+                            current,
+                            bonus)
+                    .withStyle(ChatFormatting.WHITE));
+            output.append("\n");
         }
     }
 }

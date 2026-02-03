@@ -3,6 +3,7 @@ package net.purple.solextended.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -67,13 +68,13 @@ public class FoodListCommands {
         CommandSourceStack source = context.getSource();
 
         if (!source.isPlayer()) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.clearlist.only_player")));
+            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.only_player")));
             return 0;
         }
 
         ServerPlayer player = source.getPlayer();
         if (player == null) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.clearlist.player_not_found")));
+            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.player_not_found")));
             return 0;
         }
 
@@ -95,22 +96,26 @@ public class FoodListCommands {
         CommandSourceStack source = context.getSource();
 
         if (!source.isPlayer()) {
-            source.sendFailure(Component.literal("§cThis command can only be executed by a player!"));
+            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.only_player")).withStyle(ChatFormatting.RED));
             return 0;
         }
 
         ServerPlayer player = source.getPlayer();
         if (player == null) {
-            source.sendFailure(Component.literal("§cPlayer not found!"));
+            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.player_not_found")).withStyle(ChatFormatting.RED));
             return 0;
         }
 
         var foodList = player.getData(FOOD_LIST_ATTACHMENT);
         int foodCount = foodList.getFoodEatenCount();
 
-        MutableComponent output = Component.literal("")
-                .append("§6=== Food Stats for §f" + player.getName().getString() + " §6===\n")
-                .append("§7Unique Foods Eaten: §f" + foodCount + "\n");
+        MutableComponent output = Component.empty()
+                .append(Component.translatable(keyString("command", "foodlist.showstats.header"), player.getName())
+                        .withStyle(ChatFormatting.GOLD))
+                .append("\n")
+                .append(Component.translatable(keyString("command", "foodlist.showstats.foods_eaten"), foodCount)
+                        .withStyle(ChatFormatting.GRAY))
+                .append("\n");
 
         // Let each milestone manager append its own stats lines.
         MilestoneManagerRegistry.outputStatsAllManagers(player, foodCount, output);
