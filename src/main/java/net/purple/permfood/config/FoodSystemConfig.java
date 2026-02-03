@@ -46,6 +46,7 @@ public class FoodSystemConfig extends Config {
         @Desc("Percentage of the hunger bar required for strong natural regeneration when the player has saturation (vanilla: 100).\n" +
                 "Requires the game rule 'naturalRegeneration' to be enabled. Values are rounded down.")
         public ValidatedInt NATURAL_REGEN_THRESHOLD_WITH_SATURATION = new ValidatedInt(100, 100, 0);
+        
         @Desc("Percentage of the hunger bar required for weak natural regeneration when the player has no saturation (vanilla: 90).\n" +
                 "Requires the game rule 'naturalRegeneration' to be enabled. Values are rounded down.")
         public ValidatedInt NATURAL_REGEN_THRESHOLD_NO_SATURATION = new ValidatedInt(90, 100, 0);

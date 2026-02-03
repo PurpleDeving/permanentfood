@@ -2,10 +2,12 @@ package net.purple.solextended.config;
 
 import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.config.Config;
+import me.fzzyhmstrs.fzzy_config.util.Translatable;
 import net.purple.solextended.Constants;
 
 import static net.purple.solextended.SolExtended.MODID;
 
+@Translatable.Name("Sol Client Config")
 @Translation(prefix = MODID + ".sol_client_config")
 public class SolClientConfig extends Config {
 

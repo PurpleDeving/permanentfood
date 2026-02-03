@@ -51,4 +51,5 @@ public class SolExtended {
     // TODO Tooltip inlcuding Book, Commands, showstats output etc.
 
     // TODO Remove more Hunger per Exhaustion option
+    // TODO Add Mod description etc.
 }

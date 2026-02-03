@@ -8,6 +8,7 @@
   "gui.solextended.food_book.stats.foods_eaten": "Foods Eaten",
   "gui.solextended.food_book.eaten_foods": "Eaten Foods (%s)",
   "gui.solextended.food_book.attribution": "by: %s",
+  "solextended.sol_client_config": "Sol Client Config",
   "solextended.sol_client_config.isFoodTooltipEnabled": "Food Tooltips",
   "solextended.sol_client_config.isFoodTooltipEnabled.desc": "Whether food tooltips for eaten/not eaten foods is shown.",
   "solextended.sol_client_config.shouldPlayMilestoneSound": "Milestone Sound",
