@@ -31,5 +31,8 @@
   "solextended.solextended_config.resetFoodListOnDeath": "Reset Food List On Death",
   "solextended.solextended_config.resetFoodListOnDeath.desc": "When true, the tracked food list resets when the player dies.",
   "solextended.solextended_config.whiteList": "Whitelist",
-  "solextended.solextended_config.whiteList.desc": "Items allowed when List Mode is WHITELIST."
+  "solextended.solextended_config.whiteList.desc": "Items allowed when List Mode is WHITELIST.",
+  "command.solextended.foodlist.clearlist.only_player": "This command can only be executed by a player!",
+  "command.solextended.foodlist.clearlist.player_not_found": "Player not found!",
+  "command.solextended.foodlist.clearlist.success": "Your list has been cleared."
 }

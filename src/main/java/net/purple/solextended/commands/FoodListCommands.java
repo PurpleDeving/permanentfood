@@ -22,6 +22,7 @@ import java.util.List;
 
 import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
 import static net.purple.solextended.SolExtended.IS_DEV;
+import static net.purple.solextended.client.LocalizationHelper.keyString;
 
 @EventBusSubscriber
 public class FoodListCommands {
@@ -66,13 +67,13 @@ public class FoodListCommands {
         CommandSourceStack source = context.getSource();
 
         if (!source.isPlayer()) {
-            source.sendFailure(Component.literal("§cThis command can only be executed by a player!"));
+            source.sendFailure(Component.translatable(keyString("command", "foodlist.clearlist.only_player")));
             return 0;
         }
 
         ServerPlayer player = source.getPlayer();
         if (player == null) {
-            source.sendFailure(Component.literal("§cPlayer not found!"));
+            source.sendFailure(Component.translatable(keyString("command", "foodlist.clearlist.player_not_found")));
             return 0;
         }
 
@@ -84,7 +85,7 @@ public class FoodListCommands {
         var foodList = player.getData(SolExtended.FOOD_LIST_ATTACHMENT);
         MilestoneManagerRegistry.updateAllManagers(player, foodList.getFoodEatenCount());
 
-        source.sendSuccess(() -> Component.nullToEmpty("Your list has been cleared."), true);
+        source.sendSuccess(() -> Component.translatable(keyString("command", "foodlist.clearlist.success")), true);
         return 1;
 
     }

@@ -31,5 +31,8 @@
   "solextended.solextended_config.resetFoodListOnDeath": "solextended.solextended_config.resetFoodListOnDeath",
   "solextended.solextended_config.resetFoodListOnDeath.desc": "solextended.solextended_config.resetFoodListOnDeath.desc",
   "solextended.solextended_config.whiteList": "solextended.solextended_config.whiteList",
-  "solextended.solextended_config.whiteList.desc": "solextended.solextended_config.whiteList.desc"
+  "solextended.solextended_config.whiteList.desc": "solextended.solextended_config.whiteList.desc",
+  "command.solextended.foodlist.clearlist.only_player": "command.solextended.foodlist.clearlist.only_player",
+  "command.solextended.foodlist.clearlist.player_not_found": "command.solextended.foodlist.clearlist.player_not_found",
+  "command.solextended.foodlist.clearlist.success": "command.solextended.foodlist.clearlist.success"
 }
