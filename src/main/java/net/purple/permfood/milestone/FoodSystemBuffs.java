@@ -33,8 +33,18 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
             ModAttributes.MAX_HUNGER,
             "Hunger",
             Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES);
-    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff", Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(), ModAttributes.MAX_SATURATION, "Saturation", Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES);
-    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff", Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(), ModAttributes.MAX_EXHAUSTION, "Exhaustion", Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES);
+
+    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff",
+            Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(),
+            ModAttributes.MAX_SATURATION,
+            "Saturation",
+            Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES);
+
+    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff",
+            Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(),
+            ModAttributes.MAX_EXHAUSTION,
+            "Exhaustion",
+            Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES);
 
     private static Supplier<AttachmentType<FoodSystemBuffs>> ATTACHMENT_TYPE;
 
