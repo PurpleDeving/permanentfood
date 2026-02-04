@@ -46,4 +46,6 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
     public void outputStats(ServerPlayer player, int foodCount, MutableComponent output) {
         // no-op by default
     }
+
+    public abstract MilestoneMessage gatherMilestoneMessages();
 }

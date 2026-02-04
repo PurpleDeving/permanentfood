@@ -8,10 +8,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
+import net.purple.solextended.api.milestonebased.MilestoneMessage;
 import net.purple.solextended.config.Configs;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static net.purple.solextended.Constants.ENABLE_EXTENSIVE_LOGGING;
 import static net.purple.solextended.SolExtended.*;
@@ -57,9 +55,9 @@ public class FoodListEatEvent {
             return;
         }
 
-        List<?> celebrations = new ArrayList<>(); // TODO get from MilestoneManagerRegistry > From all Managers > from all there MilestoneProgressions.
-        boolean milestonesReached = false;
-        if (milestonesReached && EffectiveSide.get().isClient()) {
+        MilestoneMessage celebrations = new MilestoneMessage(); // TODO get from MilestoneManagerRegistry > From all Managers > from all there MilestoneProgressions.
+
+        if (!celebrations.getMilestoneMessages().isEmpty() && EffectiveSide.get().isClient()) {
             // TODO Celebrate
         }
     }
