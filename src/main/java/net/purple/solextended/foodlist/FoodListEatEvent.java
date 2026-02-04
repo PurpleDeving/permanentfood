@@ -1,6 +1,7 @@
 package net.purple.solextended.foodlist;
 
 
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -55,10 +56,23 @@ public class FoodListEatEvent {
             return;
         }
 
-        MilestoneMessage celebrations = new MilestoneMessage(); // TODO get from MilestoneManagerRegistry > From all Managers > from all there MilestoneProgressions.
+        if (!EffectiveSide.get().isClient()) {
+            return;
+        }
 
-        if (!celebrations.getMilestoneMessages().isEmpty() && EffectiveSide.get().isClient()) {
-            // TODO Celebrate
+
+        MilestoneMessage celebrations = MilestoneManagerRegistry.collectMilestoneMessagesForPlayer(player); // TODO get from MilestoneManagerRegistry > From all Managers > from all there MilestoneProgressions.
+
+        if (!celebrations.milestoneMessages().isEmpty()) {
+
+            for (MutableComponent message : celebrations.milestoneMessages()) {
+
+
+                // IMPL
+                // TODO - NOT TESTED + CONTINUE HERE
+                player.sendSystemMessage(message);
+            }
+            LOGGER.warn("FoodListEvents.onFoodEaten: Milestone messages collected");
         }
     }
 }

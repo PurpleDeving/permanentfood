@@ -81,7 +81,7 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
 
         for (AttributeMilestoneProgression attributeBuff : attributeBuffs) {
             // Update milestone progression
-            attributeBuff.checkReachedMilestoneUpdate(foodCount);
+            attributeBuff.updateMilestonesReached(foodCount);
 
             // Apply or update the attribute modifier
             AttributeMilestoneType attributeMilestoneType = (AttributeMilestoneType) attributeBuff.getType();
@@ -135,4 +135,6 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
             output.append("\n");
         }
     }
+
+
 }

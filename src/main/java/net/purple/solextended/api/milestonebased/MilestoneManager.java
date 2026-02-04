@@ -7,18 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Base class for all milestone-based progression managers.
- * Each player gets their own instance via DataAttachment.
- *
- * <p>Implementations should:
- * <ul>
- *   <li>Update each {@link MilestoneProgression} using {@link MilestoneProgression#checkReachedMilestoneUpdate(int)}.</li>
- *   <li>Apply their side-effects/modifiers to the provided {@link Player}.</li>
- * </ul>
- *
- * @param <T> The type of milestone progression this manager handles
- */
+
 public abstract class MilestoneManager<T extends MilestoneProgression> {
 
     private final List<T> milestoneProgressions = new ArrayList<>();
@@ -47,5 +36,15 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
         // no-op by default
     }
 
-    public abstract MilestoneMessage gatherMilestoneMessages();
+    public MilestoneMessage gatherMilestoneMessages(Player player, MilestoneMessage existingMessage) {
+
+        for (MilestoneProgression milestoneProgression : this.getMilestoneProgressions()) {
+            if (milestoneProgression.checkReachedMilestoneUpdate()) {
+                existingMessage.milestoneMessages().add(milestoneProgression.getCelebrationMessage(player));
+            }
+        }
+
+
+        return existingMessage;
+    }
 }

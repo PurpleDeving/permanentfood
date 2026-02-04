@@ -51,6 +51,7 @@ public class MilestoneManagerRegistry {
      */
     private static boolean registered = false;
 
+
     private record ManagerRegistration<M extends MilestoneManager<?>>(
             ResourceLocation id,
             Supplier<AttachmentType<M>> attachmentType) {
@@ -131,6 +132,21 @@ public class MilestoneManagerRegistry {
             );
         }
     }
+
+    /******************************************
+     Collect Milestone Updates for Client-bound celebration
+     ******************************************/
+
+    public static MilestoneMessage collectMilestoneMessagesForPlayer(Player player) {
+        MilestoneMessage milestoneMessages = new MilestoneMessage();
+
+        for (ManagerRegistration<?> registration : REGISTERED_MANAGERS.values()) {
+            player.getData(registration.attachmentType).gatherMilestoneMessages(player, milestoneMessages);
+        }
+
+        return milestoneMessages;
+    }
+
 
     /******************************************
      Updates all milestone managers for all online players.
