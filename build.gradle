@@ -151,16 +151,20 @@ dependencies {
     // at runtime, use the full JEI jar for NeoForge
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
-    // Runtimes are for testing only
 
     // FuzzyConfig
     implementation "me.fzzyhmstrs:fzzy_config:${fzzy_version}"
+
+    // Runtimes are for testing only
 
     //Attribute Fix
     compileOnly("curse.maven:attributefix-280510:7115922-sources")
     runtimeOnly("curse.maven:attributefix-280510:7115922")
     runtimeOnly "curse.maven:bookshelf-228525:7335846"
     runtimeOnly "curse.maven:prickle-1023259:6961457"
+
+    // AppleSkin
+    runtimeOnly "curse.maven:appleskin-248787:7517379"
 
 
     // For more info:

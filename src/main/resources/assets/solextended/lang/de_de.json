@@ -2,7 +2,7 @@
   "item.solextended.food_book": "item.solextended.food_book",
   "tooltip.solextended.enabled.not_eaten": "tooltip.solextended.enabled.not_eaten",
   "tooltip.solextended.enabled.eaten": "tooltip.solextended.enabled.eaten",
-  "tooltip.solextended.cheap": "tooltip.solextended.cheap",
+  "tooltip.solextended.disabled.cheap_food": "tooltip.solextended.disabled.cheap_food",
   "tooltip.solextended.disabled.white_black_list": "tooltip.solextended.disabled.white_black_list",
   "gui.solextended.food_book.stats.title": "gui.solextended.food_book.stats.title",
   "gui.solextended.food_book.stats.foods_eaten": "gui.solextended.food_book.stats.foods_eaten",

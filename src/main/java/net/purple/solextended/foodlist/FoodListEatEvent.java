@@ -45,14 +45,13 @@ public class FoodListEatEvent {
         boolean newFoodEaten = playerFoodList.addFood(usedStack);
 
         if (newFoodEaten) {
-            player.syncData(FOOD_LIST_ATTACHMENT);
 
             if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
                 LOGGER.info("FoodListEvents.onFoodEaten: New food eaten registered: " + usedStack.getDisplayName());
             }
 
-            // Direct update: no event bus, no intermediate event objects
-            MilestoneManagerRegistry.updateAllManagers(player, playerFoodList.getFoodEatenCount());
+            //For now immediate sync. Maybe needs changing when celebration becomes a thing
+            MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(player, playerFoodList.getFoodEatenCount());
         }
     }
 }

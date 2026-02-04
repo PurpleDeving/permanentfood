@@ -83,7 +83,7 @@ public class FoodList {
     public static boolean isHealthy(Item item) {
         if (!isFood(item)) return false;
         //noinspection DataFlowIssue
-        return item.getFoodProperties(item.getDefaultInstance(), null).saturation() >= Configs.solExtendedConfig.minimumFoodValue.get();
+        return item.getFoodProperties(item.getDefaultInstance(), null).nutrition() >= Configs.solExtendedConfig.minimumFoodValue.get();
     }
 
     public static boolean isFoodAllowed(Item item) {

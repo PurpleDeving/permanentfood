@@ -40,7 +40,7 @@ public class PlayerFoodList implements INBTSerializable<CompoundTag> {
     /**
      * @return true if the food was not previously known, i.e. if a new food has been tried
      */
-    private boolean addFood(Item item) {
+    public boolean addFood(Item item) {
         if (FoodList.isFoodAllowed(item)) {
             return eatenFoods.add(item);
         }

@@ -18,12 +18,6 @@ import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
 @EventBusSubscriber(modid = MODID)
 public class SolextendedEvents {
 
-
-    private static void refreshAllManagers(ServerPlayer player) {
-        var foodList = player.getData(FOOD_LIST_ATTACHMENT);
-        MilestoneManagerRegistry.updateAllManagers(player, foodList.getFoodEatenCount());
-    }
-
     /**
      * When a player logs in, initialize all milestone managers based on their current food count.
      */
@@ -31,7 +25,7 @@ public class SolextendedEvents {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            refreshAllManagers(serverPlayer);
+            MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(serverPlayer);
         }
 
 
@@ -45,7 +39,7 @@ public class SolextendedEvents {
         }
         if (Configs.solExtendedConfig.resetFoodListOnDeath) {
             serverPlayer.getData(FOOD_LIST_ATTACHMENT).clearList();
-            refreshAllManagers(serverPlayer);
+            MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(serverPlayer);
         }
 
     }
@@ -57,10 +51,10 @@ public class SolextendedEvents {
             FoodList.updateAllowedFoods(); //on Booth Sides
 
             if (EffectiveSide.get().isServer()) {
-                MilestoneManagerRegistry.updateAllPlayersAllManagers(); // Refresh all players' milestone managers when config is reloaded
+                MilestoneManagerRegistry.updateAllManagersForAllPlayers(); // Refresh all players' milestone managers when config is reloaded
             }
 
         }
     }
- 
+
 }

@@ -47,6 +47,7 @@ public class TooltipHandler {
             } else { // If food is healthy but not allowed, it must be the whitelist/blacklist
                 tooltip.add(LocalizationHelper.localizedTooltip("disabled.white_black_list", ChatFormatting.GRAY));
             }
+            return;
         }
         PlayerFoodList playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
         boolean hasBeenEaten = playerFoodList.hasEaten(item);
@@ -55,7 +56,7 @@ public class TooltipHandler {
         if (hasBeenEaten) {
             tooltip.add(LocalizationHelper.localizedTooltip("enabled.eaten", ChatFormatting.GREEN));
         } else {
-            tooltip.add(LocalizationHelper.localizedTooltip("enabled.not_eaten", ChatFormatting.DARK_GRAY));
+            tooltip.add(LocalizationHelper.localizedTooltip("enabled.not_eaten", ChatFormatting.DARK_AQUA));
         }
 
     }

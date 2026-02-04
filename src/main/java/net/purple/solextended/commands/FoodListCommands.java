@@ -1,6 +1,7 @@
 package net.purple.solextended.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
@@ -16,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
+import net.purple.solextended.foodlist.FoodList;
 
 import java.util.Comparator;
 import java.util.List;
@@ -96,11 +98,8 @@ public class FoodListCommands {
 
             var foodList = player.getData(FOOD_LIST_ATTACHMENT);
             foodList.clearList();
-            player.syncData(FOOD_LIST_ATTACHMENT);
 
-
-            // Direct update for all registered milestone managers
-            MilestoneManagerRegistry.updateAllManagers(player, foodList.getFoodEatenCount());
+            MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(player, foodList.getFoodEatenCount());
 
             source.sendSuccess(() -> Component.translatable(keyString("command", "foodlist.clearlist.success")), true);
             return 1;
@@ -139,10 +138,69 @@ public class FoodListCommands {
 
 
         final LiteralArgumentBuilder<CommandSourceStack> foodlistCommand = Commands.literal("foodlist");
-        foodlistCommand//.requires((CommandSourceStack sourceStack) -> sourceStack.hasPermission(2))
+        foodlistCommand
                 .then(Commands.literal("showlist").executes(FoodListCommands::showList));
         dispatcher.register(foodlistCommand);
 
+        final LiteralArgumentBuilder<CommandSourceStack> foodlistAddTestFoodCommand = Commands.literal("foodlist");
+        foodlistAddTestFoodCommand
+                .then(Commands.literal("testfood")
+                        .then(Commands.argument("count", IntegerArgumentType.integer(1))
+                                .executes(FoodListCommands::addTestFood)));
+        dispatcher.register(foodlistAddTestFoodCommand);
+
+    }
+
+
+    private static int addTestFood(CommandContext<CommandSourceStack> context) {
+        return withPlayer(context, player -> {
+            int count = IntegerArgumentType.getInteger(context, "count");
+            return addTestFood(player, context.getSource(), count);
+        });
+    }
+
+    /**
+     * Adds up to {@code count} random missing foods to the player's eaten list.
+     *
+     * @return number of foods actually added (0 if none could be added)
+     */
+    private static int addTestFood(ServerPlayer player, CommandSourceStack source, int count) {
+        var playerFoodList = player.getData(FOOD_LIST_ATTACHMENT);
+
+        // Build missing foods list (allowed foods minus already eaten)
+
+        int countdown = count;
+
+        for (Item item : FoodList.lazzyGetAllowedFoods()) {
+            if (playerFoodList.hasEaten(item)) {
+                continue;
+            }
+
+
+            playerFoodList.addFood(item);
+            countdown--;
+
+            if (countdown <= 0) {
+                source.sendSuccess(() -> Component.translatable(keyString("command", "foodlist.testfood.success"), count)
+                        .withStyle(ChatFormatting.GREEN), true);
+                MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(player);
+                return 1;
+            }
+
+        }
+
+        int addedCount = count - countdown;
+        if (addedCount >= 1) {
+
+            source.sendSuccess(() -> Component.translatable(keyString("command", "foodlist.testfood.success.partial"), addedCount, count)
+                    .withStyle(ChatFormatting.GREEN), true);
+            MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(player);
+            return 1;
+        } else {
+            source.sendFailure(Component.translatable(keyString("command", "foodlist.testfood.failure.none_added"))
+                    .withStyle(ChatFormatting.RED));
+            return 0;
+        }
     }
 
 
