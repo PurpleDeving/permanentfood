@@ -3,5 +3,6 @@
   "command.permanentfood.milestone.attribute_buffs.changes": "%s Changes: %s",
   "command.permanentfood.milestone.attribute_buffs.enabled": "Enabled",
   "command.permanentfood.milestone.attribute_buffs.disabled": "Disabled",
-  "command.permanentfood.milestone.attribute_buffs.current_and_bonus": "Max %s is %s with a Milestone Bonus of %s."
+  "command.permanentfood.milestone.attribute_buffs.current_and_bonus": "Max %s is %s with a Milestone Bonus of %s.",
+  "celebration.permanentfood.celebration.message": "%s increased to %s (bonus +%s)"
 }

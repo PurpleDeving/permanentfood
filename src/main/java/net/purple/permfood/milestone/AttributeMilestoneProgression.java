@@ -2,6 +2,7 @@ package net.purple.permfood.milestone;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
+import net.purple.permfood.PermanentFood;
 import net.purple.solextended.api.milestonebased.MilestoneProgression;
 import net.purple.solextended.client.LocalizationHelper;
 
@@ -31,8 +32,10 @@ public class AttributeMilestoneProgression extends MilestoneProgression {
         AttributeMilestoneType attributeMilestoneType = (AttributeMilestoneType) getType();
         double attributevalue = Objects.requireNonNull(player.getAttribute(attributeMilestoneType.getAttribute())).getValue(); // TODO - Need to limit to 1 decimal place ?
 
-        //TODO Type must be solvable better than this
-        return LocalizationHelper.localizedComponent("celebration", "celebration.message", attributeMilestoneType.getDeclareName(), attributevalue, getBuffValue());
+        // domain.modid.path => celebration.permanentfood.celebration.message
+        return LocalizationHelper.localizedComponent(PermanentFood.MODID, "celebration", "celebration.message",
+                attributeMilestoneType.getDeclareName(), attributevalue, getBuffValue());
+
+        // TODO  Continue testing here
     }
 }
-
