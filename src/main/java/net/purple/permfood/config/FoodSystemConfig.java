@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Translatable.Name(value = "Ernährungssystem", lang = "de_de")
 public class FoodSystemConfig extends Config {
 
+    // TODO - English is fixed but not tested. German/ Test not tested yet
 
     public FoodSystemConfig() {
         super(Constants.rLFoodSystemConfig);

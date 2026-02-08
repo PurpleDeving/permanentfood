@@ -7,6 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
@@ -15,7 +16,10 @@ import net.purple.permfood.attributes.ModAttributes;
 import net.purple.permfood.config.Configs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 import java.util.Objects;
@@ -146,20 +150,31 @@ public class FoodDataMixin {
      PEACEFUL HUNGER
      ******************************************/
 
-    /// What difficulty should be used when you has HUNGER_ON_PEACEFUL on ?
-    @ModifyVariable(method = "tick",
-            at = @At("STORE"),
-            name = "difficulty")
-    private Difficulty peaceful_hunger$tick$getDifficulty(Difficulty originalHungerDifficulty) {
+    /**
+     * In 1.21.x the local variable table is often not available at runtime, so relying on
+     * {@code @ModifyVariable(name = "difficulty")} is brittle and can fail injection checks.
+     * <p>
+     * Redirect the difficulty lookup instead.
+     */
+    @Redirect(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;getDifficulty()Lnet/minecraft/world/Difficulty;"
+            )
+    )
+    private Difficulty peaceful_hunger$tick$redirectDifficulty(Level level) {
+        Difficulty originalHungerDifficulty = level.getDifficulty();
 
         if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
-            System.out.println("FoodDataMixin.peaceful_hunger$tick$getDifficulty: Original Difficulty: " + originalHungerDifficulty);
+            System.out.println("FoodDataMixin.peaceful_hunger$tick$redirectDifficulty: Original Difficulty: " + originalHungerDifficulty);
         }
 
-
-        if (Configs.foodSystemConfig.sectionPeacefulHunger.ENABLE_HUNGER_ON_PEACEFUL && originalHungerDifficulty == Difficulty.PEACEFUL) {
+        if (Configs.foodSystemConfig.sectionPeacefulHunger.ENABLE_HUNGER_ON_PEACEFUL
+                && originalHungerDifficulty == Difficulty.PEACEFUL) {
             return Configs.foodSystemConfig.sectionPeacefulHunger.PEACEFUL_HUNGER_DIFFICULTY.get();
         }
+
         return originalHungerDifficulty;
     }
 
