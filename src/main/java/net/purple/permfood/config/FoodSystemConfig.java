@@ -2,7 +2,6 @@ package net.purple.permfood.config;
 
 import me.fzzyhmstrs.fzzy_config.annotations.Action;
 import me.fzzyhmstrs.fzzy_config.annotations.RequiresAction;
-import me.fzzyhmstrs.fzzy_config.annotations.Translation;
 import me.fzzyhmstrs.fzzy_config.api.SaveType;
 import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
@@ -17,11 +16,8 @@ import net.minecraft.world.Difficulty;
 import net.purple.permfood.Constants;
 import org.jetbrains.annotations.NotNull;
 
-import static net.purple.permfood.PermanentFood.MODID;
-
 @Translatable.Name("Food System")
 @Translatable.Name(value = "Ernährungssystem", lang = "de_de")
-@Translation(prefix = MODID + ".foodsystem_config")
 public class FoodSystemConfig extends Config {
 
 
@@ -33,7 +29,6 @@ public class FoodSystemConfig extends Config {
     @Name(value = "Friedliche Hunger Einstellungen", lang = "de_de")
 
     public PeacefulHungerSection sectionPeacefulHunger = new PeacefulHungerSection();
-
 
     public static class PeacefulHungerSection extends ConfigSection {
 
