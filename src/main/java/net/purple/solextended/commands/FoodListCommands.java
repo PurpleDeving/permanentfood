@@ -16,8 +16,8 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.foodlist.FoodList;
+import net.purple.solextended.milestonebased.MilestoneManagerRegistry;
 
 import java.util.Comparator;
 import java.util.List;

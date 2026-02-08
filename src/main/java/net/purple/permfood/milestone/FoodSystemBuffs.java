@@ -13,8 +13,8 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 import net.purple.permfood.attributes.ModAttributes;
 import net.purple.permfood.config.Configs;
 import net.purple.permfood.config.FoodSystemConfig;
-import net.purple.solextended.api.milestonebased.MilestoneManager;
-import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
+import net.purple.solextended.milestonebased.MilestoneManager;
+import net.purple.solextended.milestonebased.MilestoneManagerRegistry;
 import org.jline.utils.Log;
 
 import java.util.List;

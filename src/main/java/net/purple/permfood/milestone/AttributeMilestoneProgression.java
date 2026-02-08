@@ -3,8 +3,8 @@ package net.purple.permfood.milestone;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.purple.permfood.PermanentFood;
-import net.purple.solextended.api.milestonebased.MilestoneProgression;
 import net.purple.solextended.client.LocalizationHelper;
+import net.purple.solextended.milestonebased.MilestoneProgression;
 
 import java.util.Objects;
 

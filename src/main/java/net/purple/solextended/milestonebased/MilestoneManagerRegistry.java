@@ -1,4 +1,4 @@
-package net.purple.solextended.api.milestonebased;
+package net.purple.solextended.milestonebased;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;

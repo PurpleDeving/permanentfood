@@ -1,3 +1,4 @@
+/*
 package backup.config;
 
 import me.fzzyhmstrs.fzzy_config.annotations.Action;
@@ -110,3 +111,4 @@ public class AttributeConfig extends Config {
     }
 
 }
+*/

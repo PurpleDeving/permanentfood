@@ -3,7 +3,7 @@ package net.purple.permfood.milestone;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.purple.solextended.api.milestonebased.MilestoneType;
+import net.purple.solextended.milestonebased.MilestoneType;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package net.purple.solextended.api.milestonebased;
+package net.purple.solextended.milestonebased;
 
 import java.util.Collections;
 import java.util.List;

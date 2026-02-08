@@ -157,8 +157,8 @@ public class FoodDataMixin {
         }
 
 
-        if (Configs.foodSystemConfig.peacefulHungerSection.ENABLE_HUNGER_ON_PEACEFUL && originalHungerDifficulty == Difficulty.PEACEFUL) {
-            return Configs.foodSystemConfig.peacefulHungerSection.PEACEFUL_HUNGER_DIFFICULTY.get();
+        if (Configs.foodSystemConfig.sectionPeacefulHunger.ENABLE_HUNGER_ON_PEACEFUL && originalHungerDifficulty == Difficulty.PEACEFUL) {
+            return Configs.foodSystemConfig.sectionPeacefulHunger.PEACEFUL_HUNGER_DIFFICULTY.get();
         }
         return originalHungerDifficulty;
     }
@@ -177,7 +177,7 @@ public class FoodDataMixin {
         if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) { // Attribute doesn't exist on the player if the flag is false
             return original;
         }
-        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.peacefulHungerSection.NATURAL_REGEN_THRESHOLD_WITH_SATURATION.get() / 100;
+        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.sectionPeacefulHunger.NATURAL_REGEN_THRESHOLD_WITH_SATURATION.get() / 100;
     }
 
     // Hunger Threshold for Natural_Regeneration without Saturation
@@ -190,7 +190,7 @@ public class FoodDataMixin {
         if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) { // Attribute doesn't exist on the player if the flag is false
             return original;
         }
-        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.peacefulHungerSection.NATURAL_REGEN_THRESHOLD_NO_SATURATION.get() / 100;
+        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.sectionPeacefulHunger.NATURAL_REGEN_THRESHOLD_NO_SATURATION.get() / 100;
     }
 
     /******************************************

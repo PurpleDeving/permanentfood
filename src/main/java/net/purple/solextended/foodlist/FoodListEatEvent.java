@@ -8,9 +8,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.purple.solextended.api.milestonebased.MilestoneManagerRegistry;
-import net.purple.solextended.api.milestonebased.MilestoneMessage;
 import net.purple.solextended.config.Configs;
+import net.purple.solextended.milestonebased.MilestoneManagerRegistry;
+import net.purple.solextended.milestonebased.MilestoneMessage;
 
 import static net.purple.solextended.Constants.ENABLE_EXTENSIVE_LOGGING;
 import static net.purple.solextended.SolExtended.*;

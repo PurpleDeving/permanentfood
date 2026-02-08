@@ -248,3 +248,10 @@ tasks.register('cleanGeneratedResources', Delete) {
         dependsOn(tasks.named('cleanGeneratedResources'))
     }
 }
+
+// When both src/main/resources and src/generated/resources contain the same paths (common for lang files),
+// Gradle will fail with a duplicate entry error unless we specify a strategy.
+// We prefer the main resources over generated ones, so just exclude duplicates.
+tasks.withType(ProcessResources).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
