@@ -146,6 +146,21 @@ public class FoodDataMixin {
         return Mth.clamp(saturationToClamp, min, returnMax);
     }
 
+
+/*    @Inject(
+            method = "tick",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void tickOverwrite(Player player, CallbackInfo ci) {
+        Difficulty difficulty = player.level().getDifficulty();
+        FoodData foodData = (FoodData) (Object) this;
+        foodData.lastFoodLevel = foodData.foodLevel;
+
+
+        ci.cancel(); // Prevents orriginal logic
+    }*/
+
     /******************************************
      PEACEFUL HUNGER
      ******************************************/

@@ -144,6 +144,7 @@ public class MilestoneManagerRegistry {
             player.getData(registration.attachmentType).gatherMilestoneMessages(player, milestoneMessages);
         }
 
+
         return milestoneMessages;
     }
 

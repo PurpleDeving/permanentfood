@@ -8,12 +8,14 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.purple.solextended.config.Configs;
 import net.purple.solextended.foodlist.FoodList;
 import net.purple.solextended.milestonebased.MilestoneManagerRegistry;
+import net.purple.solextended.networking.SolExtendedNetworking;
 
-import static net.purple.permfood.PermanentFood.MODID;
 import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
+import static net.purple.solextended.SolExtended.MODID;
 
 @EventBusSubscriber(modid = MODID)
 public class SolextendedEvents {
@@ -55,6 +57,14 @@ public class SolextendedEvents {
             }
 
         }
+    }
+
+    /**
+     * Register custom payloads.
+     */
+    @SubscribeEvent
+    public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
+        SolExtendedNetworking.registerPayloads(event);
     }
 
 }
