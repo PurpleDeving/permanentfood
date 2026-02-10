@@ -43,9 +43,9 @@ public class TooltipHandler {
         boolean isAllowed = FoodList.isFoodAllowed(item);
         if (!isAllowed) { // Item is food but not allowed
             if (!isHealthy(item)) {
-                tooltip.add(LocalizationHelper.localizedTooltip("disabled.cheap_food", ChatFormatting.DARK_GRAY));
+                tooltip.add(LocalizationHelper.localizedTooltip(MODID, "disabled.cheap_food", ChatFormatting.DARK_GRAY));
             } else { // If food is healthy but not allowed, it must be the whitelist/blacklist
-                tooltip.add(LocalizationHelper.localizedTooltip("disabled.white_black_list", ChatFormatting.GRAY));
+                tooltip.add(LocalizationHelper.localizedTooltip(MODID, "disabled.white_black_list", ChatFormatting.GRAY));
             }
             return;
         }
@@ -54,9 +54,9 @@ public class TooltipHandler {
 
 
         if (hasBeenEaten) {
-            tooltip.add(LocalizationHelper.localizedTooltip("enabled.eaten", ChatFormatting.GREEN));
+            tooltip.add(LocalizationHelper.localizedTooltip(MODID, "enabled.eaten", ChatFormatting.GREEN));
         } else {
-            tooltip.add(LocalizationHelper.localizedTooltip("enabled.not_eaten", ChatFormatting.DARK_AQUA));
+            tooltip.add(LocalizationHelper.localizedTooltip(MODID, "enabled.not_eaten", ChatFormatting.DARK_AQUA));
         }
 
     }

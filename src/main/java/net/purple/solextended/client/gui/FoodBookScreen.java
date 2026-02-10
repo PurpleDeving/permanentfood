@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static net.purple.solextended.SolExtended.MODID;
+
 /**
  * Main Food Book GUI Screen.
  * Displays pages showing food statistics and eaten foods.
@@ -36,7 +38,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     // CONSTANTS & RESOURCES
     // ========================================
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
-            SolExtended.MODID, "textures/gui/food_book.png");
+            MODID, "textures/gui/food_book.png");
 
     private static final ImageData BOOK_IMAGE = new ImageData(TEXTURE,
             new Rectangle(0, 0, 186, 192));
@@ -89,7 +91,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
                     .collect(Collectors.toList());
 
             // ItemListPage.pages returns multiple pages if needed
-            Component title = LocalizationHelper.localizedComponent("gui", "food_book.eaten_foods", eatenStacks.size());
+            Component title = LocalizationHelper.localizedComponent(MODID, "gui", "food_book.eaten_foods", eatenStacks.size());
             List<? extends Page> pages = FoodListPage.pages(frame,
                     title.getString(), eatenStacks);
 
@@ -184,7 +186,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
                     .collect(Collectors.toList());
 
             if (!eatenStacks.isEmpty()) {
-                Component title = LocalizationHelper.localizedComponent("gui", "food_book.eaten_foods", eatenStacks.size());
+                Component title = LocalizationHelper.localizedComponent(MODID, "gui", "food_book.eaten_foods", eatenStacks.size());
                 List<? extends Page> foodPages = FoodListPage.pages(background.frame,
                         title.getString(), eatenStacks);
 

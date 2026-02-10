@@ -23,13 +23,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
-import static net.purple.solextended.SolExtended.FOOD_LIST_ATTACHMENT;
-import static net.purple.solextended.SolExtended.IS_DEV;
+import static net.purple.solextended.SolExtended.*;
 import static net.purple.solextended.client.LocalizationHelper.keyString;
 
 @EventBusSubscriber
 public class FoodListCommands {
 
+    // TODO Missing localization in lanauge files for all outcomes of foodlist test command
 
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
@@ -72,7 +72,7 @@ public class FoodListCommands {
         CommandSourceStack source = context.getSource();
 
         if (!source.isPlayer()) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.only_player"))
+            source.sendFailure(Component.translatable(keyString(MODID, "command", "foodlist.commands.only_player"))
                     .withStyle(ChatFormatting.RED));
             return 0;
         }
@@ -81,7 +81,7 @@ public class FoodListCommands {
         // the check anyway for safety and to provide a localized error.
         ServerPlayer player = source.getPlayer();
         if (player == null) {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.commands.player_not_found"))
+            source.sendFailure(Component.translatable(keyString(MODID, "command", "foodlist.commands.player_not_found"))
                     .withStyle(ChatFormatting.RED));
             return 0;
         }
@@ -98,7 +98,7 @@ public class FoodListCommands {
 
             MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(player, foodList.getFoodEatenCount());
 
-            source.sendSuccess(() -> Component.translatable(keyString("command", "foodlist.clearlist.success")), true);
+            source.sendSuccess(() -> Component.translatable(keyString(MODID, "command", "foodlist.clearlist.success")), true);
             return 1;
         });
     }
@@ -111,10 +111,10 @@ public class FoodListCommands {
             int foodCount = foodList.getFoodEatenCount();
 
             MutableComponent output = Component.empty()
-                    .append(Component.translatable(keyString("command", "foodlist.showstats.header"), player.getName())
+                    .append(Component.translatable(keyString(MODID, "command", "foodlist.showstats.header"), player.getName())
                             .withStyle(ChatFormatting.GOLD))
                     .append("\n")
-                    .append(Component.translatable(keyString("command", "foodlist.showstats.foods_eaten"), foodCount)
+                    .append(Component.translatable(keyString(MODID, "command", "foodlist.showstats.foods_eaten"), foodCount)
                             .withStyle(ChatFormatting.GRAY))
                     .append("\n");
 
@@ -178,7 +178,7 @@ public class FoodListCommands {
             countdown--;
 
             if (countdown <= 0) {
-                source.sendSuccess(() -> Component.translatable(keyString("command", "foodlist.testfood.success"), count)
+                source.sendSuccess(() -> Component.translatable(keyString(MODID, "command", "foodlist.testfood.success"), count)
                         .withStyle(ChatFormatting.GREEN), true);
                 MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(player);
                 return 1;
@@ -189,12 +189,12 @@ public class FoodListCommands {
         int addedCount = count - countdown;
         if (addedCount >= 1) {
 
-            source.sendSuccess(() -> Component.translatable(keyString("command", "foodlist.testfood.success.partial"), addedCount, count)
+            source.sendSuccess(() -> Component.translatable(keyString(MODID, "command", "foodlist.testfood.success.partial"), addedCount, count)
                     .withStyle(ChatFormatting.GREEN), true);
             MilestoneManagerRegistry.syncFoodListAndUpdateAllManagersForPlayer(player);
             return 1;
         } else {
-            source.sendFailure(Component.translatable(keyString("command", "foodlist.testfood.failure.none_added"))
+            source.sendFailure(Component.translatable(keyString(MODID, "command", "foodlist.testfood.failure.none_added"))
                     .withStyle(ChatFormatting.RED));
             return 0;
         }

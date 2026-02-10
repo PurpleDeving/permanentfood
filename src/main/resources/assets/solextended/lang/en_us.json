@@ -36,5 +36,6 @@
   "command.solextended.foodlist.commands.player_not_found": "Player not found!",
   "command.solextended.foodlist.clearlist.success": "Your list has been cleared.",
   "command.solextended.foodlist.showstats.header": "=== Food Stats for %s ===",
-  "command.solextended.foodlist.showstats.foods_eaten": "Unique Foods Eaten: %s"
+  "command.solextended.foodlist.showstats.foods_eaten": "Unique Foods Eaten: %s",
+  "command.solextended.foodlist.testfood.success": "%s test foods succesfully added"
 }
