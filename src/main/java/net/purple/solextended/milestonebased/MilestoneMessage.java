@@ -5,12 +5,11 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public record MilestoneMessage(boolean anyMilestoneReached, List<MutableComponent> milestoneMessages,
-                               boolean isMaxMilestoneReached) {
+public class MilestoneMessage {
 
-    public MilestoneMessage() {
-        this(false, new ArrayList<MutableComponent>(), false);
-    }
+    public boolean anyMilestoneReached = false;
+    public final List<MutableComponent> milestoneMessages = new ArrayList<>();
+    public boolean anyMaxMilestoneReached = false;
 
 
 }

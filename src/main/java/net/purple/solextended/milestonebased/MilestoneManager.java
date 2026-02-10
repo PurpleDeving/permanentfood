@@ -40,10 +40,10 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
 
         for (MilestoneProgression milestoneProgression : this.getMilestoneProgressions()) {
             if (milestoneProgression.checkReachedMilestoneUpdate()) {
-                existingMessage.anyMilestoneReached() = true;
-                existingMessage.milestoneMessages().add(milestoneProgression.getCelebrationMessage(player));
+                existingMessage.anyMilestoneReached = true;
+                existingMessage.milestoneMessages.add(milestoneProgression.getCelebrationMessage(player));
                 if (milestoneProgression.maxMilestonesReached()) {
-                    existingMessage.isMaxMilestoneReached() = true;
+                    existingMessage.anyMaxMilestoneReached = true;
                 }
             }
         }

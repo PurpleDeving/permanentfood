@@ -63,9 +63,9 @@ public class FoodListEatEvent {
 
         MilestoneMessage celebrations = MilestoneManagerRegistry.collectMilestoneMessagesForPlayer(player); // TODO get from MilestoneManagerRegistry > From all Managers > from all there MilestoneProgressions.
 
-        if (!celebrations.milestoneMessages().isEmpty()) {
+        if (!celebrations.milestoneMessages.isEmpty()) {
 
-            for (MutableComponent message : celebrations.milestoneMessages()) {
+            for (MutableComponent message : celebrations.milestoneMessages) {
 
                 // If any is
 
