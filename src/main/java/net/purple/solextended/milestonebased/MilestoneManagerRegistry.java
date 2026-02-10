@@ -177,7 +177,7 @@ public class MilestoneManagerRegistry {
 
     public static void syncFoodListAndUpdateAllManagersForPlayer(Player player, int foodCount) {
         player.syncData(SolExtended.FOOD_LIST_ATTACHMENT);
-        updateAllManagersForPlayer(player, player.getData(SolExtended.FOOD_LIST_ATTACHMENT).getFoodEatenCount());
+        updateAllManagersForPlayer(player, foodCount);
     }
 
     private static void updateAllManagersForPlayer(Player player) {
