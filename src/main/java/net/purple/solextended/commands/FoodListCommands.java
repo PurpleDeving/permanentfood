@@ -30,9 +30,6 @@ import static net.purple.solextended.client.LocalizationHelper.keyString;
 @EventBusSubscriber
 public class FoodListCommands {
 
-    // TODO - Can commands be case sensitive, underscore or space separated?
-
-    // IMPL Translation Keys for List Messages
 
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {

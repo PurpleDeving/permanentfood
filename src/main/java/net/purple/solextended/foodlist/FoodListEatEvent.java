@@ -67,6 +67,8 @@ public class FoodListEatEvent {
 
             for (MutableComponent message : celebrations.milestoneMessages()) {
 
+                // If any is
+
 
                 // IMPL
                 // TODO - NOT TESTED + CONTINUE HERE

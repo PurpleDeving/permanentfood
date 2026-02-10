@@ -150,12 +150,7 @@ public class FoodDataMixin {
      PEACEFUL HUNGER
      ******************************************/
 
-    /**
-     * In 1.21.x the local variable table is often not available at runtime, so relying on
-     * {@code @ModifyVariable(name = "difficulty")} is brittle and can fail injection checks.
-     * <p>
-     * Redirect the difficulty lookup instead.
-     */
+
     @Redirect(
             method = "tick",
             at = @At(

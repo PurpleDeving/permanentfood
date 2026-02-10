@@ -36,15 +36,17 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
         // no-op by default
     }
 
-    public MilestoneMessage gatherMilestoneMessages(Player player, MilestoneMessage existingMessage) {
+    public void gatherMilestoneMessages(Player player, MilestoneMessage existingMessage) {
 
         for (MilestoneProgression milestoneProgression : this.getMilestoneProgressions()) {
             if (milestoneProgression.checkReachedMilestoneUpdate()) {
+                existingMessage.anyMilestoneReached() = true;
                 existingMessage.milestoneMessages().add(milestoneProgression.getCelebrationMessage(player));
+                if (milestoneProgression.maxMilestonesReached()) {
+                    existingMessage.isMaxMilestoneReached() = true;
+                }
             }
         }
 
-
-        return existingMessage;
     }
 }
