@@ -13,13 +13,11 @@ public class AttributeMilestoneType extends MilestoneType {
 
     Holder<Attribute> attribute;
     String declareName;
-    Boolean isEnabled;
 
-    public AttributeMilestoneType(String name, List<? extends Integer> milestones, Holder<Attribute> attribute, String declareName, Boolean isEnabled) {
-        super(name, milestones);
+    public AttributeMilestoneType(String name, List<? extends Integer> milestones, Boolean isEnabled, Holder<Attribute> attribute, String declareName) {
+        super(name, milestones, isEnabled);
         this.attribute = attribute;
         this.declareName = declareName;
-        this.isEnabled = isEnabled;
     }
 
 

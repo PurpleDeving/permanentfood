@@ -14,10 +14,13 @@ public class MilestoneType {
 
     private final String name;
     private volatile List<Integer> milestones;
+    private boolean isEnabled;
 
-    public MilestoneType(String name, List<? extends Integer> milestones) {
+
+    public MilestoneType(String name, List<? extends Integer> milestones, Boolean isEnabled) {
         this.name = Objects.requireNonNull(name, "name");
         setMilestones(milestones);
+        this.isEnabled = isEnabled;
     }
 
     public String getName() {
@@ -49,4 +52,7 @@ public class MilestoneType {
         return milestones.size();
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 }

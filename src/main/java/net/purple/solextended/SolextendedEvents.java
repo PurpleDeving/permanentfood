@@ -46,6 +46,7 @@ public class SolextendedEvents {
 
     }
 
+    // TODO > This also needs to repopulate the MilestoneManager with their Progressions such as
     @SubscribeEvent
     public static void onConfigReload(ModConfigEvent.Reloading event) {
         if (event.getConfig().getModId().equals(MODID)) {

@@ -17,7 +17,6 @@ import net.purple.solextended.milestonebased.MilestoneManager;
 import net.purple.solextended.milestonebased.MilestoneManagerRegistry;
 import org.jline.utils.Log;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import static net.purple.permfood.PermanentFood.MODID;
@@ -28,23 +27,29 @@ import static net.purple.permfood.PermanentFood.MODID;
  */
 public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgression> {
 
-    private static final AttributeMilestoneType MAX_HUNGER_BUFF = new AttributeMilestoneType("max_hunger_buff",
+    private static final AttributeMilestoneType MAX_HUNGER_BUFF = new AttributeMilestoneType(
+            "max_hunger_buff",
             Configs.foodSystemConfig.sectionHunger.milestonesHunger.get(),
+            Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES,
             ModAttributes.MAX_HUNGER,
-            "Hunger",
-            Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES);
+            "Hunger"
+    );
 
-    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType("max_saturation_buff",
+    private static final AttributeMilestoneType MAX_SATURATION_BUFF = new AttributeMilestoneType(
+            "max_saturation_buff",
             Configs.foodSystemConfig.sectionSaturation.milestonesSaturation.get(),
+            Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES,
             ModAttributes.MAX_SATURATION,
-            "Saturation",
-            Configs.foodSystemConfig.sectionSaturation.ENABLE_SATURATION_CHANGES);
+            "Saturation"
+    );
 
-    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType("max_exhaustion_buff",
+    private static final AttributeMilestoneType MAX_EXHAUSTION_BUFF = new AttributeMilestoneType(
+            "max_exhaustion_buff",
             Configs.foodSystemConfig.sectionExhaustion.milestonesExhaustion.get(),
+            Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES,
             ModAttributes.MAX_EXHAUSTION,
-            "Exhaustion",
-            Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES);
+            "Exhaustion"
+    );
 
     private static Supplier<AttachmentType<FoodSystemBuffs>> ATTACHMENT_TYPE;
 
@@ -67,38 +72,41 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
 
         FoodSystemConfig foodSystemConfig = Configs.foodSystemConfig;
 
-        this.getMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_HUNGER_BUFF, foodSystemConfig.sectionHunger.perMilestoneHunger.get()));
-        this.getMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_SATURATION_BUFF, foodSystemConfig.sectionSaturation.perMilestoneSaturation.get()));
-        this.getMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_EXHAUSTION_BUFF, foodSystemConfig.sectionExhaustion.perMilestoneExhaustion.get()));
+        // Register *all* progressions; enabled/disabled will be handled at application time.
+        this.getAllMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_HUNGER_BUFF, foodSystemConfig.sectionHunger.perMilestoneHunger.get()));
+        this.getAllMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_SATURATION_BUFF, foodSystemConfig.sectionSaturation.perMilestoneSaturation.get()));
+        this.getAllMilestoneProgressions().add(new AttributeMilestoneProgression(MAX_EXHAUSTION_BUFF, foodSystemConfig.sectionExhaustion.perMilestoneExhaustion.get()));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void onFoodCountUpdate(Player player, int foodCount) {
         Log.warn("Updating AttributeBuffs for player: " + player.getName().getString() + " with foodCount: " + foodCount);
+
+        // Phase 1: always update tracking state, even for disabled types.
+        for (AttributeMilestoneProgression progression : this.getAllMilestoneProgressions()) {
+            progression.updateMilestonesReached(foodCount);
+        }
+
+        // Phase 2: only apply modifiers for enabled types.
         AttributeMap playerAttributes = player.getAttributes();
-        List<AttributeMilestoneProgression> attributeBuffs = this.getMilestoneProgressions();
+        for (AttributeMilestoneProgression progression : this.getActiveMilestoneProgressions()) {
+            AttributeMilestoneType type = (AttributeMilestoneType) progression.getType();
+            Holder<Attribute> attribute = type.getAttribute();
 
-        for (AttributeMilestoneProgression attributeBuff : attributeBuffs) {
-            // Update milestone progression
-            attributeBuff.updateMilestonesReached(foodCount);
-
-            // Apply or update the attribute modifier
-            AttributeMilestoneType attributeMilestoneType = (AttributeMilestoneType) attributeBuff.getType();
-            Holder<Attribute> attribute = attributeMilestoneType.getAttribute();
-            AttributeModifier attributeModifier = new AttributeModifier(
-                    attributeMilestoneType.getResourceLocation(),
-                    attributeBuff.getBuffValue(),
+            AttributeModifier modifier = new AttributeModifier(
+                    type.getResourceLocation(),
+                    progression.getBuffValue(),
                     AttributeModifier.Operation.ADD_VALUE
             );
-            playerAttributes.getInstance(attribute).addOrReplacePermanentModifier(attributeModifier);
+            playerAttributes.getInstance(attribute).addOrReplacePermanentModifier(modifier);
         }
     }
 
     @Override
     public void outputStats(ServerPlayer player, int foodCount, MutableComponent output) {
 
-        for (AttributeMilestoneProgression progression : this.getMilestoneProgressions()) {
+        for (AttributeMilestoneProgression progression : this.getAllMilestoneProgressions()) {
             AttributeMilestoneType type = (AttributeMilestoneType) progression.getType();
             String declareName = type.declareName;
 
@@ -110,7 +118,7 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
 
             // Enabled/disabled label is localized separately so languages can vary word order.
             Component enabledLabel = Component.translatable(
-                    "command." + MODID + ".milestone.attribute_buffs." + (type.isEnabled ? "enabled" : "disabled"));
+                    "command." + MODID + ".milestone.attribute_buffs." + (type.isEnabled() ? "enabled" : "disabled"));
 
             output.append(Component.translatable(
                             "command." + MODID + ".milestone.attribute_buffs.changes",
@@ -119,7 +127,7 @@ public class FoodSystemBuffs extends MilestoneManager<AttributeMilestoneProgress
                     .withStyle(ChatFormatting.WHITE));
             output.append("\n");
 
-            if (!type.isEnabled) {
+            if (!type.isEnabled()) {
                 continue;
             }
 

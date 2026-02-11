@@ -6,14 +6,24 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public abstract class MilestoneManager<T extends MilestoneProgression> {
 
     private final List<T> milestoneProgressions = new ArrayList<>();
 
-    public List<T> getMilestoneProgressions() {
+    /**
+     * @return all milestone progressions tracked by this manager.
+     */
+    public List<T> getAllMilestoneProgressions() {
         return milestoneProgressions;
+    }
+
+    public List<T> getActiveMilestoneProgressions() {
+        return milestoneProgressions.stream()
+                .filter(progression -> progression.getType().isEnabled())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -38,10 +48,10 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
 
     public void gatherMilestoneMessages(Player player, MilestoneMessage existingMessage) {
 
-        for (MilestoneProgression milestoneProgression : this.getMilestoneProgressions()) {
+        for (MilestoneProgression milestoneProgression : this.getActiveMilestoneProgressions()) {
             if (milestoneProgression.checkReachedMilestoneUpdate()) {
                 existingMessage.anyMilestoneReached = true;
-                existingMessage.milestoneMessages.add(milestoneProgression.getCelebrationMessage(player)); // TODO Logic for different Message for Max
+                existingMessage.milestoneMessages.add(milestoneProgression.getCelebrationMessage(player));
                 if (milestoneProgression.maxMilestonesReached()) {
                     existingMessage.anyMaxMilestoneReached = true;
                 }
