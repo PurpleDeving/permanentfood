@@ -21,14 +21,23 @@ public final class FoodListPage extends Page {
     private static final int itemSpacing = UIItemStack.size + 4;
 
     /**
-     * Creates multiple pages if needed to display all items
+     * Creates multiple pages if needed to display all items.
+     * Always returns at least one page, even when items list is empty.
      */
     public static List<FoodListPage> pages(Rectangle frame, String header, List<ItemStack> items) {
         List<FoodListPage> pages = new ArrayList<>();
-        for (int startIndex = 0; startIndex < items.size(); startIndex += FoodListPage.itemsPerPage) {
-            int endIndex = Math.min(startIndex + FoodListPage.itemsPerPage, items.size());
-            pages.add(new FoodListPage(frame, header, items.subList(startIndex, endIndex)));
+
+        if (items.isEmpty()) {
+            // Create an empty page with just the header
+            pages.add(new FoodListPage(frame, header, items));
+        } else {
+            // Create pages for all items
+            for (int startIndex = 0; startIndex < items.size(); startIndex += FoodListPage.itemsPerPage) {
+                int endIndex = Math.min(startIndex + FoodListPage.itemsPerPage, items.size());
+                pages.add(new FoodListPage(frame, header, items.subList(startIndex, endIndex)));
+            }
         }
+
         return pages;
     }
 

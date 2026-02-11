@@ -44,7 +44,6 @@ public class SolExtended {
     // TODO Write README.md and credit solcarrot
     // TODO ReWrite FoodBookScreen for a modern screen ???
 
-    // TODO Empty Foodlist Page looks bad
 
     // TODO Tooltip inlcuding Book, Commands, showstats output etc.
 

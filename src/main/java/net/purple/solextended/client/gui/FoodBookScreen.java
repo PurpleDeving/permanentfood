@@ -19,6 +19,7 @@ import net.purple.solextended.client.gui.pages.FoodListPage;
 import net.purple.solextended.client.gui.pages.Page;
 import net.purple.solextended.client.gui.pages.StatsPage;
 import net.purple.solextended.foodlist.PlayerFoodList;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -59,13 +60,13 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     // ========================================
     private PageFlipButton nextPageButton;
     private PageFlipButton prevPageButton;
-    private List<PageRegistry.PageEntry> pageEntries = new ArrayList<>();
+    private final List<PageRegistry.PageEntry> pageEntries = new ArrayList<>();
     private int currentPageNumber = 0;
 
     // ========================================
     // DATA
     // ========================================
-    private Player player;
+    private final Player player;
     private FoodData foodData;
 
     static {
@@ -90,13 +91,13 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
                     .map(ItemStack::new)
                     .collect(Collectors.toList());
 
-            // ItemListPage.pages returns multiple pages if needed
+            // FoodListPage.pages returns multiple pages if needed, always at least one
             Component title = LocalizationHelper.localizedComponent(MODID, "gui", "food_book.eaten_foods", eatenStacks.size());
             List<? extends Page> pages = FoodListPage.pages(frame,
                     title.getString(), eatenStacks);
 
             // Return the first page (we'll handle multiple pages separately)
-            return pages.isEmpty() ? new StatsPage(0, frame) : pages.getFirst();
+            return pages.getFirst();
         });
     }
 
@@ -174,13 +175,13 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
 
         // For the last internal page (eaten foods), we need to handle pagination
         if (!registryPages.isEmpty()) {
-            // Add all pages except the last one (which might be multi-page)
+            // Add all pages except the last one (which might be multipage)
             for (int i = 0; i < registryPages.size() - 1; i++) {
                 pageEntries.add(registryPages.get(i));
             }
 
             // Handle the eaten foods list (potentially multiple pages)
-            PageRegistry.PageEntry lastEntry = registryPages.get(registryPages.size() - 1);
+            PageRegistry.PageEntry lastEntry = registryPages.getLast();
             List<ItemStack> eatenStacks = foodData.getEatenFoods().stream()
                     .map(ItemStack::new)
                     .collect(Collectors.toList());
@@ -205,7 +206,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     // ========================================
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
 
         if (!pageEntries.isEmpty()) {
@@ -224,7 +225,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         UIElement.render(guiGraphics, background, mouseX, mouseY);
     }
