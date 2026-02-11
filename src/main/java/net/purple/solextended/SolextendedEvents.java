@@ -46,7 +46,11 @@ public class SolextendedEvents {
 
     }
 
-    // TODO > This also needs to repopulate the MilestoneManager with their Progressions such as
+
+    /*
+       Info: Because all MilestoneTypes need to be static, a reloading here doesn't make sense. Instead, all Configs relevant for MilestoneTypes should have a @RequiresAction(action = Action.RESTART)
+     */
+
     @SubscribeEvent
     public static void onConfigReload(ModConfigEvent.Reloading event) {
         if (event.getConfig().getModId().equals(MODID)) {
