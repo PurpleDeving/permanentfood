@@ -174,6 +174,7 @@ public class FoodSystemConfig extends Config {
         @Name("Exhaustion per heal")
         @Name(value = "Erschöpfung pro Heilung", lang = "de_de")
         @Desc("Amount of exhaustion applied to the player when they heal one heart. Higher values increase exhaustion cost for healing. Vanilla default is 6.0.")
+        @RequiresAction(action = Action.RESTART)
         public ValidatedFloat exhaustion_per_Heal = new ValidatedFloat(6.0F, 1000.0F, 0.1F, ValidatedNumber.WidgetType.TEXTBOX);
     }
 
