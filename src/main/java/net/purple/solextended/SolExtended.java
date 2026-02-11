@@ -44,12 +44,13 @@ public class SolExtended {
     // TODO Write README.md and credit solcarrot
     // TODO ReWrite FoodBookScreen for a modern screen ???
 
-    // TODO Test Peaceful Hunger not working
-
     // TODO Empty Foodlist Page looks bad
 
     // TODO Tooltip inlcuding Book, Commands, showstats output etc.
 
     // TODO Remove more Hunger per Exhaustion option
     // TODO Add Mod description etc.
+
+    // TODO Javadoc for everything
+    // TODO Check all Javadoc Author entries
 }

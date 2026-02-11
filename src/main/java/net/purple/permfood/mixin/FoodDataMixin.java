@@ -7,27 +7,25 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.GameRules;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.purple.permfood.attributes.ModAttributes;
 import net.purple.permfood.config.Configs;
+import net.purple.permfood.config.FoodSystemConfig;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.Objects;
 
-import static net.purple.permfood.attributes.ModAttributes.MAX_EXHAUSTION;
-import static net.purple.permfood.attributes.ModAttributes.MAX_SATURATION;
-import static net.purple.solextended.Constants.ENABLE_EXTENSIVE_LOGGING;
-import static net.purple.solextended.SolExtended.IS_DEV;
+import static net.purple.permfood.attributes.ModAttributes.*;
 
 
 @SuppressWarnings("DataFlowIssue")
@@ -147,107 +145,114 @@ public class FoodDataMixin {
     }
 
 
-/*    @Inject(
+    @Shadow
+    private int lastFoodLevel;
+    @Shadow
+    private int foodLevel;
+    @Shadow
+    private float exhaustionLevel;
+    @Shadow
+    private float saturationLevel;
+    @Shadow
+    private int tickTimer;
+
+
+    /**
+     * Overwrites the vanilla addExhaustion method to use a dynamic maximum exhaustion cap
+     * based on the player's MAX_EXHAUSTION attribute multiplied by 10, instead of the
+     * hardcoded 40.0F value.
+     *
+     * @param exhaustion The amount of exhaustion to add
+     * @reason Replace hardcoded 40.0F cap with configurable max exhaustion * 10
+     * @author PurpleMod
+     */
+    @Overwrite
+    public void addExhaustion(float exhaustion) {
+        permanentfood_1_21_1$validatePlayer();
+        float maxExhaustionCap = Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES
+                ? (float) this.permanentfood_1_21_1$player.getAttribute(MAX_EXHAUSTION).getValue() * 10
+                : 40.0F;
+        this.exhaustionLevel = Math.min(this.exhaustionLevel + exhaustion, maxExhaustionCap);
+    }
+
+
+    /******************************************
+     Tick Overwrite
+     ******************************************/
+
+    @Inject(
             method = "tick",
             at = @At("HEAD"),
             cancellable = true
     )
     private void tickOverwrite(Player player, CallbackInfo ci) {
+        FoodSystemConfig foodSystemConfig = Configs.foodSystemConfig;
         Difficulty difficulty = player.level().getDifficulty();
-        FoodData foodData = (FoodData) (Object) this;
-        foodData.lastFoodLevel = foodData.foodLevel;
+
+        // Only when it's originally easy, do you have to
+        if (foodSystemConfig.sectionFoodHealing.ENABLE_HUNGER_DIFFICULTY && difficulty == Difficulty.PEACEFUL) {
+            difficulty = Configs.foodSystemConfig.sectionFoodHealing.HUNGER_DIFFICULTY.get();
+        }
+
+        this.lastFoodLevel = foodLevel;
+
+        boolean isExhaustionChanged = foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES;
+        float exhaustionThreshold = isExhaustionChanged ? (float) player.getAttribute(MAX_EXHAUSTION).getValue() : 4.0F;
+        boolean isHungerChanged = foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES;
+        int maxHunger = isHungerChanged ? (int) (player.getAttribute(MAX_HUNGER).getValue() + 0.5) : 20;
+        float exhaustionPerHeal = foodSystemConfig.sectionFoodHealing.exhaustionPerHeal.get();
+
+        // Reduce Exhaustion for the cost of food/saturation
+        if (this.exhaustionLevel > exhaustionThreshold) {
+            this.exhaustionLevel -= exhaustionThreshold;
+            if (this.saturationLevel > 0.0F) {
+                this.saturationLevel = Math.max(this.saturationLevel - 1.0F, 0.0F);
+            } else if (difficulty != Difficulty.PEACEFUL) {
+                this.foodLevel = Math.max(this.foodLevel - 1, 0);
+            }
+        }
+
+        boolean flag = player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
+        // Superfast healing. Slowed if you don't have as much saturation as a Heal would add exhaustion. Adds Exhaustion for the amount healed
+        if (flag && this.saturationLevel > 0.0F && player.isHurt() && this.foodLevel >= maxHunger) {
+            ++this.tickTimer;
+            if (this.tickTimer >= 10) {
+                float f = Math.min(this.saturationLevel, exhaustionPerHeal);
+                player.heal(f / exhaustionPerHeal);
+                this.addExhaustion(f);
+                this.tickTimer = 0;
+            }
+            ci.cancel();
+            return;
+
+            // Normal Healing for exhaustion. Threshold is as Vanilla 90% of the maxHunger
+        } else if (flag && this.foodLevel >= (int) (maxHunger * 0.9 + 0.5) && player.isHurt()) {
+            ++this.tickTimer;
+            if (this.tickTimer >= 80) {
+                player.heal(1.0F);
+                this.addExhaustion(exhaustionPerHeal);
+                this.tickTimer = 0;
+            }
+            ci.cancel();
+            return;
+        }
+
+        // Food Starvation
+        if (this.foodLevel <= 0) {
+            ++this.tickTimer;
+            if (this.tickTimer >= 80) {
+                if (player.getHealth() > 10.0F || difficulty == Difficulty.HARD || player.getHealth() > 1.0F && difficulty == Difficulty.NORMAL) {
+                    player.hurt(player.damageSources().starve(), 1.0F);
+                }
+
+                this.tickTimer = 0;
+            }
+        } else {
+            this.tickTimer = 0; // Tick timer is only used by natural regeneration or when starving. So if booth doesn't happen, reset it.
+        }
 
 
         ci.cancel(); // Prevents orriginal logic
-    }*/
-
-    /******************************************
-     PEACEFUL HUNGER
-     ******************************************/
-
-
-    @Redirect(
-            method = "tick",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/Level;getDifficulty()Lnet/minecraft/world/Difficulty;"
-            )
-    )
-    private Difficulty peaceful_hunger$tick$redirectDifficulty(Level level) {
-        Difficulty originalHungerDifficulty = level.getDifficulty();
-
-        if (IS_DEV && ENABLE_EXTENSIVE_LOGGING) {
-            System.out.println("FoodDataMixin.peaceful_hunger$tick$redirectDifficulty: Original Difficulty: " + originalHungerDifficulty);
-        }
-
-        if (Configs.foodSystemConfig.sectionPeacefulHunger.ENABLE_HUNGER_ON_PEACEFUL
-                && originalHungerDifficulty == Difficulty.PEACEFUL) {
-            return Configs.foodSystemConfig.sectionPeacefulHunger.PEACEFUL_HUNGER_DIFFICULTY.get();
-        }
-
-        return originalHungerDifficulty;
-    }
-
-    /******************************************
-     Natural Regeneration + NON_Natural Regeneration
-     ******************************************/
-
-    // Hunger Threshold for Natural_Regeneration with Saturation
-    @ModifyConstant(
-            method = "tick", // Note: The method descriptor is (IF)V in bytecode
-            constant = @Constant(intValue = 20,
-                    ordinal = 0) // The one in the Natural_Regen Block
-    )
-    private int setThresholdForNaturalRegenerationWithSaturation(int original, Player player) {
-        if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) { // Attribute doesn't exist on the player if the flag is false
-            return original;
-        }
-        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.sectionPeacefulHunger.NATURAL_REGEN_THRESHOLD_WITH_SATURATION.get() / 100;
-    }
-
-    // Hunger Threshold for Natural_Regeneration without Saturation
-    @ModifyConstant(
-            method = "tick", // Note: The method descriptor is (IF)V in bytecode
-            constant = @Constant(intValue = 18,
-                    ordinal = 0) // The under the Natural_Regen Block
-    )
-    private int setThresholdForNaturalRegenerationNoSaturation(int original, Player player) {
-        if (!Configs.foodSystemConfig.sectionHunger.ENABLE_HUNGER_CHANGES) { // Attribute doesn't exist on the player if the flag is false
-            return original;
-        }
-        return (int) player.getAttribute(ModAttributes.MAX_HUNGER).getValue() * Configs.foodSystemConfig.sectionPeacefulHunger.NATURAL_REGEN_THRESHOLD_NO_SATURATION.get() / 100;
-    }
-
-    /******************************************
-     ExhaustionLevel injecting
-     ******************************************/
-
-    // MAX Exhaustion // TODO > Rename Max to something else. Its not a max
-    @ModifyConstant(
-            method = "tick",
-            constant = @Constant(floatValue = 4.0F) // Doubles as the Exhaustion Threshold (when it is reduced for hunger/sauturation) and also the amount it is reduced by.
-    )
-    private float useMaxExhaustion(float original, Player player) {
-        if (!Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES) {
-            return original;
-        }
-        return (float) player.getAttribute(MAX_EXHAUSTION).getValue();
-    }
-
-
-    // FIXME THis does not work correctly or gets stuck sometimes ????
-
-    // Exhaustion per Heal
-    // MAX Exhaustion
-    @ModifyConstant(
-            method = "tick", // Note: The method descriptor is (IF)V in bytecode
-            constant = @Constant(floatValue = 6.0F)
-    )
-    private float useExhaustionForHealing(float original, Player player) {
-        if (!Configs.foodSystemConfig.sectionExhaustion.ENABLE_EXHAUSTION_CHANGES) {
-            return original;
-        }
-        return Configs.foodSystemConfig.sectionExhaustion.exhaustion_per_Heal.get();
     }
 
 

@@ -26,13 +26,13 @@ public abstract class PlayerMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;getDifficulty()Lnet/minecraft/world/Difficulty;",
-                    ordinal = 0 // The Peaceful check
+                    ordinal = 0
             )
     )
-    private Difficulty changeNaturalRegenAccordingToPeacefulHunger(Level level) {
-        if (Configs.foodSystemConfig.sectionPeacefulHunger.ENABLE_HUNGER_ON_PEACEFUL) {
-            // Correct difficulty doesn't matter. If you want Hunger_on_Peaceful, then we can just return anything that is not peaceful
-            return Difficulty.EASY;
+    private Difficulty changeNaturalRegenAccordingToHungerDifficulty(Level level) {
+
+        if (Configs.foodSystemConfig.sectionFoodHealing.ENABLE_HUNGER_DIFFICULTY) {
+            return Configs.foodSystemConfig.sectionFoodHealing.HUNGER_DIFFICULTY.get();
         }
 
         return level.getDifficulty();

@@ -7,7 +7,6 @@ import me.fzzyhmstrs.fzzy_config.config.Config;
 import me.fzzyhmstrs.fzzy_config.config.ConfigSection;
 import me.fzzyhmstrs.fzzy_config.util.Translatable;
 import me.fzzyhmstrs.fzzy_config.validation.collection.ValidatedList;
-import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedChoice;
 import me.fzzyhmstrs.fzzy_config.validation.misc.ValidatedEnum;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedFloat;
 import me.fzzyhmstrs.fzzy_config.validation.number.ValidatedInt;
@@ -20,40 +19,35 @@ import org.jetbrains.annotations.NotNull;
 @Translatable.Name(value = "Ernährungssystem", lang = "de_de")
 public class FoodSystemConfig extends Config {
 
-    // TODO - English is fixed but not tested. German/ Test not tested yet
+    // TODO - Recreate these + Generate the german tests again
 
     public FoodSystemConfig() {
         super(Constants.rLFoodSystemConfig);
     }
 
-    @Name("Peaceful Hunger Settings")
-    @Name(value = "Friedliche Hunger Einstellungen", lang = "de_de")
+    @Name("Hunger Difficulty Settings")
+    @Name(value = "Hunger-Schwierigkeitseinstellungen", lang = "de_de")
 
-    public PeacefulHungerSection sectionPeacefulHunger = new PeacefulHungerSection();
+    public FoodHealingSection sectionFoodHealing = new FoodHealingSection();
 
-    public static class PeacefulHungerSection extends ConfigSection {
+    public static class FoodHealingSection extends ConfigSection {
 
-        @Name("Enable hunger on Peaceful")
-        @Name(value = "Hunger auf Friedlich aktivieren", lang = "de_de")
-        @Desc("When true, players will still get hungry on Peaceful difficulty. Set to false to disable hunger on Peaceful.")
-        public boolean ENABLE_HUNGER_ON_PEACEFUL = true;
+        @Name("Enable separate hunger difficulty")
+        @Name(value = "Separate Hunger-Schwierigkeit aktivieren", lang = "de_de")
+        @Desc("When true, a separate difficulty is used for food and hunger. This allows hunger difficulty to be independent from the game's difficulty setting.")
+        public boolean ENABLE_HUNGER_DIFFICULTY = true;
 
-        @Name("Peaceful hunger difficulty")
-        @Name(value = "Schwierigkeit für Hunger auf Friedlich", lang = "de_de")
-        @Desc("When hunger on Peaceful is enabled, this sets which difficulty's hunger rules to apply (EASY, NORMAL, or HARD).")
-        public ValidatedChoice<Difficulty> PEACEFUL_HUNGER_DIFFICULTY = new ValidatedEnum<>(Difficulty.EASY).toList(Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD).toChoices(ValidatedChoice.WidgetType.CYCLING);
+        @Name("Hunger difficulty")
+        @Name(value = "Hunger-Schwierigkeit", lang = "de_de")
+        @Desc("When separate hunger difficulty is enabled, this sets which difficulty's hunger rules to apply.")
+        public ValidatedEnum<Difficulty> HUNGER_DIFFICULTY = new ValidatedEnum<>(Difficulty.EASY, ValidatedEnum.WidgetType.CYCLING);
 
-        @Name("Regen threshold (with saturation)")
-        @Name(value = "Regeneration-Schwelle (mit Sättigung)", lang = "de_de")
-        @Desc("Percentage of the hunger bar required for strong natural regeneration when the player has saturation (vanilla: 100).\n" +
-                "Requires the game rule 'naturalRegeneration' to be enabled. Values are rounded down.")
-        public ValidatedInt NATURAL_REGEN_THRESHOLD_WITH_SATURATION = new ValidatedInt(100, 100, 0);
 
-        @Name("Regen threshold (no saturation)")
-        @Name(value = "Regeneration-Schwelle (ohne Sättigung)", lang = "de_de")
-        @Desc("Percentage of the hunger bar required for weak natural regeneration when the player has no saturation (vanilla: 90).\n" +
-                "Requires the game rule 'naturalRegeneration' to be enabled. Values are rounded down.")
-        public ValidatedInt NATURAL_REGEN_THRESHOLD_NO_SATURATION = new ValidatedInt(90, 100, 0);
+        @Name("Exhaustion per heal")
+        @Name(value = "Erschöpfung pro Heilung", lang = "de_de")
+        @Desc("Amount of exhaustion applied to the player when they heal one heart. Lower is 'easier' for the player. Vanilla default is 6.0.")
+        @RequiresAction(action = Action.RESTART)
+        public ValidatedFloat exhaustionPerHeal = new ValidatedFloat(6.0F, 1000.0F, 0.1F, ValidatedNumber.WidgetType.TEXTBOX);
 
 
     }
@@ -87,9 +81,10 @@ public class FoodSystemConfig extends Config {
 
         @Name("Hunger milestones")
         @Name(value = "Hunger-Meilensteine", lang = "de_de")
-        @Desc("The Amount of unique Foods eaten needed to reach the different Milestones. \n" +
-                "More Milestones will let you earn more max hunger.\n" +
-                "Must be in order from smallest to largest.")
+        @Desc("""
+                The Amount of unique Foods eaten needed to reach the different Milestones.
+                More Milestones will let you earn more max hunger.
+                Must be in order from smallest to largest.""")
         public ValidatedList<Integer> milestonesHunger = ValidatedList.ofInt(5, 10, 15, 20);
     }
 
@@ -126,10 +121,13 @@ public class FoodSystemConfig extends Config {
 
         @Name("Saturation milestones")
         @Name(value = "Sättigungs-Meilensteine", lang = "de_de")
-        @Desc("The Amount of unique Foods eaten needed to reach the different Milestones. \n" +
-                "More Milestones will let you earn more max Saturation.\n" +
-                "Must be in order from smallest to largest.")
+        @Desc("""
+                The Amount of unique Foods eaten needed to reach the different Milestones.
+                More Milestones will let you earn more max Saturation.
+                Must be in order from smallest to largest.""")
         public ValidatedList<Integer> milestonesSaturation = ValidatedList.ofInt(5, 10, 15, 20);
+
+
     }
 
 
@@ -145,6 +143,7 @@ public class FoodSystemConfig extends Config {
         }
 
 
+        // Add that higher max exhaustion is good for baseExhaustion and perMilestoneExhaustion. The value is the threshold before saturation/hunger is deducted
         @Name("Enable exhaustion changes")
         @Name(value = "Erschöpfungsänderungen aktivieren", lang = "de_de")
         @Desc("Whether or not exhaustion mechanics should be changed by this mod.")
@@ -161,21 +160,17 @@ public class FoodSystemConfig extends Config {
         @Name(value = "Erschöpfung pro Meilenstein", lang = "de_de")
         @Desc("The Amount of max Exhaustion gained per Milestone reached. \n" +
                 "Higher values will make each Milestone more impactful.")
-        public ValidatedFloat perMilestoneExhaustion = new ValidatedFloat(2.0F, 100, 0, ValidatedNumber.WidgetType.TEXTBOX);
+        public ValidatedFloat perMilestoneExhaustion = new ValidatedFloat(0.20F, 100, 0, ValidatedNumber.WidgetType.TEXTBOX);
 
         @Name("Exhaustion milestones")
         @Name(value = "Erschöpfungs-Meilensteine", lang = "de_de")
-        @Desc("The Amount of unique Foods eaten needed to reach the different Milestones. \n" +
-                "More Milestones will let you earn more max Exhaustion.\n" +
-                "Must be in order from smallest to largest.")
+        @Desc("""
+                The Amount of unique Foods eaten needed to reach the different Milestones.\s
+                More Milestones will let you earn more max Exhaustion.
+                Must be in order from smallest to largest.""")
         public ValidatedList<Integer> milestonesExhaustion = ValidatedList.ofInt(5, 10, 15, 20);
 
 
-        @Name("Exhaustion per heal")
-        @Name(value = "Erschöpfung pro Heilung", lang = "de_de")
-        @Desc("Amount of exhaustion applied to the player when they heal one heart. Higher values increase exhaustion cost for healing. Vanilla default is 6.0.")
-        @RequiresAction(action = Action.RESTART)
-        public ValidatedFloat exhaustion_per_Heal = new ValidatedFloat(6.0F, 1000.0F, 0.1F, ValidatedNumber.WidgetType.TEXTBOX);
     }
 
 
