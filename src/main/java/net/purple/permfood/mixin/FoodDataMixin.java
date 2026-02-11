@@ -222,7 +222,7 @@ public class FoodDataMixin {
      ExhaustionLevel injecting
      ******************************************/
 
-    // MAX Exhaustion
+    // MAX Exhaustion // TODO > Rename Max to something else. Its not a max
     @ModifyConstant(
             method = "tick",
             constant = @Constant(floatValue = 4.0F) // Doubles as the Exhaustion Threshold (when it is reduced for hunger/sauturation) and also the amount it is reduced by.
@@ -233,6 +233,9 @@ public class FoodDataMixin {
         }
         return (float) player.getAttribute(MAX_EXHAUSTION).getValue();
     }
+
+
+    // FIXME THis does not work correctly or gets stuck sometimes ????
 
     // Exhaustion per Heal
     // MAX Exhaustion
