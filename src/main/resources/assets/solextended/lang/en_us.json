@@ -37,5 +37,7 @@
   "command.solextended.foodlist.clearlist.success": "Your list has been cleared.",
   "command.solextended.foodlist.showstats.header": "=== Food Stats for %s ===",
   "command.solextended.foodlist.showstats.foods_eaten": "Unique Foods Eaten: %s",
-  "command.solextended.foodlist.testfood.success": "%s test foods succesfully added"
+  "command.solextended.foodlist.testfood.success": "%s test foods successfully added.",
+  "command.solextended.foodlist.testfood.success.partial": "Only %s out of %s test foods could be added.",
+  "command.solextended.foodlist.testfood.failure.none_added": "No test foods could be added. You\"ve already eaten them all."
 }

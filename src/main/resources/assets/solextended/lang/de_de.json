@@ -36,5 +36,8 @@
   "command.solextended.foodlist.commands.player_not_found": "command.solextended.foodlist.commands.player_not_found",
   "command.solextended.foodlist.clearlist.success": "command.solextended.foodlist.clearlist.success",
   "command.solextended.foodlist.showstats.header": "command.solextended.foodlist.showstats.header",
-  "command.solextended.foodlist.showstats.foods_eaten": "command.solextended.foodlist.showstats.foods_eaten"
+  "command.solextended.foodlist.showstats.foods_eaten": "command.solextended.foodlist.showstats.foods_eaten",
+  "command.solextended.foodlist.testfood.success": "command.solextended.foodlist.testfood.success",
+  "command.solextended.foodlist.testfood.success.partial": "command.solextended.foodlist.testfood.success.partial",
+  "command.solextended.foodlist.testfood.failure.none_added": "command.solextended.foodlist.testfood.failure.none_added"
 }

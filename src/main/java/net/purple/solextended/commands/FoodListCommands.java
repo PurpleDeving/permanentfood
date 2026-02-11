@@ -29,8 +29,6 @@ import static net.purple.solextended.client.LocalizationHelper.keyString;
 @EventBusSubscriber
 public class FoodListCommands {
 
-    // TODO Missing localization in lanauge files for all outcomes of foodlist test command
-
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
 
