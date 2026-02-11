@@ -18,7 +18,6 @@ import java.util.Set;
 public class PlayerFoodList implements INBTSerializable<CompoundTag> {
     private static final String NBT_KEY_FOOD_LIST = "foodList";
 
-    //IMPL Set of all eaten foods for that player.
     private final Set<Item> eatenFoods = new HashSet<>();
 
 
