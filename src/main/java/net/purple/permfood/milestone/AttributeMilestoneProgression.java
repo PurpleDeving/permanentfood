@@ -1,12 +1,12 @@
 package net.purple.permfood.milestone;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.purple.permfood.PermanentFood;
 import net.purple.solextended.client.LocalizationHelper;
 import net.purple.solextended.milestonebased.MilestoneProgression;
-
-import java.util.Objects;
 
 public class AttributeMilestoneProgression extends MilestoneProgression {
 
@@ -26,16 +26,27 @@ public class AttributeMilestoneProgression extends MilestoneProgression {
         return (double) Math.round(value * scale) / scale;
     }
 
-    @Override // TODO This is the wrong Localization Helper
+    @Override
     public MutableComponent getCelebrationMessage(Player player) {
 
         AttributeMilestoneType attributeMilestoneType = (AttributeMilestoneType) getType();
-        double attributevalue = Objects.requireNonNull(player.getAttribute(attributeMilestoneType.getAttribute())).getValue(); // TODO - Need to limit to 1 decimal place ?
 
-        // domain.modid.path => celebration.permanentfood.celebration.message
-        return LocalizationHelper.localizedComponent(PermanentFood.MODID, "celebration", "celebration.message",
-                attributeMilestoneType.getDeclareName(), attributevalue, getBuffValue());
+        AttributeInstance instance = player.getAttribute(attributeMilestoneType.getAttribute());
+        double attributeValue = instance != null ? instance.getValue() : 0.0;
 
-        // TODO  Continue testing here
+        // Display values with a consistent single decimal place.
+        double shownAttributeValue = round(attributeValue, 1);
+        double shownBuffValue = round(getBuffValue(), 1);
+
+        if (this.maxMilestonesReached()) {
+            // domain.modid.path => celebration.permanentfood.celebration.max_message
+            return LocalizationHelper.localizedComponent(PermanentFood.MODID, "celebration", "celebration.max_message",
+                    attributeMilestoneType.getDeclareName(), shownAttributeValue, shownBuffValue).withStyle(ChatFormatting.GOLD);
+
+        } else {
+            // domain.modid.path => celebration.permanentfood.celebration.message
+            return LocalizationHelper.localizedComponent(PermanentFood.MODID, "celebration", "celebration.message",
+                    attributeMilestoneType.getDeclareName(), shownAttributeValue, shownBuffValue);
+        }
     }
 }

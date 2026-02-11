@@ -41,7 +41,7 @@ public abstract class MilestoneManager<T extends MilestoneProgression> {
         for (MilestoneProgression milestoneProgression : this.getMilestoneProgressions()) {
             if (milestoneProgression.checkReachedMilestoneUpdate()) {
                 existingMessage.anyMilestoneReached = true;
-                existingMessage.milestoneMessages.add(milestoneProgression.getCelebrationMessage(player));
+                existingMessage.milestoneMessages.add(milestoneProgression.getCelebrationMessage(player)); // TODO Logic for different Message for Max
                 if (milestoneProgression.maxMilestonesReached()) {
                     existingMessage.anyMaxMilestoneReached = true;
                 }
