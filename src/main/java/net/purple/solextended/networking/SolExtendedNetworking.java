@@ -1,7 +1,5 @@
 package net.purple.solextended.networking;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.purple.solextended.SolExtended;
@@ -25,7 +23,4 @@ public final class SolExtendedNetworking {
         );
     }
 
-    public static void sendCelebrationToTracking(ServerPlayer celebratingPlayer, MilestoneCelebrationPayload payload) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(celebratingPlayer, payload);
-    }
 }

@@ -3,12 +3,8 @@ package net.purple.solextended.networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -34,53 +30,40 @@ public final class MilestoneCelebrationClientHandler {
                 return;
             }
 
-            // Per-viewer config gating
-            boolean playSoundAllowed = Boolean.TRUE.equals(Configs.solClientConfig.shouldPlayMilestoneSound);
-            boolean particlesAllowed = Boolean.TRUE.equals(Configs.solClientConfig.shouldSpawnMilestoneParticles);
 
-            if (particlesAllowed) {
-                ParticleOptions particle = resolveParticle(payload.particleId());
-                if (particle != null && payload.particleCount() > 0) {
-                    spawnParticles(level, celebratingPlayer, particle, payload.particleCount());
-                }
-            }
+            if (payload.anyMaxMilestoneReached()) {
 
-            if (playSoundAllowed && payload.hasSound() && payload.volume() > 0.0f) {
-                SoundEvent sound = resolveSound(payload.soundId());
-                if (sound != null) {
-                    level.playLocalSound(
-                            celebratingPlayer.getX(), celebratingPlayer.getY(), celebratingPlayer.getZ(),
-                            sound,
-                            SoundSource.PLAYERS,
-                            payload.volume(),
-                            1.0f,
-                            false
-                    );
+                if (Configs.solClientConfig.shouldSpawnMaxMilestoneParticles) {
+                    spawnParticles(level, celebratingPlayer, ParticleTypes.HAPPY_VILLAGER, 16);
+                } else if (Configs.solClientConfig.shouldSpawnMilestoneParticles) {
+                    spawnParticles(level, celebratingPlayer, ParticleTypes.HEART, 16);
                 }
+
+                if (Configs.solClientConfig.shouldPlayMilestoneSound) {
+                    playSound(level, celebratingPlayer, SoundEvents.PLAYER_LEVELUP, 1.0f);
+                }
+
+
+            } else if (payload.anyMilestoneReached()) {
+
+                if (Configs.solClientConfig.shouldSpawnMilestoneParticles) {
+                    spawnParticles(level, celebratingPlayer, ParticleTypes.HEART, 12);
+                }
+
+                if (Configs.solClientConfig.shouldPlayMilestoneSound) {
+                    playSound(level, celebratingPlayer, SoundEvents.PLAYER_LEVELUP, 0.6f);
+                }
+
+            } else {
+
+                if (Configs.solClientConfig.shouldSpawnParticlesForNewFood && celebratingPlayer == mc.player) {
+                    spawnParticles(level, celebratingPlayer, ParticleTypes.END_ROD, 12);
+                }
+
             }
         });
     }
 
-    private static ParticleOptions resolveParticle(ResourceLocation id) {
-        if (id == null || !BuiltInRegistries.PARTICLE_TYPE.containsKey(id)) {
-            return null;
-        }
-
-        ParticleType<?> type = BuiltInRegistries.PARTICLE_TYPE.get(id);
-        // Minimal: only support simple particle types (vanilla's HAPPY_VILLAGER, HEART, END_ROD, etc.)
-        if (type instanceof SimpleParticleType simple) {
-            return simple;
-        }
-
-        return null;
-    }
-
-    private static SoundEvent resolveSound(ResourceLocation id) {
-        if (id == null || !BuiltInRegistries.SOUND_EVENT.containsKey(id)) {
-            return null;
-        }
-        return BuiltInRegistries.SOUND_EVENT.get(id);
-    }
 
     private static void spawnParticles(ClientLevel level, Player player, ParticleOptions particle, int count) {
         double x = player.getX();
@@ -93,5 +76,9 @@ public final class MilestoneCelebrationClientHandler {
             double dz = (level.random.nextDouble() - 0.5) * 0.6;
             level.addParticle(particle, x + dx, y + dy, z + dz, 0.0, 0.02, 0.0);
         }
+    }
+
+    private static void playSound(ClientLevel level, Player player, net.minecraft.sounds.SoundEvent sound, float volume) {
+        level.playLocalSound(player.getX(), player.getY(), player.getZ(), sound, net.minecraft.sounds.SoundSource.PLAYERS, volume, 1.0f, false);
     }
 }

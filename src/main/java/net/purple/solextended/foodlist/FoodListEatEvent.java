@@ -1,23 +1,19 @@
 package net.purple.solextended.foodlist;
 
 
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.purple.solextended.config.Configs;
 import net.purple.solextended.milestonebased.MilestoneManagerRegistry;
 import net.purple.solextended.milestonebased.MilestoneMessage;
 import net.purple.solextended.networking.MilestoneCelebrationPayload;
-import net.purple.solextended.networking.SolExtendedNetworking;
 
 import static net.purple.solextended.Constants.ENABLE_EXTENSIVE_LOGGING;
 import static net.purple.solextended.SolExtended.*;
@@ -81,31 +77,16 @@ public class FoodListEatEvent {
             serverPlayer.sendSystemMessage(message);
         }
 
-        // Build generalized celebration payload.
-        ResourceLocation particleId;
-        int count;
-        ResourceLocation soundId = null;
-        float volume = 0.0f;
-
-        if (milestoneMessage.anyMaxMilestoneReached) {
-            particleId = BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.HAPPY_VILLAGER.getType());
-            count = 16;
-            soundId = SoundEvents.PLAYER_LEVELUP.getLocation();
-            volume = 1.0f;
-        } else if (milestoneMessage.anyMilestoneReached) {
-            particleId = BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.HEART.getType());
-            count = 12;
-            soundId = SoundEvents.PLAYER_LEVELUP.getLocation();
-            volume = 0.6f;
-        } else {
-            particleId = BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.END_ROD.getType());
-            count = 12;
-        }
-
-        SolExtendedNetworking.sendCelebrationToTracking(
+        // Send simplified celebration payload to clients.
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(
                 serverPlayer,
-                new MilestoneCelebrationPayload(serverPlayer.getId(), particleId, count, soundId, volume)
+                new MilestoneCelebrationPayload(
+                        serverPlayer.getId(),
+                        milestoneMessage.anyMilestoneReached,
+                        milestoneMessage.anyMaxMilestoneReached
+                )
         );
+
 
     }
 }
